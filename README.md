@@ -12,6 +12,7 @@
 
 ```bash
 git clone https://github.com/wofkof/TravelAgencyBackend.git
+dotnet ef database update
 ```
 
 ### 🔄 2. 開發新功能時，從 main 切新分支
