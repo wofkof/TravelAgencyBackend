@@ -51,16 +51,6 @@ git pull origin main
 git branch -d feature/行程管理
 ```
 
----
-
-## 🌐 Azure SQL Database
-
-### 連線字串範例
-
-```
-Server=tcp:yourserver.database.windows.net,1433;Initial Catalog=TravelAgencyDB;Persist Security Info=False;User ID=你的帳號;Password=你的密碼;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;
-```
-
 > 密碼請不要放在appsettings.json，改放Development.json
 
 ---
