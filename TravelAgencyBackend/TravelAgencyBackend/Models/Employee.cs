@@ -10,6 +10,19 @@ namespace TravelAgencyBackend.Models
         [Display(Name = "停權")]
         Suspended
     }
+
+    public enum GenderType
+    {
+        [Display(Name = "男性")]
+        Male = 1, 
+
+        [Display(Name = "女性")]
+        Female = 2,
+
+        [Display(Name = "其他")]
+        Other = 3 
+    }
+
     public class Employee
     {
         public int EmployeeId { get; set; }
@@ -22,6 +35,13 @@ namespace TravelAgencyBackend.Models
         public DateTime HireDate { get; set; }
         public EmployeeStatus Status { get; set; } = EmployeeStatus.Active;
         public string? Note { get; set; }
+
+        // **新增的性別欄位**
+        public GenderType Gender { get; set; } = GenderType.Male;
+
+        // **新增的地址欄位**
+        [MaxLength(255)]  // 限制最大長度為 255 字符
+        public string Address { get; set; }
 
         public Role Role { get; set; } = null!;
 
