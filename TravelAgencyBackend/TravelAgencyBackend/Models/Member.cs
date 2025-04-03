@@ -12,7 +12,7 @@ namespace TravelAgencyBackend.Models
     }
     public class Member
     {
-        [DisplayName("會員編號")]
+        [DisplayName("編號")]
         public int MemberId { get; set; }
         [Required(ErrorMessage = "請輸入帳號")]
         [DisplayName("帳號")]

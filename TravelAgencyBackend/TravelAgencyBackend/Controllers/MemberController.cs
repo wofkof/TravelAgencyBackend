@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using TravelAgencyBackend.Models;
 using TravelAgencyBackend.ViewModles;
 using TravelAgencyBackend.Helpers;
+using Microsoft.AspNetCore.OutputCaching;
 
 namespace TravelAgencyBackend.Controllers
 {
@@ -26,6 +27,7 @@ namespace TravelAgencyBackend.Controllers
             ViewBag.Account = member.Account;
             return View();
         }
+
         // 管理員能夠修改會員密碼
         [HttpPost]
         [ValidateAntiForgeryToken]
