@@ -1,4 +1,10 @@
-﻿<div class="app-header header-shadow">
+﻿@inject TravelAgencyBackend.ViewComponent.DashboardService DashboardService
+@{
+    int employeeId = 1; // ⚠️ 實際上應該是從登入的使用者抓
+    int unreadCount = DashboardService.GetUnreadMessageCountForEmployee(employeeId);
+}
+
+<div class="app-header header-shadow">
     <!-- Logo + 關閉側邊欄按鈕（桌機用） -->
     <div class="app-header__logo">
         <div class="logo-src">TravelAgency</div>
@@ -11,6 +17,19 @@
                 </button>
             </div>
         </div>
+        <li class="nav-item">
+            <a class="nav-link" asp-controller="ChatRoom" asp-action="Index">
+                🔔 @if (unreadCount > 0)
+                {
+                    <span class="badge bg-danger">@unreadCount 筆未讀訊息</span>
+                }
+                else
+                {
+                    <span class="text-muted">無新訊息</span>
+                }
+            </a>
+        </li>
+
     </div>
 
     <!-- 手機版的 sidebar toggle（行動裝置） -->
@@ -24,3 +43,4 @@
         </div>
     </div>
 </div>
+
