@@ -5,6 +5,10 @@ namespace TravelAgencyBackend.Models
     // Code First
     public class AppDbContext : DbContext
     {
+        public AppDbContext()
+        {
+        }
+
         public AppDbContext(DbContextOptions<AppDbContext> options)
               : base(options) { }
         // 宣告註冊
