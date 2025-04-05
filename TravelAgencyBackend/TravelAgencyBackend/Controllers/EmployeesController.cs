@@ -98,58 +98,79 @@ namespace TravelAgencyBackend.Controllers
         }
 
 
-        // GET: Employees/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var employee = await _context.Employees.FindAsync(id);
-            if (employee == null)
+            var emp = await _context.Employees.FindAsync(id);
+            if (emp == null) return NotFound();
+
+            var vm = new EmployeeEditViewModel
             {
-                return NotFound();
-            }
-            ViewData["RoleId"] = new SelectList(_context.Roles, "RoleId", "RoleName", employee.RoleId);
-            return View(employee);
+                EmployeeId = emp.EmployeeId,
+                Name = emp.Name,
+                Email = emp.Email,
+                Phone = emp.Phone,
+                BirthDate = emp.BirthDate,
+                HireDate = emp.HireDate,
+                Gender = emp.Gender,
+                Status = emp.Status,
+                Address = emp.Address,
+                Note = emp.Note,
+                RoleId = emp.RoleId
+                // ❌ 不帶 Password，避免洩漏
+            };
+
+            ViewBag.RoleList = new SelectList(_context.Roles, "RoleId", "RoleName", emp.RoleId);
+            ViewBag.GenderList = new SelectList(Enum.GetValues(typeof(GenderType)).Cast<GenderType>());
+            ViewBag.StatusList = new SelectList(Enum.GetValues(typeof(EmployeeStatus)).Cast<EmployeeStatus>());
+
+            return View(vm);
         }
 
-        // POST: Employees/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
+
+        // POST: Employees/Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("EmployeeId,RoleId,Name,Password,Email,Phone,BirthDate,HireDate,Status,Note,Gender,Address")] Employee employee)
+        public async Task<IActionResult> Edit(int id, EmployeeEditViewModel vm)
         {
-            if (id != employee.EmployeeId)
+            if (id != vm.EmployeeId) return NotFound();
+
+            if (!ModelState.IsValid)
             {
-                return NotFound();
+                ViewBag.RoleList = new SelectList(_context.Roles, "RoleId", "RoleName", vm.RoleId);
+                ViewBag.GenderList = new SelectList(Enum.GetValues(typeof(GenderType)).Cast<GenderType>());
+                ViewBag.StatusList = new SelectList(Enum.GetValues(typeof(EmployeeStatus)).Cast<EmployeeStatus>());
+                return View(vm);
             }
 
-            if (ModelState.IsValid)
+            var emp = await _context.Employees.FindAsync(id);
+            if (emp == null) return NotFound();
+
+            // 更新欄位
+            emp.Name = vm.Name;
+            emp.Email = vm.Email;
+            emp.Phone = vm.Phone;
+            emp.BirthDate = vm.BirthDate;
+            emp.HireDate = vm.HireDate;
+            emp.Gender = vm.Gender;
+            emp.Status = vm.Status;
+            emp.Address = vm.Address;
+            emp.Note = vm.Note;
+            emp.RoleId = vm.RoleId;
+
+            // ✅ 密碼只有在有輸入時才更新
+            if (!string.IsNullOrWhiteSpace(vm.Password))
             {
-                try
-                {
-                    _context.Update(employee);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!EmployeeExists(employee.EmployeeId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                emp.Password = vm.Password;
             }
-            ViewData["RoleId"] = new SelectList(_context.Roles, "RoleId", "RoleName", employee.RoleId);
-            return View(employee);
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(List));
         }
+
+
 
         // GET: Employees/Delete/5
         public async Task<IActionResult> Delete(int? id)
