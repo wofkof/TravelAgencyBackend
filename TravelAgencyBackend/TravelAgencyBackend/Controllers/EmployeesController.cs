@@ -128,8 +128,6 @@ namespace TravelAgencyBackend.Controllers
             return View(vm);
         }
 
-
-
         // POST: Employees/Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -170,9 +168,7 @@ namespace TravelAgencyBackend.Controllers
             return RedirectToAction(nameof(List));
         }
 
-
-
-        // GET: Employees/Delete/5
+        // GET: Employees/Delete
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -183,32 +179,43 @@ namespace TravelAgencyBackend.Controllers
             var employee = await _context.Employees
                 .Include(e => e.Role)
                 .FirstOrDefaultAsync(m => m.EmployeeId == id);
+
             if (employee == null)
             {
                 return NotFound();
             }
 
-            return View(employee);
+            var viewModel = new EmployeeDeleteViewModel
+            {
+                EmployeeId = employee.EmployeeId,
+                Name = employee.Name,
+                RoleName = employee.Role?.RoleName
+            };
+
+            return View(viewModel);
         }
 
-        // POST: Employees/Delete/5
-        [HttpPost, ActionName("Delete")]
+        // POST: Employees/Delete
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             var employee = await _context.Employees.FindAsync(id);
             if (employee != null)
             {
                 _context.Employees.Remove(employee);
+                await _context.SaveChangesAsync();
             }
 
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(List));
         }
 
-        private bool EmployeeExists(int id)
-        {
-            return _context.Employees.Any(e => e.EmployeeId == id);
-        }
+        /// 檢查指定 ID 的員工是否存在於資料庫中。
+        /// Scaffold 預設產生的方法，未來可用於處理資料庫更新時的併發檢查（例如 Edit 或 Delete 操作）。
+        /// 目前尚未使用，保留以供日後擴充用。
+        //private bool EmployeeExists(int id)
+        //{
+        //    return _context.Employees.Any(e => e.EmployeeId == id);
+        //}
     }
 }
