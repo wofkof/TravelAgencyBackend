@@ -3,6 +3,7 @@ using System.Data;
 
 namespace TravelAgencyBackend.Models
 {
+ 
     public enum EmployeeStatus
     {
         [Display(Name = "正常")]
@@ -14,13 +15,13 @@ namespace TravelAgencyBackend.Models
     public enum GenderType
     {
         [Display(Name = "男性")]
-        Male = 1, 
+        Male = 0, 
 
         [Display(Name = "女性")]
-        Female = 2,
+        Female = 1,
 
         [Display(Name = "其他")]
-        Other = 3 
+        Other = 2 
     }
 
     public class Employee
