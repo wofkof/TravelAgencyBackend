@@ -1,17 +1,23 @@
-﻿@model List<Member>
+﻿@model TravelAgencyBackend.ViewModels.ChatRoomCreateViewModel
 
-<h2>建立新聊天室</h2>
+@{
+    ViewData["Title"] = "建立聊天室";
+}
+
+<h2>建立聊天室</h2>
 
 <form asp-action="Create" method="post">
     <div class="mb-3">
-        <label>選擇要聯繫的會員：</label>
-        <select name="memberId" class="form-select" required>
-            @foreach (var member in Model)
-            {
-                <option value="@member.MemberId">@member.Name (@member.Email)</option>
-            }
+        <label asp-for="MemberId" class="form-label"></label>
+        <select asp-for="MemberId" class="form-select" asp-items="Model.MemberList">
+            <option value="">-- 請選擇會員 --</option>
         </select>
+        <span asp-validation-for="MemberId" class="text-danger"></span>
     </div>
+
     <button type="submit" class="btn btn-primary">建立聊天室</button>
-    <a asp-action="Index" class="btn btn-secondary">返回列表</a>
 </form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

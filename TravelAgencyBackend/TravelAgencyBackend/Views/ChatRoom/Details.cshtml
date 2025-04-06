@@ -1,10 +1,10 @@
-﻿@model TravelAgencyBackend.Models.ChatRoom
+﻿@model TravelAgencyBackend.ViewModels.ChatRoomDetailViewModel
 
 @{
     ViewData["Title"] = "Details";
 }
 
-<h1>與 @Model.Member.Name 的對話</h1>
+<h1>與 @Model.MemberName 的對話</h1>
 
 <div class="mb-3">
     <a asp-action="Index" class="btn btn-secondary">返回聊天室列表</a>
@@ -27,43 +27,47 @@ else
 <hr />
 
 <div id="chatArea" class="border p-3 bg-light mb-4" style="max-height: 400px; overflow-y: auto;">
-    @foreach (var msg in Model.Messages.OrderBy(m => m.SentAt))
+    @foreach (var msg in Model.Messages)
     {
         <div class="mb-2">
-            <strong>@(msg.SenderType == SenderType.Employee ? "員工" : "會員")：</strong>
+            <strong>@(msg.SenderType == "Employee" ? "員工" : "會員")：</strong>
             @msg.Content
             <div class="text-muted" style="font-size: 0.9em;">
-                @msg.SentAt.ToString("yyyy-MM-dd HH-mm")
+                @msg.SentAt
                 @if (!msg.IsRead)
                 {
-                    <span class="badge bg-warning text-dark">
-                        未讀
-                    </span>
+                    <span class="badge bg-warning text-dark">未讀</span>
                 }
             </div>
         </div>
     }
 </div>
+
 <form asp-action="SendMessage" method="post">
-    <input type="hidden" name="ChatRoomId" value="@Model.ChatRoomId">
+    <input name="ChatRoomId" type="hidden" value="@Model.ChatRoomId" />
 
     <div class="mb-3">
-        <textarea name="Content" class="form-control" rows="3" placeholder="輸入內容訊息..." required></textarea>
+        <textarea name="Content" class="form-control" rows="3" required maxlength="500"></textarea>
     </div>
 
     <button type="submit" class="btn btn-primary">送出訊息</button>
 </form>
 
+
 @section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script>
         $(document).ready(function () {
             scrollToBottom();
         });
+
         function scrollToBottom() {
             var chatArea = document.getElementById("chatArea");
             chatArea.scrollTop = chatArea.scrollHeight;
-        };
+        }
+
         function loadMessages() {
             $.get('/ChatRoom/GetMessages', { chatRoomId: @Model.ChatRoomId }, function (data) {
                 let html = '';
