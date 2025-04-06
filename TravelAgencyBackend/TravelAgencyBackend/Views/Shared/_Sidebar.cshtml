@@ -52,6 +52,20 @@
                         </li>
                     </ul>
                 </li>
+                @* 參與人功能 *@
+                <li>
+                    <a href="#">
+                        <i class="metismenu-icon pe-7s-add-user"></i>參與人功能
+                        <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                    </a>
+                    <ul>
+                        <li>
+                            <a asp-controller="Participants" asp-action="Index">
+                                <i class="metismenu-icon"></i>參與人列表
+                            </a>
+                        </li>
+                    </ul>
+                </li>
                 @* 聊天室 *@
                 <li>
                     <a href="#">
@@ -67,11 +81,6 @@
                         <li>
                             <a asp-controller="ChatRoom" asp-action="Create">
                                 <i class="metismenu-icon"></i>新增聊天室
-                            </a>
-                        </li>
-                        <li>
-                            <a asp-controller="MemberChat" asp-action="Index">
-                                <i class="metismenu-icon"></i>會員聊天室
                             </a>
                         </li>
                     </ul>
@@ -157,6 +166,20 @@
                         <li>
                             <a asp-controller="" asp-action="">
                                 <i class="metismenu-icon"></i>查看訂單
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                @* 前端功能 *@
+                <li>
+                    <a href="#">
+                        <i class="metismenu-icon pe-7s-look"></i>前端功能
+                        <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                    </a>
+                    <ul>
+                        <li>
+                            <a asp-controller="MemberChat" asp-action="Index">
+                                <i class="metismenu-icon"></i>會員聊天室
                             </a>
                         </li>
                     </ul>

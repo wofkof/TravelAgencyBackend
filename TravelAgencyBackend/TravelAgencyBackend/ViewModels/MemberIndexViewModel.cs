@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using TravelAgencyBackend.Models;
 
-namespace TravelAgencyBackend.ViewModles
+namespace TravelAgencyBackend.ViewModels
 {
     public class MemberIndexViewModel
     {

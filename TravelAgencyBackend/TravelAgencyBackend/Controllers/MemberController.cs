@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TravelAgencyBackend.Models;
-using TravelAgencyBackend.ViewModles;
+using TravelAgencyBackend.ViewModels;
 using TravelAgencyBackend.Helpers;
 using Microsoft.AspNetCore.OutputCaching;
 
@@ -95,7 +95,7 @@ namespace TravelAgencyBackend.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(Member member)
-        {
+        { 
             if (_context.Members.Any(m => m.Account == member.Account))
             {
                 ModelState.AddModelError("Account", "此帳號已被註冊");
@@ -107,7 +107,7 @@ namespace TravelAgencyBackend.Controllers
             if (_context.Members.Any(m => m.Phone == member.Phone))
             {
                 ModelState.AddModelError("Phone", "此手機已被註冊");
-            }
+            } 
 
             if (ModelState.IsValid)
             {
@@ -136,6 +136,17 @@ namespace TravelAgencyBackend.Controllers
         public IActionResult Edit(int id, Member updatedMember)
         {
             if (id != updatedMember.MemberId) return BadRequest("參數錯誤：id 不一致");
+
+            if (_context.Members.Any(m => m.Account == updatedMember.Account
+            && m.MemberId != updatedMember.MemberId))
+
+            if (_context.Members.Any(m => m.Email == updatedMember.Email 
+            && m.MemberId != updatedMember.MemberId))
+                ModelState.AddModelError("Email", "該信箱已被註冊");
+
+            if (_context.Members.Any(m => m.Phone == updatedMember.Phone 
+            && m.MemberId != updatedMember.MemberId))
+                ModelState.AddModelError("Phone", "該手機號碼已被註冊");
 
             if (ModelState.IsValid)
             {

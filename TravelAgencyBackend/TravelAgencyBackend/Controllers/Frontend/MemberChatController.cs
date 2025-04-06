@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TravelAgencyBackend.Models;
 
-namespace TravelAgencyBackend.Controllers
+namespace TravelAgencyBackend.Controllers.Frontend
 {
     public class MemberChatController : Controller
     {
@@ -38,7 +38,7 @@ namespace TravelAgencyBackend.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult SendMessage(int chatRoomId, string content) 
         {
-            int memberId = 9;
+            int memberId = 1;
 
             var chatRoom = _context.ChatRooms
                 .FirstOrDefault(c => c.ChatRoomId == chatRoomId && c.MemberId == memberId);
@@ -64,7 +64,7 @@ namespace TravelAgencyBackend.Controllers
         // 聊天室列表
         public IActionResult Index()
         {
-            int memberId = 9;
+            int memberId = 1;
 
             var chatRoom = _context.ChatRooms
                 .Include(c => c.Employee)

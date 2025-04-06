@@ -14,6 +14,7 @@ namespace TravelAgencyBackend.Controllers
         {
             _context = context;
         }
+
         //取訊息Json
         [HttpGet]
         public IActionResult GetMessages(int chatRoomId) 
@@ -55,7 +56,7 @@ namespace TravelAgencyBackend.Controllers
         {
             // TODO: 目前登入員工 ID
             int emoployeeId = 1;
-
+            //int.Parse(User.FindFirst("EmployeeId").Value);
             var chatRoom = _context.ChatRooms
                 .FirstOrDefault(c => c.ChatRoomId == ChatRoomId);
             if (chatRoom == null) return NotFound("聊天室已不存在");
@@ -81,7 +82,7 @@ namespace TravelAgencyBackend.Controllers
         {
             // TODO: 目前登入員工 ID
             int emoployeeId = 1;
-
+            //int.Parse(User.FindFirst("EmployeeId").Value);
             var chatRooms = _context.ChatRooms
                 .Where(c => c.EmployeeId == emoployeeId)
                 .Include(c => c.Member)
@@ -135,6 +136,8 @@ namespace TravelAgencyBackend.Controllers
         public IActionResult Create(int memberId)
         {
             int employeeId = 1;
+            //int.Parse(User.FindFirst("EmployeeId").Value);
+
             //檢查是否有聊天室
             var existingChat = _context.ChatRooms
                 .FirstOrDefault(c => c.EmployeeId == employeeId && c.MemberId == memberId);
