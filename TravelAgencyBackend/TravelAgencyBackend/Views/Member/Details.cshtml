@@ -67,6 +67,12 @@
     </dl>
 </div>
 <div>
+    <a asp-controller="Participants" asp-action="Index" asp-route-memberId="@Model.MemberId" class="btn btn-outline-primary">
+        查看參與人
+    </a>
+    <a asp-controller="Participants" asp-action="Create" asp-route-memberId="@Model.MemberId" class="btn btn-primary">
+        新增參與人
+    </a>
     <a asp-action="Edit" asp-route-id="@Model.MemberId" class="btn btn-success">修改</a>
     <a asp-action="Index" class="btn btn-secondary">返回</a>
     <a asp-action="ChangePassword" asp-route-id="@Model.MemberId" class="btn btn-sm btn-danger mt-2">變更密碼</a>

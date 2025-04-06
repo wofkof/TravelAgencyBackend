@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Protocol.Plugins;
 using TravelAgencyBackend.Models;
 
 namespace TravelAgencyBackend.Controllers
@@ -14,18 +15,53 @@ namespace TravelAgencyBackend.Controllers
             _context = context;
         }
 
+        //取訊息Json
+        [HttpGet]
+        public IActionResult GetMessages(int chatRoomId) 
+        {
+            var messages = _context.Messages
+                .Where(m => m.ChatRoomId == chatRoomId)
+                .OrderBy(m => m.SentAt)
+                .Select(m => new 
+                {
+                    sender = m.SenderType.ToString(),
+                    content = m.Content,
+                    sentAt = m.SentAt.ToString("yyyy-MM-dd HH:mm"),
+                    isRead = m.IsRead,
+                })
+                .ToList();
+
+            return Json(messages);
+        }
+
+        // 關閉聊天室
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Close(int id) 
+        {
+            var chatRoom = _context.ChatRooms
+                .FirstOrDefault(c => c.ChatRoomId == id);
+            if (chatRoom == null) return NotFound("聊天室已不存在");
+
+            chatRoom.Status = ChatStatus.Closed;
+            _context.SaveChanges();
+
+            return RedirectToAction("Details", new { id });
+        }
+
+        // 發送訊息
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult SendMessage(int ChatRoomId, string Content) 
         {
             // TODO: 目前登入員工 ID
             int emoployeeId = 1;
-
+            //int.Parse(User.FindFirst("EmployeeId").Value);
             var chatRoom = _context.ChatRooms
                 .FirstOrDefault(c => c.ChatRoomId == ChatRoomId);
             if (chatRoom == null) return NotFound("聊天室已不存在");
 
-            var message = new Message
+            var message = new Models.Message
             {
                 ChatRoomId = ChatRoomId,
                 SenderType = SenderType.Employee,
@@ -41,12 +77,12 @@ namespace TravelAgencyBackend.Controllers
             return RedirectToAction("Details", new { id = ChatRoomId });
         }
 
-        // GET: ChatRoomController
+        //聊天室列表
         public IActionResult Index()
         {
             // TODO: 目前登入員工 ID
             int emoployeeId = 1;
-
+            //int.Parse(User.FindFirst("EmployeeId").Value);
             var chatRooms = _context.ChatRooms
                 .Where(c => c.EmployeeId == emoployeeId)
                 .Include(c => c.Member)
@@ -57,7 +93,7 @@ namespace TravelAgencyBackend.Controllers
             return View(chatRooms);
         }
 
-        // GET: ChatRoomController/Details/5
+        //查看聊天室
         public IActionResult Details(int id)
         {
             var chatRoom = _context.ChatRooms
@@ -84,7 +120,7 @@ namespace TravelAgencyBackend.Controllers
             return View(chatRoom);
         }
 
-        // GET: ChatRoomController/Create
+        // 建立聊天室
         public IActionResult Create()
         {
             var members = _context.Members
@@ -94,19 +130,35 @@ namespace TravelAgencyBackend.Controllers
             return View(members);
         }
 
-        // POST: ChatRoomController/Create
+        // 建立聊天室
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(IFormCollection collection)
+        public IActionResult Create(int memberId)
         {
-            try
+            int employeeId = 1;
+            //int.Parse(User.FindFirst("EmployeeId").Value);
+
+            //檢查是否有聊天室
+            var existingChat = _context.ChatRooms
+                .FirstOrDefault(c => c.EmployeeId == employeeId && c.MemberId == memberId);
+
+            if (existingChat != null) 
             {
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", new { id = existingChat.ChatRoomId });
             }
-            catch
+            //建立新聊天室
+            var newChat = new ChatRoom
             {
-                return View();
-            }
+                EmployeeId = employeeId,
+                MemberId = memberId,
+                CreatedAt = DateTime.Now,
+                Status = ChatStatus.Opened
+            };
+
+            _context.ChatRooms.Add(newChat);
+            _context.SaveChanges();
+
+            return RedirectToAction("Details", new { id = newChat.ChatRoomId });
         }
 
         // GET: ChatRoomController/Edit/5
