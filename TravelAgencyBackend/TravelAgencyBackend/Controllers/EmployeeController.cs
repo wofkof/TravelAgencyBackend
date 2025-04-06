@@ -23,8 +23,11 @@ namespace TravelAgencyBackend.Controllers
         public async Task<IActionResult> List(EmployeeKeyWordViewModel p)
         {
             var query = _context.Employees
-                                .Include(e => e.Role)
-                                .AsQueryable();
+                .Where(e => e.Status != EmployeeStatus.Deleted)
+                .Include(e => e.Role)
+                .AsQueryable();
+
+
 
             if (!string.IsNullOrEmpty(p.txtKeyword))
             {
@@ -57,7 +60,11 @@ namespace TravelAgencyBackend.Controllers
         {
             ViewBag.RoleList = new SelectList(_context.Roles, "RoleId", "RoleName");
             ViewBag.GenderList = new SelectList(Enum.GetValues(typeof(GenderType)));
-            ViewBag.StatusList = new SelectList(Enum.GetValues(typeof(EmployeeStatus)));
+            ViewBag.StatusList = new SelectList(
+            Enum.GetValues(typeof(EmployeeStatus))
+                .Cast<EmployeeStatus>()
+                .Where(s => s != EmployeeStatus.Deleted) // 👈 避免讓人選「刪除」
+            );
 
             var vm = new EmployeeCreateViewModel
             {
@@ -68,13 +75,20 @@ namespace TravelAgencyBackend.Controllers
 
             return View(vm);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(EmployeeCreateViewModel vm)
         {
             ViewBag.RoleList = new SelectList(_context.Roles, "RoleId", "RoleName", vm.RoleId);
             ViewBag.GenderList = new SelectList(Enum.GetValues(typeof(GenderType)));
-            ViewBag.StatusList = new SelectList(Enum.GetValues(typeof(EmployeeStatus)));
+            //ViewBag.StatusList = new SelectList(Enum.GetValues(typeof(EmployeeStatus)));
+            ViewBag.StatusList = new SelectList(
+    Enum.GetValues(typeof(EmployeeStatus))
+        .Cast<EmployeeStatus>()
+        .Where(s => s != EmployeeStatus.Deleted) // 👈 避免讓人選「刪除」
+);
+
 
             if (!ModelState.IsValid)
             {
@@ -126,7 +140,12 @@ namespace TravelAgencyBackend.Controllers
 
             ViewBag.RoleList = new SelectList(_context.Roles, "RoleId", "RoleName", emp.RoleId);
             ViewBag.GenderList = new SelectList(Enum.GetValues(typeof(GenderType)).Cast<GenderType>());
-            ViewBag.StatusList = new SelectList(Enum.GetValues(typeof(EmployeeStatus)).Cast<EmployeeStatus>());
+            ViewBag.StatusList = new SelectList(
+     Enum.GetValues(typeof(EmployeeStatus))
+         .Cast<EmployeeStatus>()
+         .Where(s => s != EmployeeStatus.Deleted) // 👈 避免讓人選「刪除」
+ );
+
 
             return View(vm);
         }
@@ -142,7 +161,12 @@ namespace TravelAgencyBackend.Controllers
             {
                 ViewBag.RoleList = new SelectList(_context.Roles, "RoleId", "RoleName", vm.RoleId);
                 ViewBag.GenderList = new SelectList(Enum.GetValues(typeof(GenderType)).Cast<GenderType>());
-                ViewBag.StatusList = new SelectList(Enum.GetValues(typeof(EmployeeStatus)).Cast<EmployeeStatus>());
+                ViewBag.StatusList = new SelectList(
+                Enum.GetValues(typeof(EmployeeStatus))
+                    .Cast<EmployeeStatus>()
+                    .Where(s => s != EmployeeStatus.Deleted) // 👈 避免讓人選「刪除」
+);
+
                 return View(vm);
             }
 
@@ -170,6 +194,52 @@ namespace TravelAgencyBackend.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(List));
         }
+
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null) return NotFound();
+
+            var emp = await _context.Employees
+                .Include(e => e.Role)
+                .FirstOrDefaultAsync(e => e.EmployeeId == id);
+
+            if (emp == null) return NotFound();
+
+            var vm = new EmployeeDeleteViewModel
+            {
+                EmployeeId = emp.EmployeeId,
+                Name = emp.Name,
+                RoleName = emp.Role.RoleName,
+                Phone = emp.Phone,
+                Email = emp.Email,
+                Note = emp.Note
+            };
+
+            return View(vm);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int EmployeeId)
+        {
+            var emp = await _context.Employees.FindAsync(EmployeeId);
+            if (emp == null) return NotFound();
+
+            // 軟刪除：只更改狀態，不移除資料
+            emp.Status = EmployeeStatus.Deleted;
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(List));
+        }
+
+        /// 檢查指定 ID 的員工是否存在於資料庫中。
+        /// Scaffold 預設產生的方法，未來可用於處理資料庫更新時的併發檢查（例如 Edit 或 Delete 操作）。
+        /// 目前尚未使用，保留以供日後擴充用。
+        //private bool EmployeeExists(int id)
+        //{
+        //    return _context.Employees.Any(e => e.EmployeeId == id);
+        //}
     }
 
 }

@@ -3,14 +3,19 @@ using System.Data;
 
 namespace TravelAgencyBackend.Models
 {
- 
+
     public enum EmployeeStatus
     {
         [Display(Name = "正常")]
-        Active,
+        Active = 0,
+
         [Display(Name = "停權")]
-        Suspended
+        Suspended = 1,
+
+        [Display(Name = "已刪除")]
+        Deleted = 2 // ← 軟刪除專用
     }
+
 
     public enum GenderType
     {
