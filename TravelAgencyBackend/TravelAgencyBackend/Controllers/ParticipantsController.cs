@@ -5,35 +5,32 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using TravelAgencyBackend.Models;
 using TravelAgencyBackend.ViewModels;
+using AutoMapper;
 
 namespace TravelAgencyBackend.Controllers
 {
     public class ParticipantsController : Controller
     {
         private readonly AppDbContext _context;
+        private readonly IMapper _mapper;
 
-        public ParticipantsController(AppDbContext context)
+        public ParticipantsController(AppDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
-        // 參與人列表
         public IActionResult Index(ParticipantIndexViewModel model, int? memberId)
         {
-            var query = _context.Participants
-                .Include(p => p.Member)
-                .AsQueryable();
+            var query = _context.Participants.Include(p => p.Member).AsQueryable();
 
-            // 如果從「會員清單」點進來
             if (memberId.HasValue)
             {
                 model.FilterMemberId = memberId;
             }
 
-            // 搜尋
             if (!string.IsNullOrWhiteSpace(model.SearchText))
             {
                 var keyword = model.SearchText.Trim();
@@ -43,7 +40,6 @@ namespace TravelAgencyBackend.Controllers
                     p.IdNumber.Contains(keyword));
             }
 
-            // 篩選會員
             if (model.FilterMemberId.HasValue)
             {
                 query = query.Where(p => p.MemberId == model.FilterMemberId);
@@ -56,131 +52,109 @@ namespace TravelAgencyBackend.Controllers
             }
 
             model.TotalCount = query.Count();
-            model.Participants = query
-                .Skip((model.Page - 1) * model.PageSize)
-                .Take(model.PageSize)
-                .ToList();
 
-            model.Members = _context.Members.ToList(); // 會員下拉清單
+            model.Participants = _mapper.Map<List<ParticipantListItemViewModel>>(
+                query.Skip((model.Page - 1) * model.PageSize).Take(model.PageSize).ToList()
+            );
 
+            model.Members = _context.Members.ToList();
             return View(model);
         }
 
-
-        // GET: Participants/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var participant = await _context.Participants
-                .Include(p => p.Member)
-                .FirstOrDefaultAsync(m => m.ParticipantId == id);
-            if (participant == null)
-            {
-                return NotFound();
-            }
+            var participant = await _context.Participants.Include(p => p.Member).FirstOrDefaultAsync(p => p.ParticipantId == id);
+            if (participant == null) return NotFound();
 
-            return View(participant);
+            var vm = _mapper.Map<ParticipantDetailViewModel>(participant);
+            return View(vm);
         }
 
         private void SetFormOptions(object? selectedMemberId = null, string? selectedPlace = null)
         {
             ViewBag.Members = new SelectList(_context.Members, "MemberId", "Name", selectedMemberId);
-            ViewBag.IssuedPlaces = new SelectList(new[]
-            {
-                "台北", "台中", "嘉義", "高雄", "花蓮"
-            }, selectedPlace);
+            ViewBag.IssuedPlaces = new SelectList(new[] { "台北", "台中", "嘉義", "高雄", "花蓮" }, selectedPlace);
         }
 
-        // 新增參與人 
         public IActionResult Create(int memberId)
         {
             var member = _context.Members.Find(memberId);
             if (member == null) return NotFound($"找不到 ID 為 {memberId} 的參與人");
-            
-            var model = new Participant
-            {
-                MemberId = memberId
-            };
 
+            var model = new ParticipantCreateViewModel { MemberId = memberId };
             ViewBag.MemberName = member.Name;
             SetFormOptions();
             return View(model);
         }
 
-        // 新增參與人
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Participant participant)
+        public IActionResult Create(ParticipantCreateViewModel vm)
         {
-            // 驗證
-            if (_context.Participants.Any(p => p.IdNumber == participant.IdNumber))
+            if (_context.Participants.Any(p => p.IdNumber == vm.IdNumber))
                 ModelState.AddModelError("IdNumber", "身分證號已存在");
 
-            if (_context.Participants.Any(p => p.Phone == participant.Phone))
+            if (_context.Participants.Any(p => p.Phone == vm.Phone))
                 ModelState.AddModelError("Phone", "手機已存在");
 
-            if (_context.Participants.Any(p => p.PassportNumber == participant.PassportNumber))
+            if (!string.IsNullOrEmpty(vm.PassportNumber) && _context.Participants.Any(p => p.PassportNumber == vm.PassportNumber))
                 ModelState.AddModelError("PassportNumber", "護照號碼已存在");
 
             if (!ModelState.IsValid)
             {
-                SetFormOptions(participant.MemberId, participant.IssuedPlace);
-                return View(participant);
+                SetFormOptions(vm.MemberId, vm.IssuedPlace);
+                return View(vm);
             }
 
+            var participant = _mapper.Map<Participant>(vm);
             _context.Participants.Add(participant);
             _context.SaveChanges();
-            return RedirectToAction(nameof(Index), new { memberId = participant.MemberId });
 
+            return RedirectToAction(nameof(Index), new { memberId = vm.MemberId });
         }
 
-        // GET: Participants/Edit/5
         public IActionResult Edit(int id)
         {
-            var participant = _context.Participants
-                .Include(p => p.Member)
-                .FirstOrDefault(p => p.ParticipantId == id);
+            var participant = _context.Participants.Include(p => p.Member).FirstOrDefault(p => p.ParticipantId == id);
+            if (participant == null) return NotFound($"找不到 ID 為 {id} 的參與人");
 
-            if (participant == null)
-                return NotFound($"找不到 ID 為 {id} 的參與人");
-
+            var vm = _mapper.Map<ParticipantEditViewModel>(participant);
             ViewBag.MemberName = participant.Member.Name;
-            return View(participant);
+            SetFormOptions(participant.MemberId, participant.IssuedPlace);
+            return View(vm);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, Participant participant)
+        public IActionResult Edit(int id, ParticipantEditViewModel vm)
         {
-            if (id != participant.ParticipantId) return NotFound($"找不到 ID 為 {id} 的參與人");
+            if (id != vm.ParticipantId) return NotFound($"找不到 ID 為 {id} 的參與人");
 
-            if (_context.Participants.Any(p => p.IdNumber == participant.IdNumber
-            && p.ParticipantId != participant.ParticipantId))
+            if (_context.Participants.Any(p => p.IdNumber == vm.IdNumber && p.ParticipantId != vm.ParticipantId))
                 ModelState.AddModelError("IdNumber", "身分證號已存在");
 
-            if (_context.Participants.Any(p => p.Phone == participant.Phone
-            && p.ParticipantId != participant.ParticipantId))
+            if (_context.Participants.Any(p => p.Phone == vm.Phone && p.ParticipantId != vm.ParticipantId))
                 ModelState.AddModelError("Phone", "手機已存在");
 
-            if (_context.Participants.Any(p => p.PassportNumber == participant.PassportNumber
-            && p.ParticipantId != participant.ParticipantId))
+            if (!string.IsNullOrEmpty(vm.PassportNumber) && _context.Participants.Any(p => p.PassportNumber == vm.PassportNumber && p.ParticipantId != vm.ParticipantId))
                 ModelState.AddModelError("PassportNumber", "護照號碼已存在");
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                _context.Update(participant);
-                _context.SaveChanges();
-                return RedirectToAction(nameof(Index), new { memberId = participant.MemberId });
+                SetFormOptions(vm.MemberId, vm.IssuedPlace);
+                return View(vm);
             }
 
-            return View(participant);
+            var participant = _context.Participants.Find(id);
+            if (participant == null) return NotFound();
+
+            _mapper.Map(vm, participant);
+            _context.SaveChanges();
+            return RedirectToAction(nameof(Index), new { memberId = vm.MemberId });
         }
 
-        // POST: Participants/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Delete(int id)
@@ -189,11 +163,10 @@ namespace TravelAgencyBackend.Controllers
             if (participant == null) return NotFound($"找不到 ID 為 {id} 的參與人");
 
             int memberId = participant.MemberId;
-
             _context.Participants.Remove(participant);
             _context.SaveChanges();
 
-            return RedirectToAction(nameof(Index), new { memberId = memberId }); 
+            return RedirectToAction(nameof(Index), new { memberId = memberId });
         }
     }
 }

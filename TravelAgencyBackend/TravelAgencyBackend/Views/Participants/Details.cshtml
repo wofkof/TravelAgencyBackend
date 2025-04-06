@@ -1,4 +1,4 @@
-﻿@model TravelAgencyBackend.Models.Participant
+﻿@model TravelAgencyBackend.ViewModels.ParticipantDetailViewModel
 
 @{
     ViewData["Title"] = "Details";
@@ -14,7 +14,7 @@
             會員姓名
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Member.Name)
+            @Html.DisplayFor(model => model.MemberName)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Name)
@@ -35,24 +35,6 @@
             @Html.DisplayFor(model => model.IdNumber)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Gender)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Gender)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.BirthDate)
-        </dt>
-        <dd class = "col-sm-10">
-			@(Model.BirthDate.HasValue ? Model.BirthDate.Value.ToString("yyyy/MM/dd") : "尚未填寫")
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.EnglishName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.EnglishName)
-        </dd>
-        <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.PassportNumber)
         </dt>
         <dd class = "col-sm-10">
@@ -63,12 +45,6 @@
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.IssuedPlace)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PassportIssueDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @(Model.PassportIssueDate.HasValue ? Model.PassportIssueDate.Value.ToString("yyyy/MM/dd") : "尚未填寫")
         </dd>
     </dl>
 </div>

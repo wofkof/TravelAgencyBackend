@@ -1,4 +1,4 @@
-﻿@model TravelAgencyBackend.Models.Member
+﻿@model TravelAgencyBackend.ViewModels.MemberEditViewModel
 
 @{
     ViewData["Title"] = "編輯會員";
@@ -14,9 +14,7 @@
             @Html.AntiForgeryToken()
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="MemberId" />
-            <input type="hidden" asp-for="Account" />
-            <input type="hidden" asp-for="Password" />
-                
+
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
