@@ -52,8 +52,8 @@
                     <td>@Html.DisplayFor(modelItem => item.Status)</td>
                     <td>@Html.DisplayFor(modelItem => item.Note)</td>
                     <td>
-                        @Html.ActionLink("修改", "Edit", "Employees", new { id = item.EmployeeId }, null) |
-                        @Html.ActionLink("刪除", "Delete", "Employees", new { id = item.EmployeeId }, new { onclick = "return confirm('確定要刪除嗎?')" })
+                        @Html.ActionLink("修改", "Edit", "Employee", new { id = item.EmployeeId }, null) |
+                        @Html.ActionLink("刪除", "Delete", "Employee", new { id = item.EmployeeId }, new { onclick = "return confirm('確定要刪除嗎?')" })
                     </td>
                 </tr>
             }

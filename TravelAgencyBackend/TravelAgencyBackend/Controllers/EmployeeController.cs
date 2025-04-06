@@ -101,6 +101,75 @@ namespace TravelAgencyBackend.Controllers
             return RedirectToAction(nameof(List));
         }
 
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null) return NotFound();
+
+            var emp = await _context.Employees.FindAsync(id);
+            if (emp == null) return NotFound();
+
+            var vm = new EmployeeEditViewModel
+            {
+                EmployeeId = emp.EmployeeId,
+                Name = emp.Name,
+                Email = emp.Email,
+                Phone = emp.Phone,
+                BirthDate = emp.BirthDate,
+                HireDate = emp.HireDate,
+                Gender = emp.Gender,
+                Status = emp.Status,
+                Address = emp.Address,
+                Note = emp.Note,
+                RoleId = emp.RoleId
+                // ❌ 不帶 Password，避免洩漏
+            };
+
+            ViewBag.RoleList = new SelectList(_context.Roles, "RoleId", "RoleName", emp.RoleId);
+            ViewBag.GenderList = new SelectList(Enum.GetValues(typeof(GenderType)).Cast<GenderType>());
+            ViewBag.StatusList = new SelectList(Enum.GetValues(typeof(EmployeeStatus)).Cast<EmployeeStatus>());
+
+            return View(vm);
+        }
+
+        // POST: Employees/Edit
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, EmployeeEditViewModel vm)
+        {
+            if (id != vm.EmployeeId) return NotFound();
+
+            if (!ModelState.IsValid)
+            {
+                ViewBag.RoleList = new SelectList(_context.Roles, "RoleId", "RoleName", vm.RoleId);
+                ViewBag.GenderList = new SelectList(Enum.GetValues(typeof(GenderType)).Cast<GenderType>());
+                ViewBag.StatusList = new SelectList(Enum.GetValues(typeof(EmployeeStatus)).Cast<EmployeeStatus>());
+                return View(vm);
+            }
+
+            var emp = await _context.Employees.FindAsync(id);
+            if (emp == null) return NotFound();
+
+            // 更新欄位
+            emp.Name = vm.Name;
+            emp.Email = vm.Email;
+            emp.Phone = vm.Phone;
+            emp.BirthDate = vm.BirthDate;
+            emp.HireDate = vm.HireDate;
+            emp.Gender = vm.Gender;
+            emp.Status = vm.Status;
+            emp.Address = vm.Address;
+            emp.Note = vm.Note;
+            emp.RoleId = vm.RoleId;
+
+            // ✅ 密碼只有在有輸入時才更新
+            if (!string.IsNullOrWhiteSpace(vm.Password))
+            {
+                emp.Password = vm.Password;
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(List));
+        }
     }
 
 }
