@@ -21,7 +21,7 @@ namespace TravelAgencyBackend.Controllers
         // GET: TravelSuppliers
         public async Task<IActionResult> Index()
         {
-            return View(await _context.TravelSuppliers.ToListAsync());
+            return View(_context.TravelSuppliers);
         }
 
         // GET: TravelSuppliers/Details/5
@@ -61,6 +61,7 @@ namespace TravelAgencyBackend.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
             return View(travelSupplier);
         }
 

@@ -22,7 +22,7 @@ namespace TravelAgencyBackend.Controllers
         public async Task<IActionResult> Index()
         {
             var appDbContext = _context.OfficialTravelSchedules.Include(o => o.OfficialTravelDetail);
-            return View(await appDbContext.ToListAsync());
+            return View(appDbContext);
         }
 
         // GET: OfficialTravelSchedules/Details/5

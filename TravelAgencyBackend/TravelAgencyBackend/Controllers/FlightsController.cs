@@ -21,7 +21,7 @@ namespace TravelAgencyBackend.Controllers
         // GET: Flights
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Flights.ToListAsync());
+            return View(_context.Flights);
         }
 
         // GET: Flights/Details/5
