@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -48,8 +50,9 @@ namespace TravelAgencyBackend.Controllers
         // GET: OfficialTravels/Create
         public IActionResult Create()
         {
-            ViewData["CreatedByEmployeeName"] = new SelectList(_context.Employees, "EmpolyeeId", "Email");
-            ViewData["RegionName"] = new SelectList(_context.Regions, "RegionId", "Country "+"Name");
+            ViewData["CreatedByEmployeeName"] = new SelectList(_context.Employees, "EmployeeId", "Name");
+            ViewData["RegionName"] = new SelectList(_context.Regions, "RegionId", "Country");
+            ViewData["TravelStatusList"] = GetTravelStatusSelectList();
             return View();
         }
 
@@ -66,8 +69,9 @@ namespace TravelAgencyBackend.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CreatedByEmployeeId"] = new SelectList(_context.Employees, "EmployeeId", "Email", officialTravel.CreatedByEmployeeId);
-            ViewData["RegionId"] = new SelectList(_context.Regions, "RegionId", "Country", officialTravel.RegionId);
+            ViewData["CreatedByEmployeeName"] = new SelectList(_context.Employees, "EmployeeId", "Name", officialTravel.CreatedByEmployeeId);
+            ViewData["RegionName"] = new SelectList(_context.Regions, "RegionId", "Country", officialTravel.RegionId);
+            ViewData["TravelStatusList"] = GetTravelStatusSelectList();
             return View(officialTravel);
         }
 
@@ -86,6 +90,7 @@ namespace TravelAgencyBackend.Controllers
             }
             ViewData["CreatedByEmployeeName"] = new SelectList(_context.Employees, "EmployeeId", "Name", officialTravel.CreatedByEmployeeId);
             ViewData["RegionName"] = new SelectList(_context.Regions, "RegionId", "Country", officialTravel.RegionId);
+            ViewData["TravelStatusList"] = GetTravelStatusSelectList();
             return View(officialTravel);
         }
 
@@ -123,6 +128,7 @@ namespace TravelAgencyBackend.Controllers
             }
             ViewData["CreatedByEmployeeName"] = new SelectList(_context.Employees, "EmployeeId", "Name", officialTravel.CreatedByEmployeeId);
             ViewData["RegionName"] = new SelectList(_context.Regions, "RegionId", "Country", officialTravel.RegionId);
+            ViewData["TravelStatusList"] = GetTravelStatusSelectList();
             return View(officialTravel);
         }
 
@@ -164,6 +170,20 @@ namespace TravelAgencyBackend.Controllers
         private bool OfficialTravelExists(int id)
         {
             return _context.OfficialTravels.Any(e => e.OfficialTravelId == id);
+        }
+
+        private IEnumerable<SelectListItem> GetTravelStatusSelectList()
+        {
+            return Enum.GetValues(typeof(TravelStatus))
+                .Cast<TravelStatus>()
+                .Select(e => new SelectListItem
+                {
+                    Value = e.ToString(),
+                    Text = e.GetType()
+                            .GetMember(e.ToString())
+                            .First()
+                            .GetCustomAttribute<DisplayAttribute>()?.Name ?? e.ToString()
+                });
         }
     }
 }
