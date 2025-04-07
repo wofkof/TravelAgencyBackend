@@ -17,20 +17,21 @@
                     </a>
                     <ul>
                         <li>
-                            <a asp-controller="" asp-action="">
+                            <a asp-controller="Employee" asp-action="List">
                                 <i class="metismenu-icon"></i>員工列表
                             </a>
                         </li>
+                        
                         <li>
-                            <a asp-controller="" asp-action="">
-                                <i class="metismenu-icon"></i>角色權限
-                            </a>
-                        </li>
-                        <li>
-                            <a asp-controller="" asp-action="">
+                            <a asp-controller="Employee" asp-action="Create">
                                 <i class="metismenu-icon"></i>新增員工
                             </a>
                         </li> 
+                        @* <li> *@
+                        @*     <a asp-controller="Employee" asp-action="Edit"> *@
+                        @*         <i class="metismenu-icon"></i>員工權限 *@
+                        @*     </a> *@
+                        @* </li> *@
                     </ul>
                 </li>
                 @* 會員 *@
@@ -93,13 +94,13 @@
                     </a>
                     <ul>
                         <li>
-                            <a asp-controller="" asp-action="">
+                            <a asp-controller="Announcement" asp-action="List">
                                 <i class="metismenu-icon"></i>查看公告
                             </a>
                         </li>
                         <li>
-                            <a asp-controller="" asp-action="">
-                                <i class="metismenu-icon"></i>發表
+                            <a asp-controller="Announcement" asp-action="Create">
+                                <i class="metismenu-icon"></i>新增公告
                             </a>
                         </li>
                     </ul>

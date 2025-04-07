@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TravelAgencyBackend.Models;
 using TravelAgencyBackend.ViewModels.Employee;
+using TravelAgencyBackend.ViewModles.Employee;
 
 namespace TravelAgencyBackend.Controllers
 {
@@ -19,15 +20,13 @@ namespace TravelAgencyBackend.Controllers
             _context = context;
         }
 
-        // GET: Employees
+        //GET: Employees
         public async Task<IActionResult> List(EmployeeKeyWordViewModel p)
         {
             var query = _context.Employees
                 .Where(e => e.Status != EmployeeStatus.Deleted)
                 .Include(e => e.Role)
                 .AsQueryable();
-
-
 
             if (!string.IsNullOrEmpty(p.txtKeyword))
             {
@@ -56,6 +55,62 @@ namespace TravelAgencyBackend.Controllers
 
             return View(result);
         }
+
+        //分頁版
+        //public async Task<IActionResult> List(string? searchText, EmployeeStatus? filterStatus, int page = 1, int pageSize = 10)
+        //{
+        //    var query = _context.Employees.AsQueryable();
+
+        //    // 搜尋姓名、電話、信箱
+        //    if (!string.IsNullOrWhiteSpace(searchText))
+        //    {
+        //        query = query.Where(e =>
+        //            e.Name.Contains(searchText) ||
+        //            e.Phone.Contains(searchText) ||
+        //            e.Email.Contains(searchText));
+        //    }
+
+        //    // 狀態篩選
+        //    if (filterStatus.HasValue)
+        //    {
+        //        query = query.Where(e => e.Status == filterStatus.Value);
+        //    }
+
+        //    int totalCount = await query.CountAsync();
+
+        //    var employees = await query
+        //        .OrderBy(e => e.EmployeeId)
+        //        .Skip((page - 1) * pageSize)
+        //        .Take(pageSize)
+        //        .Select(e => new EmployeeListViewModel
+        //        {
+        //            EmployeeId = e.EmployeeId,
+        //            Name = e.Name,
+        //            Gender = e.Gender,
+        //            BirthDate = e.BirthDate,
+        //            Phone = e.Phone,
+        //            Email = e.Email,
+        //            Address = e.Address,
+        //            HireDate = e.HireDate,
+        //            Status = e.Status,
+        //            Note = e.Note
+        //        })
+        //        .ToListAsync();
+
+        //    var viewModel = new EmployeeIndexViewModel
+        //    {
+        //        SearchText = searchText,
+        //        FilterStatus = filterStatus,
+        //        Page = page,
+        //        PageSize = pageSize,
+        //        TotalCount = totalCount,
+        //        Employees = employees
+        //    };
+
+        //    return View(viewModel);
+        //}
+
+
         public IActionResult Create()
         {
             ViewBag.RoleList = new SelectList(_context.Roles, "RoleId", "RoleName");
