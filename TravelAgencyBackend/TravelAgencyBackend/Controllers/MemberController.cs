@@ -4,6 +4,7 @@ using TravelAgencyBackend.Models;
 using TravelAgencyBackend.ViewModels;
 using TravelAgencyBackend.Helpers;
 using AutoMapper;
+using TravelAgencyBackend.ViewComponent;
 
 namespace TravelAgencyBackend.Controllers
 {
@@ -11,11 +12,14 @@ namespace TravelAgencyBackend.Controllers
     {
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
+        private readonly PermissionCheckService _perm;
 
-        public MemberController(AppDbContext context, IMapper mapper)
+
+        public MemberController(AppDbContext context, IMapper mapper, PermissionCheckService perm)
         {
             _context = context;
             _mapper = mapper;
+            _perm = perm;
         }
 
         // ✅ 修改密碼（GET）
@@ -54,6 +58,7 @@ namespace TravelAgencyBackend.Controllers
         // ✅ Index（含搜尋與分頁）
         public IActionResult Index(MemberIndexViewModel model)
         {
+            if (!_perm.HasPermission("管理會員")) return Forbid("您沒管理會員的權限");
             string keyword = model.SearchText?.Trim() ?? "";
 
             var query = _context.Members.AsNoTracking()

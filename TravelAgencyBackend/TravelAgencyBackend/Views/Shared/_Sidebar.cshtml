@@ -1,4 +1,8 @@
-﻿<div class="app-sidebar sidebar-shadow">
+﻿@using TravelAgencyBackend.ViewComponent
+@inject PermissionCheckService PermissionChecker
+
+
+<div class="app-sidebar sidebar-shadow">
     <div class="scrollbar-sidebar">
         <div class="app-sidebar__inner">
             <ul class="vertical-nav-menu">
@@ -22,8 +26,13 @@
                             </a>
                         </li>
                         <li>
-                            <a asp-controller="" asp-action="">
-                                <i class="metismenu-icon"></i>角色權限
+                            <a asp-controller="Role" asp-action="Index">
+                                <i class="metismenu-icon"></i>角色
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-controller="Permission" asp-action="Index">
+                                <i class="metismenu-icon"></i>權限
                             </a>
                         </li>
                         <li>
@@ -41,9 +50,12 @@
                     </a>
                     <ul>
                         <li>
-                            <a asp-controller="Member" asp-action="Index">
-                                <i class="metismenu-icon"></i>會員列表
-                            </a>
+                            @if (PermissionChecker.HasPermission("管理會員"))
+                            {
+                                <a asp-controller="Member" asp-action="Index">
+                                    <i class="metismenu-icon"></i>會員列表
+                                </a>
+                            }
                         </li>
                         <li>
                             <a asp-controller="Member" asp-action="Create">
