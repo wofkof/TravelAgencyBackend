@@ -1,0 +1,85 @@
+﻿@model TravelAgencyBackend.ViewModels.MemberDetailViewModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>會員資料</h1>
+
+<div>
+    <h4>會員</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.MemberId)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.MemberId)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Account)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Account)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Phone)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Phone)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.CreatedAt)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.CreatedAt)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.UpdatedAt)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.UpdatedAt)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Status)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Status)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Note)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Note)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-controller="Participants" asp-action="Index" asp-route-memberId="@Model.MemberId" class="btn btn-outline-primary">
+        查看參與人
+    </a>
+    <a asp-controller="Participants" asp-action="Create" asp-route-memberId="@Model.MemberId" class="btn btn-primary">
+        新增參與人
+    </a>
+    <a asp-action="Edit" asp-route-id="@Model.MemberId" class="btn btn-success">修改</a>
+    <a asp-action="Index" class="btn btn-secondary">返回</a>
+    <a asp-action="ChangePassword" asp-route-id="@Model.MemberId" class="btn btn-sm btn-danger mt-2">變更密碼</a>
+    <hr>
+    <form asp-action="Delete" asp-route-id="@Model.MemberId" method="post" onsubmit="return confirm('確定要刪除嗎？')">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="MemberId" />
+        <button type="submit" class="btn btn-danger">確認刪除</button>
+    </form>
+</div>

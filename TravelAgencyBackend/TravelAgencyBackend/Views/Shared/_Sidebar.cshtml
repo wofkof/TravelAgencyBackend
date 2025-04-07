@@ -1,0 +1,190 @@
+﻿<div class="app-sidebar sidebar-shadow">
+    <div class="scrollbar-sidebar">
+        <div class="app-sidebar__inner">
+            <ul class="vertical-nav-menu">
+                <li class="app-sidebar__heading">功能選單</li>
+                @* 首頁 *@
+                <li>
+                    <a asp-controller="Home" asp-action="Index">
+                        <i class="metismenu-icon pe-7s-home"></i>首頁
+                    </a>
+                </li>
+                @* 員工 *@
+                <li>
+                    <a href="#">
+                        <i class="metismenu-icon pe-7s-id"></i>員工功能
+                        <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                    </a>
+                    <ul>
+                        <li>
+                            <a asp-controller="" asp-action="">
+                                <i class="metismenu-icon"></i>員工列表
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-controller="" asp-action="">
+                                <i class="metismenu-icon"></i>角色權限
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-controller="" asp-action="">
+                                <i class="metismenu-icon"></i>新增會員
+                            </a>
+                        </li> 
+                    </ul>
+                </li>
+                @* 會員 *@
+                <li>
+                    <a href="#">
+                        <i class="metismenu-icon pe-7s-users"></i>會員功能
+                        <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                    </a>
+                    <ul>
+                        <li>
+                            <a asp-controller="Member" asp-action="Index">
+                                <i class="metismenu-icon"></i>會員列表
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-controller="Member" asp-action="Create">
+                                <i class="metismenu-icon"></i>新增會員
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                @* 參與人功能 *@
+                <li>
+                    <a href="#">
+                        <i class="metismenu-icon pe-7s-add-user"></i>參與人功能
+                        <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                    </a>
+                    <ul>
+                        <li>
+                            <a asp-controller="Participants" asp-action="Index">
+                                <i class="metismenu-icon"></i>參與人列表
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                @* 聊天室 *@
+                <li>
+                    <a href="#">
+                        <i class="metismenu-icon  pe-7s-comment"></i>聊天室
+                        <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                    </a>
+                    <ul>
+                        <li>
+                            <a asp-controller="ChatRoom" asp-action="Index">
+                                <i class="metismenu-icon"></i>聊天室列表
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-controller="ChatRoom" asp-action="Create">
+                                <i class="metismenu-icon"></i>新增聊天室
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                @* 購物車 *@
+                <li>
+                    <a href="#">
+                        <i class="metismenu-icon pe-7s-cart"></i>購物車
+                        <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                    </a>
+                    <ul>
+                        <li>
+                            <a asp-controller="" asp-action="">
+                                <i class="metismenu-icon"></i>檢視購物車
+                            </a> 
+                        </li>
+                    </ul>
+                </li>
+                @* 公告 *@
+                <li>
+                    <a href="#">
+                        <i class="metismenu-icon pe-7s-news-paper"></i>公告
+                        <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                    </a>
+                    <ul>
+                        <li>
+                            <a asp-controller="" asp-action="">
+                                <i class="metismenu-icon"></i>查看公告
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-controller="" asp-action="">
+                                <i class="metismenu-icon"></i>發表
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                @* 官方行程 *@
+                <li>
+                    <a href="#">
+                        <i class="metismenu-icon pe-7s-global"></i>官方行程
+                        <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                    </a>
+                    <ul>
+                        <li>
+                            <a asp-controller="" asp-action="">
+                                <i class="metismenu-icon"></i>查看官方行程
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-controller="" asp-action="">
+                                <i class="metismenu-icon"></i>新增官方行程
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                @* 自訂行程 *@
+                <li>
+                    <a href="#">
+                        <i class="metismenu-icon pe-7s-map"></i>自訂行程
+                        <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                    </a>
+                    <ul>
+                        <li>
+                            <a asp-controller="" asp-action="">
+                                <i class="metismenu-icon"></i>查看自訂行程
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-controller="" asp-action=""> 
+                                <i class="metismenu-icon"></i>新增自訂行程
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                @* 訂單 *@
+                <li>
+                    <a href="#">
+                        <i class="metismenu-icon pe-7s-note2"></i>訂單
+                        <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                    </a>
+                    <ul>
+                        <li>
+                            <a asp-controller="" asp-action="">
+                                <i class="metismenu-icon"></i>查看訂單
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                @* 前端功能 *@
+                <li>
+                    <a href="#">
+                        <i class="metismenu-icon pe-7s-look"></i>前端功能
+                        <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                    </a>
+                    <ul>
+                        <li>
+                            <a asp-controller="MemberChat" asp-action="Index">
+                                <i class="metismenu-icon"></i>會員聊天室
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

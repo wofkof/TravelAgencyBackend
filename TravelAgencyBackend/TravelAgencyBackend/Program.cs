@@ -1,10 +1,14 @@
 using Microsoft.EntityFrameworkCore;
 using TravelAgencyBackend.Models;
+using TravelAgencyBackend.ViewComponent;
 
 var builder = WebApplication.CreateBuilder(args);
 
 //¨Ì¿àª`¤J
 builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<DashboardService>();
+builder.Services.AddAutoMapper(typeof(Program));
+
 builder.Services.AddDbContext<AppDbContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 //----------------------------------------------
