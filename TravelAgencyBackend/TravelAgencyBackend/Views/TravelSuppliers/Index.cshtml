@@ -13,6 +13,9 @@
     <thead>
         <tr>
             <th>
+
+            </th>
+            <th>
                 供應商名稱
             </th>
             <th>
@@ -34,8 +37,15 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+
+ @{
+    int count=0;
+    foreach (var item in Model) {
+    count++;
         <tr>
+            <td>
+                @count
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.SupplierName)
             </td>
@@ -60,6 +70,7 @@
                 <a asp-action="Delete" asp-route-id="@item.TravelSupplierId">Delete</a>
             </td>
         </tr>
+}
 }
     </tbody>
 </table>
