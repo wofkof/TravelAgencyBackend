@@ -1,0 +1,73 @@
+﻿@model TravelAgencyBackend.ViewModels.CustomTravelPendingViewModel
+
+@{
+    ViewData["Title"] = "ContentList";
+}
+
+<h1>ContentList</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Content.First().ContentId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Content.First().CustomTravelId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Content.First().ItemId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Content.First().Category)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Content.First().Day)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Content.First().Time)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Content.First().HotelName)
+            </th>
+            <th>修改</th>
+            <th>刪除</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Content) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ContentId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CustomTravelId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ItemId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Category)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Day)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Time)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.HotelName)
+            </td>
+                <td>
+                    @Html.ActionLink("修改", "EditContent", "CustomTravelPending", new { id = item.CustomTravelId }, null)
+                </td>
+                <td>
+                    @Html.ActionLink("刪除", "DeleteContent", "CustomTravelPending", new { id = item.CustomTravelId }, new { onclick = "return confirm('確定要刪除嗎?')" })
+                </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -1,0 +1,330 @@
+﻿@model TravelAgencyBackend.ViewModels.CustomTravelProductsViewModel
+@{
+    ViewData["Title"] = "List";
+}
+
+<h1>List</h1>
+
+<p>
+    @using (Html.BeginForm())
+    {
+        <div>縣市關鍵字：@Html.TextBox("txtKeyword") <input type="submit" value="搜尋" /></div>
+    }
+
+</p>
+<h2>縣市管理</h2>
+<p>
+    <a asp-action="CreateCity">新增縣市</a>
+</p>
+<p>
+    <table class="table table-striped table-hover">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.City.First().CityId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.City.First().CityName)
+            </th>
+            <th>修改</th>
+            <th>刪除</th>
+        </tr>
+        <tbody>
+            @{
+                foreach (var item in Model.City)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CityId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CityName)
+                        </td>                      
+                        <td>
+                            @Html.ActionLink("修改", "EditCity", "CustomTravelProducts", new { id = item.CityId }, null)
+                        </td>
+                        <td>
+                            @Html.ActionLink("刪除", "DeleteCity", "CustomTravelProducts", new { id = item.CityId }, new { onclick = "return confirm('確定要刪除嗎?')" })
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</p>
+
+<p>
+    @using (Html.BeginForm())
+    {
+        <div>區關鍵字：@Html.TextBox("txtKeyword") <input type="submit" value="搜尋" /></div>
+    }
+
+</p>
+<h2>區管理</h2>
+<p>
+    <a asp-action="CreateDistrict">新增區</a>
+</p>
+<p>
+    <table class="table table-striped table-hover">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.District.First().DistrictId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.District.First().CityId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.District.First().DistrictName)
+            </th>
+            <th>修改</th>
+            <th>刪除</th>
+        </tr>
+        <tbody>
+            @{
+                foreach (var item in Model.District)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DistrictId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CityId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DistrictName)
+                        </td>
+                        <td>
+                            @Html.ActionLink("修改", "EditDistrict", "CustomTravelProducts", new { id = item.DistrictId }, null)
+                        </td>
+                        <td>
+                            @Html.ActionLink("刪除", "DeleteDistrict", "CustomTravelProducts", new { id = item.DistrictId }, new { onclick = "return confirm('確定要刪除嗎?')" })
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</p>
+
+<p>
+    @using (Html.BeginForm())
+    {
+        <div>景點關鍵字：@Html.TextBox("txtKeyword") <input type="submit" value="搜尋" /></div>
+    }
+
+</p>
+<h2>景點管理</h2>
+<p>
+    <a asp-action="CreateAttraction">新增景點</a>
+</p>
+<p>
+    <table class="table table-striped table-hover">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Attraction.First().AttractionId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Attraction.First().DistrictId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Attraction.First().TravelSupplierId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Attraction.First().ScenicSpotName)
+            </th>
+            <th>修改</th>
+            <th>刪除</th>
+        </tr>
+        <tbody>
+            @{
+                foreach (var item in Model.Attraction)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.AttractionId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DistrictId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TravelSupplierId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ScenicSpotName)
+                        </td>
+                        <td>
+                            @Html.ActionLink("修改", "EditAttraction", "CustomTravelProducts", new { id = item.AttractionId }, null)
+                        </td>
+                        <td>
+                            @Html.ActionLink("刪除", "DeleteAttraction", "CustomTravelProducts", new { id = item.AttractionId }, new { onclick = "return confirm('確定要刪除嗎?')" })
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</p>
+
+<p>
+    @using (Html.BeginForm())
+    {
+        <div>餐廳關鍵字：@Html.TextBox("txtKeyword") <input type="submit" value="搜尋" /></div>
+    }
+
+</p>
+<h2>餐廳管理</h2>
+<p>
+    <a asp-action="CreateRestaurant">新增餐廳</a>
+</p>
+<p>
+    <table class="table table-striped table-hover">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Restaurant.First().RestaurantId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Restaurant.First().DistrictId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Restaurant.First().TravelSupplierId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Restaurant.First().RestaurantName)
+            </th>
+            <th>修改</th>
+            <th>刪除</th>
+        </tr>
+        <tbody>
+            @{
+                foreach (var item in Model.Restaurant)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.RestaurantId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DistrictId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TravelSupplierId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.RestaurantName)
+                        </td>
+                        <td>
+                            @Html.ActionLink("修改", "EditRestaurant", "CustomTravelProducts", new { id = item.RestaurantId }, null)
+                        </td>
+                        <td>
+                            @Html.ActionLink("刪除", "DeleteRestaurant", "CustomTravelProducts", new { id = item.RestaurantId }, new { onclick = "return confirm('確定要刪除嗎?')" })
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</p>
+
+<p>
+    @using (Html.BeginForm())
+    {
+        <div>住宿關鍵字：@Html.TextBox("txtKeyword") <input type="submit" value="搜尋" /></div>
+    }
+
+</p>
+<h2>住宿管理</h2>
+<p>
+    <a asp-action="CreateHotel">新增住宿</a>
+</p>
+<p>
+    <table class="table table-striped table-hover">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Hotel.First().HotelId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Hotel.First().DistrictId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Hotel.First().TravelSupplierId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Hotel.First().HotelName)
+            </th>
+            <th>修改</th>
+            <th>刪除</th>
+        </tr>
+        <tbody>
+            @{
+                foreach (var item in Model.Hotel)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.HotelId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DistrictId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TravelSupplierId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.HotelName)
+                        </td>
+                        <td>
+                            @Html.ActionLink("修改", "EditHotel", "CustomTravelProducts", new { id = item.HotelId }, null)
+                        </td>
+                        <td>
+                            @Html.ActionLink("刪除", "DeleteHotel", "CustomTravelProducts", new { id = item.HotelId }, new { onclick = "return confirm('確定要刪除嗎?')" })
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</p>
+
+<p>
+    @using (Html.BeginForm())
+    {
+        <div>交通方式關鍵字：@Html.TextBox("txtKeyword") <input type="submit" value="搜尋" /></div>
+    }
+
+</p>
+<h2>交通方式管理</h2>
+<p>
+    <a asp-action="CreateTransportation">新增交通方式</a>
+</p>
+<p>
+    <table class="table table-striped table-hover">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Transportation.First().TransportId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Transportation.First().TransportMethod)
+            </th>            
+            <th>修改</th>
+            <th>刪除</th>
+        </tr>
+        <tbody>
+            @{
+                foreach (var item in Model.Transportation)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TransportId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TransportMethod)
+                        </td>
+                        <td>
+                            @Html.ActionLink("修改", "EditTransportation", "CustomTravelProducts", new { id = item.TransportId }, null)
+                        </td>
+                        <td>
+                            @Html.ActionLink("刪除", "DeleteTransportation", "CustomTravelProducts", new { id = item.TransportId }, new { onclick = "return confirm('確定要刪除嗎?')" })
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</p>
