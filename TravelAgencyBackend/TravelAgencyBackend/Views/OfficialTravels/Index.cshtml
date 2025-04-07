@@ -1,91 +1,82 @@
 ﻿@model IEnumerable<TravelAgencyBackend.Models.OfficialTravel>
 
 @{
-    ViewData["Title"] = "Index";
+	ViewData["Title"] = "Index";
 }
 
 <h1>Index</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+	<a asp-action="Create">Create New</a>
 </p>
 <table class="table">
-    <thead>
-        <tr>
-            <th></th>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AvailableFrom)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AvailableUntil)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Days)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UpdatedAt)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedBy)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Region)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @{
-            int count = 0;
-            foreach (var item in Model) {
-            count++;
-            <tr>
-            <td>
-                @count
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AvailableFrom)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AvailableUntil)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Days)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UpdatedAt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedBy.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Region.Country)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.OfficialTravelId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.OfficialTravelId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.OfficialTravelId">Delete</a>
-            </td>
-        </tr>
-}
-}
-    </tbody>
+	<thead>
+		<tr>
+			<th></th>
+			<th>
+				@Html.DisplayNameFor(model => model.Title)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.CreatedBy)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Region)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.AvailableUntil)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Days)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.UpdatedAt)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Status)
+			</th>
+
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@{
+			int count = 0;
+			foreach (var item in Model)
+			{
+				count++;
+				<tr>
+					<td>
+						@count
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.Title)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.CreatedBy.Name)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.Region.Country)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.AvailableUntil)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.Days)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.UpdatedAt)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.Status)
+					</td>
+
+					<td>
+						<a asp-action="Edit" asp-route-id="@item.OfficialTravelId">Edit</a> |
+						<a asp-action="Details" asp-route-id="@item.OfficialTravelId">Details</a> |
+						<a asp-action="Delete" asp-route-id="@item.OfficialTravelId">Delete</a>
+					</td>
+				</tr>
+			}
+		}
+	</tbody>
 </table>

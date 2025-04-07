@@ -48,8 +48,8 @@ namespace TravelAgencyBackend.Controllers
         // GET: OfficialTravels/Create
         public IActionResult Create()
         {
-            ViewData["CreatedByEmployeeId"] = new SelectList(_context.Employees, "EmployeeId", "Email");
-            ViewData["RegionId"] = new SelectList(_context.Regions, "RegionId", "Country");
+            ViewData["CreatedByEmployeeName"] = new SelectList(_context.Employees, "EmpolyeeId", "Email");
+            ViewData["RegionName"] = new SelectList(_context.Regions, "RegionId", "Country "+"Name");
             return View();
         }
 
@@ -71,7 +71,7 @@ namespace TravelAgencyBackend.Controllers
             return View(officialTravel);
         }
 
-        // GET: OfficialTravels/Edit/5
+        //// GET: OfficialTravels/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -84,8 +84,8 @@ namespace TravelAgencyBackend.Controllers
             {
                 return NotFound();
             }
-            ViewData["CreatedByEmployeeId"] = new SelectList(_context.Employees, "EmployeeId", "Email", officialTravel.CreatedByEmployeeId);
-            ViewData["RegionId"] = new SelectList(_context.Regions, "RegionId", "Country", officialTravel.RegionId);
+            ViewData["CreatedByEmployeeName"] = new SelectList(_context.Employees, "EmployeeId", "Name", officialTravel.CreatedByEmployeeId);
+            ViewData["RegionName"] = new SelectList(_context.Regions, "RegionId", "Country", officialTravel.RegionId);
             return View(officialTravel);
         }
 
@@ -121,8 +121,8 @@ namespace TravelAgencyBackend.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CreatedByEmployeeId"] = new SelectList(_context.Employees, "EmployeeId", "Email", officialTravel.CreatedByEmployeeId);
-            ViewData["RegionId"] = new SelectList(_context.Regions, "RegionId", "Country", officialTravel.RegionId);
+            ViewData["CreatedByEmployeeName"] = new SelectList(_context.Employees, "EmployeeId", "Name", officialTravel.CreatedByEmployeeId);
+            ViewData["RegionName"] = new SelectList(_context.Regions, "RegionId", "Country", officialTravel.RegionId);
             return View(officialTravel);
         }
 
