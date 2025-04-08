@@ -4,6 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using TravelAgencyBackend.Models;
 using TravelAgencyBackend.ViewModels.Employee;
 using TravelAgencyBackend.ViewModles.Employee;
+using System.ComponentModel.DataAnnotations;
+using System.Reflection;
+using TravelAgencyBackend.Helpers;
+
+
 
 namespace TravelAgencyBackend.Controllers
 {
@@ -35,97 +40,57 @@ namespace TravelAgencyBackend.Controllers
                                          e.Phone.Contains(p.txtKeyword));
             }
 
-            var result = await query
-                .Select(e => new EmployeeListViewModel
+            // 1️⃣ 先用匿名型別把原始資料查出來（不能用 GetDisplayName）
+            var rawData = await query
+                .Select(e => new
                 {
-                    EmployeeId = e.EmployeeId,
-                    Name = e.Name,
-                    Gender = e.Gender,
-                    BirthDate = e.BirthDate,
-                    Phone = e.Phone,
-                    Email = e.Email,
-                    Address = e.Address,
-                    HireDate = e.HireDate,
-                    Status = e.Status,
-                    Note = e.Note,
+                    e.EmployeeId,
+                    e.Name,
+                    e.Gender,
+                    e.BirthDate,
+                    e.Phone,
+                    e.Email,
+                    e.Address,
+                    e.HireDate,
+                    e.Status,
+                    e.Note,
                     RoleName = e.Role.RoleName
                 }).ToListAsync();
+
+            // 2️⃣ 再轉成 ViewModel，這時就可以安全使用 GetDisplayName()
+            var result = rawData.Select(e => new EmployeeListViewModel
+            {
+                EmployeeId = e.EmployeeId,
+                Name = e.Name,
+                Gender = e.Gender,
+                BirthDate = e.BirthDate,
+                Phone = e.Phone,
+                Email = e.Email,
+                Address = e.Address,
+                HireDate = e.HireDate,
+                Status = e.Status, // ✅ 原 enum 型別
+                Note = e.Note,
+                RoleName = e.RoleName
+            }).ToList();
+
 
             ViewBag.Keyword = p.txtKeyword;
 
             return View(result);
         }
 
-        //分頁版
-        //public async Task<IActionResult> List(string? searchText, EmployeeStatus? filterStatus, int page = 1, int pageSize = 10)
-        //{
-        //    var query = _context.Employees.AsQueryable();
-
-        //    // 搜尋姓名、電話、信箱
-        //    if (!string.IsNullOrWhiteSpace(searchText))
-        //    {
-        //        query = query.Where(e =>
-        //            e.Name.Contains(searchText) ||
-        //            e.Phone.Contains(searchText) ||
-        //            e.Email.Contains(searchText));
-        //    }
-
-        //    // 狀態篩選
-        //    if (filterStatus.HasValue)
-        //    {
-        //        query = query.Where(e => e.Status == filterStatus.Value);
-        //    }
-
-        //    int totalCount = await query.CountAsync();
-
-        //    var employees = await query
-        //        .OrderBy(e => e.EmployeeId)
-        //        .Skip((page - 1) * pageSize)
-        //        .Take(pageSize)
-        //        .Select(e => new EmployeeListViewModel
-        //        {
-        //            EmployeeId = e.EmployeeId,
-        //            Name = e.Name,
-        //            Gender = e.Gender,
-        //            BirthDate = e.BirthDate,
-        //            Phone = e.Phone,
-        //            Email = e.Email,
-        //            Address = e.Address,
-        //            HireDate = e.HireDate,
-        //            Status = e.Status,
-        //            Note = e.Note
-        //        })
-        //        .ToListAsync();
-
-        //    var viewModel = new EmployeeIndexViewModel
-        //    {
-        //        SearchText = searchText,
-        //        FilterStatus = filterStatus,
-        //        Page = page,
-        //        PageSize = pageSize,
-        //        TotalCount = totalCount,
-        //        Employees = employees
-        //    };
-
-        //    return View(viewModel);
-        //}
-
 
         public IActionResult Create()
         {
             ViewBag.RoleList = new SelectList(_context.Roles, "RoleId", "RoleName");
-            ViewBag.GenderList = new SelectList(Enum.GetValues(typeof(GenderType)));
-            ViewBag.StatusList = new SelectList(
-            Enum.GetValues(typeof(EmployeeStatus))
-                .Cast<EmployeeStatus>()
-                .Where(s => s != EmployeeStatus.Deleted) // 👈 避免讓人選「刪除」
-            );
+            ViewBag.GenderList = EnumHelper.GetSelectListWithDisplayName<GenderType>();
+            ViewBag.StatusList = EnumHelper.GetSelectListWithDisplayName<EmployeeStatus>(excludeDeleted: true);
+
 
             var vm = new EmployeeCreateViewModel
             {
                 BirthDate = new DateTime(1955, 1, 1),
-                HireDate = DateTime.Now,
-                RoleId = 3
+                HireDate = DateTime.Now
             };
 
             return View(vm);
@@ -136,20 +101,28 @@ namespace TravelAgencyBackend.Controllers
         public async Task<IActionResult> Create(EmployeeCreateViewModel vm)
         {
             ViewBag.RoleList = new SelectList(_context.Roles, "RoleId", "RoleName", vm.RoleId);
-            ViewBag.GenderList = new SelectList(Enum.GetValues(typeof(GenderType)));
-            //ViewBag.StatusList = new SelectList(Enum.GetValues(typeof(EmployeeStatus)));
-            ViewBag.StatusList = new SelectList(
-    Enum.GetValues(typeof(EmployeeStatus))
-        .Cast<EmployeeStatus>()
-        .Where(s => s != EmployeeStatus.Deleted) // 👈 避免讓人選「刪除」
-);
+            ViewBag.GenderList = EnumHelper.GetSelectListWithDisplayName<GenderType>();
+            ViewBag.StatusList = EnumHelper.GetSelectListWithDisplayName<EmployeeStatus>(excludeDeleted: true);
 
 
+            if (_context.Employees.Any(e => e.Email == vm.Email && e.Status != EmployeeStatus.Deleted))
+            {
+                ModelState.AddModelError("Email", "此信箱已被使用，請改用其他信箱。");
+            }
+
+            // ✅ 驗證 Phone 是否重複
+            if (_context.Employees.Any(e => e.Phone == vm.Phone && e.Status != EmployeeStatus.Deleted))
+            {
+                ModelState.AddModelError("Phone", "此電話號碼已被使用，請再次確認輸入內容。");
+            }
+
+            // ❌ 有驗證錯誤就直接回原畫面
             if (!ModelState.IsValid)
             {
                 return View(vm);
             }
 
+            // ✅ 建立新員工實體
             var emp = new Employee
             {
                 Name = vm.Name,
@@ -158,17 +131,19 @@ namespace TravelAgencyBackend.Controllers
                 Phone = vm.Phone,
                 BirthDate = vm.BirthDate,
                 HireDate = vm.HireDate,
-                Gender = vm.Gender,
-                Status = vm.Status,
+                Gender = vm.Gender!.Value,
+                Status = vm.Status!.Value,
                 Address = vm.Address,
                 Note = vm.Note,
-                RoleId = vm.RoleId
+                RoleId = vm.RoleId!.Value,
+
             };
 
             _context.Add(emp);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(List));
         }
+
 
         public async Task<IActionResult> Edit(int? id)
         {
@@ -190,17 +165,31 @@ namespace TravelAgencyBackend.Controllers
                 Address = emp.Address,
                 Note = emp.Note,
                 RoleId = emp.RoleId
-                // ❌ 不帶 Password，避免洩漏
+
             };
 
             ViewBag.RoleList = new SelectList(_context.Roles, "RoleId", "RoleName", emp.RoleId);
-            ViewBag.GenderList = new SelectList(Enum.GetValues(typeof(GenderType)).Cast<GenderType>());
-            ViewBag.StatusList = new SelectList(
-     Enum.GetValues(typeof(EmployeeStatus))
-         .Cast<EmployeeStatus>()
-         .Where(s => s != EmployeeStatus.Deleted) // 👈 避免讓人選「刪除」
- );
+            ViewBag.GenderList = Enum.GetValues(typeof(GenderType))
+            .Cast<GenderType>()
+            .Select(g => new SelectListItem
+            {
+                Text = g.GetType()
+                .GetMember(g.ToString())
+                .First()
+                .GetCustomAttribute<DisplayAttribute>()?.Name ?? g.ToString(),
+                Value = ((int)g).ToString()
+            }).ToList();
 
+            ViewBag.StatusList = Enum.GetValues(typeof(EmployeeStatus))
+                .Cast<EmployeeStatus>()
+                .Select(s => new SelectListItem
+                {
+                    Text = s.GetType()
+                            .GetMember(s.ToString())
+                            .First()
+                            .GetCustomAttribute<DisplayAttribute>()?.Name ?? s.ToString(),
+                    Value = ((int)s).ToString()
+                }).ToList();
 
             return View(vm);
         }
@@ -219,7 +208,7 @@ namespace TravelAgencyBackend.Controllers
                 ViewBag.StatusList = new SelectList(
                 Enum.GetValues(typeof(EmployeeStatus))
                     .Cast<EmployeeStatus>()
-                    .Where(s => s != EmployeeStatus.Deleted) // 👈 避免讓人選「刪除」
+                    .Where(s => s != EmployeeStatus.Deleted) 
 );
 
                 return View(vm);
@@ -240,7 +229,6 @@ namespace TravelAgencyBackend.Controllers
             emp.Note = vm.Note;
             emp.RoleId = vm.RoleId;
 
-            // ✅ 密碼只有在有輸入時才更新
             if (!string.IsNullOrWhiteSpace(vm.Password))
             {
                 emp.Password = vm.Password;
@@ -287,6 +275,33 @@ namespace TravelAgencyBackend.Controllers
 
             return RedirectToAction(nameof(List));
         }
+
+        public IActionResult Details(int id)
+        {
+            var employee = _context.Employees.FirstOrDefault(e => e.EmployeeId == id);
+
+            if (employee == null)
+            {
+                return NotFound();
+            }
+
+            var vm = new EmployeeDetailViewModel
+            {
+                EmployeeId = employee.EmployeeId,
+                Name = employee.Name,
+                Gender = employee.Gender.GetDisplayName(),
+                BirthDate = employee.BirthDate,
+                Phone = employee.Phone,
+                Email = employee.Email,
+                Address = employee.Address,
+                HireDate = employee.HireDate,
+                Status = employee.Status.GetDisplayName(),
+                Note = employee.Note
+            };
+
+            return View(vm);
+        }
+
 
         /// 檢查指定 ID 的員工是否存在於資料庫中。
         /// Scaffold 預設產生的方法，未來可用於處理資料庫更新時的併發檢查（例如 Edit 或 Delete 操作）。

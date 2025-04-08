@@ -7,7 +7,7 @@ namespace TravelAgencyBackend.ViewModels
     {
         [Required(ErrorMessage = "請輸入電話")]
         [RegularExpression(@"^09\d{8}$", ErrorMessage = "請輸入正確的手機號碼")]
-        [Display(Name = "電話")]
+        [Display(Name = "帳號(電話)")]
         public string Phone { get; set; } = null!;
 
         [Required(ErrorMessage = "請輸入密碼")]

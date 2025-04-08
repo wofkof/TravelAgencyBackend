@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using TravelAgencyBackend.Models;
+using TravelAgencyBackend.Helpers;
 
 namespace TravelAgencyBackend.ViewModels.Employee
 {
@@ -12,6 +13,8 @@ namespace TravelAgencyBackend.ViewModels.Employee
 
         [Display(Name = "性別")]
         public GenderType Gender { get; set; }
+
+        public string GenderDisplay => Gender.GetDisplayName(); // ✅ 中文性別
 
         [Display(Name = "生日")]
         public DateTime BirthDate { get; set; }
@@ -30,6 +33,8 @@ namespace TravelAgencyBackend.ViewModels.Employee
 
         [Display(Name = "狀態")]
         public EmployeeStatus Status { get; set; }
+
+        public string StatusDisplay => Status.GetDisplayName(); // ✅ 中文狀態
 
         [Display(Name = "備註")]
         public string? Note { get; set; }

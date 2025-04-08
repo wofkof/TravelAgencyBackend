@@ -30,12 +30,12 @@ namespace TravelAgencyBackend.ViewModels.Employee
         public DateTime HireDate { get; set; }
 
         [Display(Name = "性別")]
-        [Required]
-        public GenderType Gender { get; set; }
+        [Required(ErrorMessage = "請選擇性別")]
+        public GenderType? Gender { get; set; }
 
         [Display(Name = "狀態")]
-        [Required]
-        public EmployeeStatus Status { get; set; }
+        [Required(ErrorMessage = "請選擇員工狀態")]
+        public EmployeeStatus? Status { get; set; }
 
         [Display(Name = "地址")]
         public string? Address { get; set; }
@@ -43,8 +43,9 @@ namespace TravelAgencyBackend.ViewModels.Employee
         [Display(Name = "備註")]
         public string? Note { get; set; }
 
-        [Display(Name = "職位名稱")]
-        [Required]
-        public int RoleId { get; set; }
+        [Required(ErrorMessage = "請選擇員工職位")]
+        [Display(Name = "職位")]
+        public int? RoleId { get; set; }
+
     }
 }
