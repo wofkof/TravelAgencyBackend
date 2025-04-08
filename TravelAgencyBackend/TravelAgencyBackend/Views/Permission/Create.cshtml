@@ -13,6 +13,12 @@
         <span asp-validation-for="PermissionName" class="text-danger"></span>
     </div>
 
+    <div>
+        <label asp-for="Caption" class="form-label"></label>
+		<textarea asp-for="Caption" class="form-control" placeholder="請填寫權限說明" rows="10"></textarea>
+		<span asp-validation-for="Caption" class="text-danger"></span>
+    </div>
+
     <button type="submit" class="btn btn-primary">儲存</button>
     <a asp-action="Index" class="btn btn-secondary">返回</a>
 </form>

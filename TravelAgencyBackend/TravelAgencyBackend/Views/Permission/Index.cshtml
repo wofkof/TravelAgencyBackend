@@ -15,7 +15,8 @@
         <tr>
             <th>編號</th>
             <th>權限名稱</th>
-            <th></th>
+            <th>說明</th>
+            <th>操作</th>
         </tr>
     </thead>
     <tbody>
@@ -24,6 +25,7 @@
             <tr>
                 <td>@item.PermissionId</td>
                 <td>@item.PermissionName</td>
+                <td>@item.Caption</td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.PermissionId" class="btn btn-sm btn-outline-secondary">編輯</a>
                     <a asp-action="Delete" asp-route-id="@item.PermissionId" class="btn btn-sm btn-outline-danger" onclick="return confirm('確定要刪除嗎？')">刪除</a>

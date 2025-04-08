@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using TravelAgencyBackend.Models;
+using TravelAgencyBackend.Services;
 using TravelAgencyBackend.ViewComponent;
 
 var builder = WebApplication.CreateBuilder(args);

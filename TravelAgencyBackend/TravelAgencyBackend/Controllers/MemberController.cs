@@ -5,26 +5,30 @@ using TravelAgencyBackend.ViewModels;
 using TravelAgencyBackend.Helpers;
 using AutoMapper;
 using TravelAgencyBackend.ViewComponent;
+using TravelAgencyBackend.Services;
 
 namespace TravelAgencyBackend.Controllers
 {
-    public class MemberController : Controller
+    public class MemberController : BaseController
     {
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
         private readonly PermissionCheckService _perm;
 
-
-        public MemberController(AppDbContext context, IMapper mapper, PermissionCheckService perm)
+        public MemberController(AppDbContext context, IMapper mapper, PermissionCheckService perm) 
+            : base(perm) 
         {
             _context = context;
             _mapper = mapper;
             _perm = perm;
         }
 
-        // ✅ 修改密碼（GET）
+        // 修改密碼（GET）
         public IActionResult ChangePassword(int id)
         {
+            var check = CheckPermissionOrForbid("修改會員密碼");
+            if (check != null) return check;
+
             var member = _context.Members.Find(id);
             if (member == null) return NotFound($"找不到 ID 為 {id} 的會員");
 
@@ -33,11 +37,14 @@ namespace TravelAgencyBackend.Controllers
             return View();
         }
 
-        // ✅ 修改密碼（POST）
+        // 修改密碼（POST）
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult ChangePassword(int id, string newPassword, string confirmPassword)
         {
+            var check = CheckPermissionOrForbid("修改會員密碼");
+            if (check != null) return check;
+
             if (newPassword != confirmPassword)
             {
                 ModelState.AddModelError(string.Empty, "密碼與確認密碼不一致");
@@ -55,10 +62,12 @@ namespace TravelAgencyBackend.Controllers
             return RedirectToAction(nameof(Details), new { id });
         }
 
-        // ✅ Index（含搜尋與分頁）
+        // Index（含搜尋與分頁）
         public IActionResult Index(MemberIndexViewModel model)
         {
-            if (!_perm.HasPermission("管理會員")) return Forbid("您沒管理會員的權限");
+            var check = CheckPermissionOrForbid("查看會員");
+            if (check != null) return check;
+
             string keyword = model.SearchText?.Trim() ?? "";
 
             var query = _context.Members.AsNoTracking()
@@ -83,9 +92,12 @@ namespace TravelAgencyBackend.Controllers
             return View(model);
         }
 
-        // ✅ 詳細資料
+        // 詳細資料
         public IActionResult Details(int id)
         {
+            var check = CheckPermissionOrForbid("查看會員");
+            if (check != null) return check;
+
             var member = _context.Members.Find(id);
             if (member == null) return NotFound();
 
@@ -93,17 +105,23 @@ namespace TravelAgencyBackend.Controllers
             return View(vm);
         }
 
-        // ✅ 建立會員（GET）
+        // 建立會員（GET）
         public IActionResult Create()
         {
+            var check = CheckPermissionOrForbid("管理會員");
+            if (check != null) return check;
+
             return View();
         }
 
-        // ✅ 建立會員（POST）
+        // 建立會員（POST）
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(MemberCreateViewModel vm)
         {
+            var check = CheckPermissionOrForbid("管理會員");
+            if (check != null) return check;
+
             if (_context.Members.Any(m => m.Account == vm.Account))
                 ModelState.AddModelError("Account", "此帳號已被註冊");
 
@@ -126,9 +144,12 @@ namespace TravelAgencyBackend.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // ✅ 編輯會員（GET）
+        // 編輯會員（GET）
         public IActionResult Edit(int id)
         {
+            var check = CheckPermissionOrForbid("管理會員");
+            if (check != null) return check;
+
             var member = _context.Members.Find(id);
             if (member == null) return NotFound($"找不到 ID 為 {id} 的會員");
 
@@ -136,11 +157,14 @@ namespace TravelAgencyBackend.Controllers
             return View(vm);
         }
 
-        // ✅ 編輯會員（POST）
+        // 編輯會員（POST）
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, MemberEditViewModel vm)
         {
+            var check = CheckPermissionOrForbid("管理會員");
+            if (check != null) return check;
+
             if (id != vm.MemberId) return BadRequest("參數錯誤：id 不一致");
 
             if (_context.Members.Any(m => m.Email == vm.Email && m.MemberId != vm.MemberId))
@@ -165,11 +189,14 @@ namespace TravelAgencyBackend.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // ✅ 刪除會員
+        // 刪除會員
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Delete(int id)
         {
+            var check = CheckPermissionOrForbid("管理會員");
+            if (check != null) return check;
+
             var member = _context.Members.Find(id);
             if (member == null) return NotFound($"找不到 ID 為 {id} 的會員");
 
