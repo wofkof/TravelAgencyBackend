@@ -26,8 +26,63 @@ namespace TravelAgencyBackend.Controllers
         }
 
         //GET: Employees
-        public async Task<IActionResult> List(EmployeeKeyWordViewModel p)
+        //public async Task<IActionResult> List(EmployeeKeyWordViewModel p)
+        //{
+        //    var query = _context.Employees
+        //        .Where(e => e.Status != EmployeeStatus.Deleted)
+        //        .Include(e => e.Role)
+        //        .AsQueryable();
+
+        //    if (!string.IsNullOrEmpty(p.txtKeyword))
+        //    {
+        //        query = query.Where(e => e.Name.Contains(p.txtKeyword) ||
+        //                                 e.Email.Contains(p.txtKeyword) ||
+        //                                 e.Phone.Contains(p.txtKeyword));
+        //    }
+
+        //    // 1️⃣ 先用匿名型別把原始資料查出來（不能用 GetDisplayName）
+        //    var rawData = await query
+        //        .Select(e => new
+        //        {
+        //            e.EmployeeId,
+        //            e.Name,
+        //            e.Gender,
+        //            e.BirthDate,
+        //            e.Phone,
+        //            e.Email,
+        //            e.Address,
+        //            e.HireDate,
+        //            e.Status,
+        //            e.Note,
+        //            RoleName = e.Role.RoleName
+        //        }).ToListAsync();
+
+        //    // 2️⃣ 再轉成 ViewModel，這時就可以安全使用 GetDisplayName()
+        //    var result = rawData.Select(e => new EmployeeListViewModel
+        //    {
+        //        EmployeeId = e.EmployeeId,
+        //        Name = e.Name,
+        //        Gender = e.Gender,
+        //        BirthDate = e.BirthDate,
+        //        Phone = e.Phone,
+        //        Email = e.Email,
+        //        Address = e.Address,
+        //        HireDate = e.HireDate,
+        //        Status = e.Status, // ✅ 原 enum 型別
+        //        Note = e.Note,
+        //        RoleName = e.RoleName
+        //    }).ToList();
+
+
+        //    ViewBag.Keyword = p.txtKeyword;
+
+        //    return View(result);
+        //}
+
+        public async Task<IActionResult> List(EmployeeKeyWordViewModel p, int page = 1)
         {
+            int pageSize = 10;
+
             var query = _context.Employees
                 .Where(e => e.Status != EmployeeStatus.Deleted)
                 .Include(e => e.Role)
@@ -40,8 +95,13 @@ namespace TravelAgencyBackend.Controllers
                                          e.Phone.Contains(p.txtKeyword));
             }
 
-            // 1️⃣ 先用匿名型別把原始資料查出來（不能用 GetDisplayName）
+            var totalCount = await query.CountAsync();
+            var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+
             var rawData = await query
+                .OrderBy(e => e.EmployeeId)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
                 .Select(e => new
                 {
                     e.EmployeeId,
@@ -57,7 +117,6 @@ namespace TravelAgencyBackend.Controllers
                     RoleName = e.Role.RoleName
                 }).ToListAsync();
 
-            // 2️⃣ 再轉成 ViewModel，這時就可以安全使用 GetDisplayName()
             var result = rawData.Select(e => new EmployeeListViewModel
             {
                 EmployeeId = e.EmployeeId,
@@ -68,17 +127,23 @@ namespace TravelAgencyBackend.Controllers
                 Email = e.Email,
                 Address = e.Address,
                 HireDate = e.HireDate,
-                Status = e.Status, // ✅ 原 enum 型別
+                Status = e.Status,
                 Note = e.Note,
                 RoleName = e.RoleName
             }).ToList();
 
+            var vm = new EmployeeListPageViewModel
+            {
+                Employees = result,
+                CurrentPage = page,
+                TotalPages = totalPages,
+                TotalCount = totalCount,
+                PageSize = pageSize,
+                Keyword = p.txtKeyword
+            };
 
-            ViewBag.Keyword = p.txtKeyword;
-
-            return View(result);
+            return View(vm);
         }
-
 
         public IActionResult Create()
         {
