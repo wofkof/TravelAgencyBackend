@@ -18,11 +18,14 @@
                     </a>
                     <ul>
                         <li>
-                            <a asp-controller="" asp-action="">
+                            <a asp-controller="Employee" asp-action="List">
                                 <i class="metismenu-icon"></i>員工列表
                             </a>
                         </li>
                         <li>
+                            <a asp-controller="Employee" asp-action="Edit">
+                                <i class="metismenu-icon"></i>員工權限
+
                             <a asp-controller="Role" asp-action="Index">
                                 <i class="metismenu-icon"></i>角色
                             </a>
@@ -33,10 +36,10 @@
                             </a>
                         </li>
                         <li>
-                            <a asp-controller="" asp-action="">
-                                <i class="metismenu-icon"></i>新增會員
+                            <a asp-controller="Employee" asp-action="Create">
+                                <i class="metismenu-icon"></i>新增員工
                             </a>
-                        </li> 
+                        </li>                      
                     </ul>
                 </li>
                 @* 會員 *@
@@ -154,9 +157,9 @@
                     </a>
                     <ul>
                         <li>
-                            <a asp-controller="" asp-action="">
+                            <a asp-controller="Cart" asp-action="List">
                                 <i class="metismenu-icon"></i>檢視購物車
-                            </a> 
+                            </a>
                         </li>
                     </ul>
                 </li>
@@ -168,13 +171,13 @@
                     </a>
                     <ul>
                         <li>
-                            <a asp-controller="" asp-action="">
+                            <a asp-controller="Announcement" asp-action="List">
                                 <i class="metismenu-icon"></i>查看公告
                             </a>
                         </li>
                         <li>
-                            <a asp-controller="" asp-action="">
-                                <i class="metismenu-icon"></i>發表
+                            <a asp-controller="Announcement" asp-action="Create">
+                                <i class="metismenu-icon"></i>新增公告
                             </a>
                         </li>
                     </ul>
@@ -211,7 +214,7 @@
                             </a>
                         </li>
                         <li>
-                            <a asp-controller="" asp-action=""> 
+                            <a asp-controller="" asp-action="">
                                 <i class="metismenu-icon"></i>新增自訂行程
                             </a>
                         </li>
