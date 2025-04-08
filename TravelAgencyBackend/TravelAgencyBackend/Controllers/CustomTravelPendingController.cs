@@ -105,16 +105,27 @@ namespace TravelAgencyBackend.Controllers
         public IActionResult CreateContent()
         {
             var id = _context.Contents.FirstOrDefault()?.CustomTravelId;
-            ViewBag.CoustomTravelId = id;
+            
+            var datas = new CustomTravelPendingViewModel
+            {
+                NewContent = new Content { CustomTravelId = id.Value },                
+                Content = _context.Contents.ToList(),
+                City = _context.Cities.ToList(),
+                District = _context.Districts.ToList(),
+                Attraction = _context.Attractions.ToList(),
+                Restaurant = _context.Restaurants.ToList(),
+                Hotel = _context.Hotels.ToList(),
+                Transportation = _context.Transportations.ToList()
+            };
 
-            return View();
+            return View(datas);
         }
         [HttpPost]
-        public IActionResult CreateContent(Content p)
-        {
-            _context.Contents.Add(p);
+        public IActionResult CreateContent(CustomTravelPendingViewModel p)
+        {         
+            _context.Contents.Add(p.NewContent);
             _context.SaveChanges();
-            return RedirectToAction("ContentList", new { id = p.CustomTravelId });
+            return RedirectToAction("ContentList", new { id = p.NewContent.CustomTravelId });
         }
         public IActionResult DeleteContent(int? id)
         {
@@ -139,23 +150,36 @@ namespace TravelAgencyBackend.Controllers
             Content d = _context.Contents.FirstOrDefault(p => p.ContentId == id);
             if (d == null)
                 return RedirectToAction("ContentList", new { id });
-            return View(d);
+
+            var datas = new CustomTravelPendingViewModel
+            {
+                EditContent = d,
+                City = _context.Cities.ToList(),
+                District = _context.Districts.ToList(),
+                Attraction = _context.Attractions.ToList(),
+                Restaurant = _context.Restaurants.ToList(),
+                Hotel = _context.Hotels.ToList(),
+                Transportation = _context.Transportations.ToList()
+            };
+            return View(datas);
         }
         [HttpPost]
-        public IActionResult EditContent(Content uiContent)
+        public IActionResult EditContent(CustomTravelPendingViewModel t)
         {
-            Content dbContent = _context.Contents.FirstOrDefault(p => p.ContentId == uiContent.ContentId);
+            Content dbContent = _context.Contents.FirstOrDefault(p => p.ContentId == t.EditContent.ContentId);
             if (dbContent == null)
-                return RedirectToAction("ContentList", new { id = uiContent.CustomTravelId });
-            dbContent.CustomTravelId = uiContent.CustomTravelId;
-            dbContent.ItemId = uiContent.ItemId;
-            dbContent.Category = uiContent.Category;
-            dbContent.Day = uiContent.Day;
-            dbContent.Time = uiContent.Time;
-            dbContent.HotelName = uiContent.HotelName;
+                return RedirectToAction("ContentList", new { id = t.EditContent.CustomTravelId });
 
+            dbContent.CustomTravelId = t.EditContent.CustomTravelId;
+            dbContent.ItemId = t.EditContent.ItemId;
+            dbContent.Category = t.EditContent.Category;
+            dbContent.Day = t.EditContent.Day;
+            dbContent.Time = t.EditContent.Time;
+            dbContent.HotelName = t.EditContent.HotelName;
+                        
             _context.SaveChanges();
-            return RedirectToAction("ContentList", new { id = uiContent.CustomTravelId });
+            
+            return RedirectToAction("ContentList", new { id = dbContent.CustomTravelId });
         }
     }
 }

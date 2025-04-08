@@ -12,5 +12,8 @@ namespace TravelAgencyBackend.ViewModels
         public IEnumerable<Restaurant> Restaurant { get; set; }
         public IEnumerable<Hotel> Hotel { get; set; }
         public IEnumerable<Transportation> Transportation { get; set; }
+
+        public Content NewContent { get; set; } = new Content();
+        public Content EditContent { get; set; }
     }
 }
