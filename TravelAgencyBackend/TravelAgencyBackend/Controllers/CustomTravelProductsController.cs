@@ -17,52 +17,52 @@ namespace TravelAgencyBackend.Controllers
         public IActionResult List(KeywordViewModel p)
         {
             IEnumerable<City> City = null;
-            if (string.IsNullOrEmpty(p.txtKeyword))
+            if (string.IsNullOrEmpty(p.txtKeywordCity))
             {
                 City = _context.Cities.ToList();
             }
             else
-            City = _context.Cities.Where(d => d.CityName.Contains(p.txtKeyword)).ToList();
+            City = _context.Cities.Where(d => d.CityName.Contains(p.txtKeywordCity)).ToList();
 
             IEnumerable<District> District = null;
-            if (string.IsNullOrEmpty(p.txtKeyword))
+            if (string.IsNullOrEmpty(p.txtKeywordDistrict))
             {
                 District = _context.Districts.ToList();
             }
             else
-                District = _context.Districts.Where(d => d.DistrictName.Contains(p.txtKeyword)).ToList();
+                District = _context.Districts.Where(d => d.DistrictName.Contains(p.txtKeywordDistrict)).ToList();
 
             IEnumerable<Attraction> Attraction = null;
-            if (string.IsNullOrEmpty(p.txtKeyword))
+            if (string.IsNullOrEmpty(p.txtKeywordAttraction))
             {
                 Attraction = _context.Attractions.ToList();
             }
             else
-                Attraction = _context.Attractions.Where(d => d.ScenicSpotName.Contains(p.txtKeyword)).ToList();
+                Attraction = _context.Attractions.Where(d => d.ScenicSpotName.Contains(p.txtKeywordAttraction)).ToList();
 
             IEnumerable<Restaurant> Restaurant = null;
-            if (string.IsNullOrEmpty(p.txtKeyword))
+            if (string.IsNullOrEmpty(p.txtKeywordRestaurant))
             {
                 Restaurant = _context.Restaurants.ToList();
             }
             else
-                Restaurant = _context.Restaurants.Where(d => d.RestaurantName.Contains(p.txtKeyword)).ToList();
+                Restaurant = _context.Restaurants.Where(d => d.RestaurantName.Contains(p.txtKeywordRestaurant)).ToList();
 
             IEnumerable<Hotel> Hotel = null;
-            if (string.IsNullOrEmpty(p.txtKeyword))
+            if (string.IsNullOrEmpty(p.txtKeywordHotel))
             {
                 Hotel = _context.Hotels.ToList();
             }
             else
-                Hotel = _context.Hotels.Where(d => d.HotelName.Contains(p.txtKeyword)).ToList();
+                Hotel = _context.Hotels.Where(d => d.HotelName.Contains(p.txtKeywordHotel)).ToList();
 
             IEnumerable<Transportation> Transportation = null;
-            if (string.IsNullOrEmpty(p.txtKeyword))
+            if (string.IsNullOrEmpty(p.txtKeywordTransportation))
             {
                 Transportation = _context.Transportations.ToList();
             }
             else
-                Transportation = _context.Transportations.Where(d => d.TransportMethod.Contains(p.txtKeyword)).ToList();
+                Transportation = _context.Transportations.Where(d => d.TransportMethod.Contains(p.txtKeywordTransportation)).ToList();
 
 
             var datas = new CustomTravelProductsViewModel

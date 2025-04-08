@@ -4,10 +4,12 @@
     ViewData["Title"] = "ContentList";
 }
 
-<h1>ContentList</h1>
+<h2>訂單行程內容</h2>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    
+    <a asp-action="CreateContent" asp-route-id="@ViewBag.CoustomTravelId" class="btn btn-outline-success">新增內容</a>
+
 </p>
 <table class="table">
     <thead>
@@ -62,12 +64,15 @@
                 @Html.DisplayFor(modelItem => item.HotelName)
             </td>
                 <td>
-                    @Html.ActionLink("修改", "EditContent", "CustomTravelPending", new { id = item.CustomTravelId }, null)
+                    @Html.ActionLink("修改", "EditContent", "CustomTravelPending", new { id = item.ContentId }, new { @class = "btn btn-outline-warning" })
                 </td>
                 <td>
-                    @Html.ActionLink("刪除", "DeleteContent", "CustomTravelPending", new { id = item.CustomTravelId }, new { onclick = "return confirm('確定要刪除嗎?')" })
+                    @Html.ActionLink("刪除", "DeleteContent", "CustomTravelPending", new { id = item.ContentId }, new { @class = "btn btn-outline-danger" ,  onclick = "return confirm('確定要刪除嗎?')" })
                 </td>
         </tr>
 }
     </tbody>
 </table>
+<div class="mt-4">
+    <a asp-action="List" class="btn btn-secondary">返回</a>
+</div>

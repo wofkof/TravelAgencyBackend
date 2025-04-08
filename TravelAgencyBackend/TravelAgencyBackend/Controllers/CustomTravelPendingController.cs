@@ -21,7 +21,9 @@ namespace TravelAgencyBackend.Controllers
                                select d;
             }
             else
-                CustomTravel = _context.CustomTravels.Where(d => d.MemberId.ToString().Contains(p.txtKeyword)
+                CustomTravel = _context.CustomTravels.Where(d =>
+                d.MemberId.ToString().Contains(p.txtKeyword)
+                || d.MemberId.ToString().Contains(p.txtKeyword)
                 || d.ReviewEmployeeId.ToString().Contains(p.txtKeyword)
                 );
             var datas = new CustomTravelPendingViewModel
@@ -102,6 +104,9 @@ namespace TravelAgencyBackend.Controllers
         }
         public IActionResult CreateContent()
         {
+            var id = _context.Contents.FirstOrDefault()?.CustomTravelId;
+            ViewBag.CoustomTravelId = id;
+
             return View();
         }
         [HttpPost]
@@ -109,18 +114,20 @@ namespace TravelAgencyBackend.Controllers
         {
             _context.Contents.Add(p);
             _context.SaveChanges();
-            return RedirectToAction("List");
+            return RedirectToAction("ContentList", new { id = p.CustomTravelId });
         }
         public IActionResult DeleteContent(int? id)
         {
             if (id != null)
             {
-
                 Content d = _context.Contents.FirstOrDefault(p => p.ContentId == id);
                 if (d != null)
                 {
                     _context.Contents.Remove(d);
                     _context.SaveChanges();
+
+                    int? customTravelId = d.CustomTravelId;
+                    return RedirectToAction("ContentList", new { id = customTravelId });
                 }
             }
             return RedirectToAction("List");
@@ -128,10 +135,10 @@ namespace TravelAgencyBackend.Controllers
         public IActionResult EditContent(int? id)
         {
             if (id == null)
-                return RedirectToAction("List");
+                return RedirectToAction("ContentList", new { id });
             Content d = _context.Contents.FirstOrDefault(p => p.ContentId == id);
             if (d == null)
-                return RedirectToAction("List");
+                return RedirectToAction("ContentList", new { id });
             return View(d);
         }
         [HttpPost]
@@ -139,7 +146,7 @@ namespace TravelAgencyBackend.Controllers
         {
             Content dbContent = _context.Contents.FirstOrDefault(p => p.ContentId == uiContent.ContentId);
             if (dbContent == null)
-                return RedirectToAction("List");
+                return RedirectToAction("ContentList", new { id = uiContent.CustomTravelId });
             dbContent.CustomTravelId = uiContent.CustomTravelId;
             dbContent.ItemId = uiContent.ItemId;
             dbContent.Category = uiContent.Category;
@@ -148,7 +155,7 @@ namespace TravelAgencyBackend.Controllers
             dbContent.HotelName = uiContent.HotelName;
 
             _context.SaveChanges();
-            return RedirectToAction("List");
+            return RedirectToAction("ContentList", new { id = uiContent.CustomTravelId });
         }
     }
 }

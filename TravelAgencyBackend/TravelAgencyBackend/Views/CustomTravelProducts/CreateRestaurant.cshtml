@@ -4,9 +4,8 @@
     ViewData["Title"] = "CreateRestaurant";
 }
 
-<h1>CreateRestaurant</h1>
+<h2>新增餐廳項目</h2>
 
-<h4>RestaurantWrap</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -28,16 +27,14 @@
                 <input asp-for="RestaurantName" class="form-control" />
                 <span asp-validation-for="RestaurantName" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+            <div class="mt-4">
+                <input type="submit" value="新增" class="btn btn-primary" />
+                <a asp-action="List" class="btn btn-secondary">返回</a>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
