@@ -24,18 +24,18 @@
             <th>
                 @Html.DisplayNameFor(model => model.AvailableUntil)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
+            @* <th> *@
+            @*     @Html.DisplayNameFor(model => model.Description) *@
+            @* </th> *@
             <th>
                 @Html.DisplayNameFor(model => model.Days)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CoverPath)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedAt)
-            </th>
+            @* <th> *@
+            @*     @Html.DisplayNameFor(model => model.CoverPath) *@
+            @* </th> *@
+            @* <th> *@
+            @*     @Html.DisplayNameFor(model => model.CreatedAt) *@
+            @* </th> *@
             <th>
                 @Html.DisplayNameFor(model => model.UpdatedAt)
             </th>
@@ -66,18 +66,18 @@
             <td>
                 @Html.DisplayFor(modelItem => item.AvailableUntil)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
+            @* <td> *@
+            @*     @Html.DisplayFor(modelItem => item.Description) *@
+            @* </td> *@
             <td>
                 @Html.DisplayFor(modelItem => item.Days)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CoverPath)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedAt)
-            </td>
+            @* <td> *@
+            @*     @Html.DisplayFor(modelItem => item.CoverPath) *@
+            @* </td> *@
+            @* <td> *@
+            @*     @Html.DisplayFor(modelItem => item.CreatedAt) *@
+            @* </td> *@
             <td>
                 @Html.DisplayFor(modelItem => item.UpdatedAt)
             </td>
@@ -85,7 +85,7 @@
                 @Html.DisplayFor(modelItem => item.Status)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CreatedBy.Email)
+                @Html.DisplayFor(modelItem => item.CreatedBy.Name)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Region.Country)

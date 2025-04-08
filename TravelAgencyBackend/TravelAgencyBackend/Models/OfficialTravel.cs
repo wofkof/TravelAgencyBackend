@@ -24,7 +24,7 @@ namespace TravelAgencyBackend.Models
         public int Days { get; set; }
         public string CoverPath { get; set; } = null!;
         public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
         public TravelStatus Status { get; set; } = TravelStatus.Draft;
 
         public ICollection<OfficialTravelDetail> Details { get; set; } = new List<OfficialTravelDetail>();

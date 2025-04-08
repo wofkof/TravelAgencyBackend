@@ -24,7 +24,7 @@ namespace TravelAgencyBackend.Controllers
         public async Task<IActionResult> Index()
         {
             var appDbContext = _context.OfficialTravels.Include(o => o.CreatedBy).Include(o => o.Region);
-            return View(await appDbContext.ToListAsync());
+            return View(appDbContext);
         }
 
         // GET: OfficialTravels/Details/5
@@ -50,7 +50,7 @@ namespace TravelAgencyBackend.Controllers
         // GET: OfficialTravels/Create
         public IActionResult Create()
         {
-            ViewData["CreatedByEmployeeId"] = new SelectList(_context.Employees, "EmployeeId", "Email");
+            ViewData["CreatedByEmployeeId"] = new SelectList(_context.Employees, "EmployeeId", "Name");
             ViewData["RegionId"] = new SelectList(_context.Regions, "RegionId", "Country");
             return View();
         }
@@ -60,15 +60,18 @@ namespace TravelAgencyBackend.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("OfficialTravelId,CreatedByEmployeeId,RegionId,Title,ProjectYear,AvailableFrom,AvailableUntil,Description,Days,CoverPath,CreatedAt,UpdatedAt,Status")] OfficialTravel officialTravel)
+        public async Task<IActionResult> Create([Bind("OfficialTravelId,CreatedByEmployeeId,RegionId,Title,ProjectYear,AvailableFrom,AvailableUntil,Description,Days,CoverPath,Status")] OfficialTravel officialTravel)
         {
+            ModelState.Remove("CreatedBy");
+            ModelState.Remove("Region");
             if (ModelState.IsValid)
             {
+                officialTravel.CreatedAt = DateTime.Now;
                 _context.Add(officialTravel);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CreatedByEmployeeId"] = new SelectList(_context.Employees, "EmployeeId", "Email", officialTravel.CreatedByEmployeeId);
+            ViewData["CreatedByEmployeeId"] = new SelectList(_context.Employees, "EmployeeId", "Name", officialTravel.CreatedByEmployeeId);
             ViewData["RegionId"] = new SelectList(_context.Regions, "RegionId", "Country", officialTravel.RegionId);
             return View(officialTravel);
         }
@@ -86,9 +89,9 @@ namespace TravelAgencyBackend.Controllers
             {
                 return NotFound();
             }
-            ViewData["CreatedByEmployeeId"] = new SelectList(_context.Employees, "EmployeeId", "Email", officialTravel.CreatedByEmployeeId);
+            ViewData["CreatedByEmployeeId"] = new SelectList(_context.Employees, "EmployeeId", "Name", officialTravel.CreatedByEmployeeId);
             ViewData["RegionId"] = new SelectList(_context.Regions, "RegionId", "Country", officialTravel.RegionId);
-            ViewData["TravelStatusList"] = GetTravelStatusSelectList();
+            //ViewData["TravelStatusList"] = GetTravelStatusSelectList();
             return View(officialTravel);
         }
 
@@ -97,8 +100,10 @@ namespace TravelAgencyBackend.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("OfficialTravelId,CreatedByEmployeeId,RegionId,Title,ProjectYear,AvailableFrom,AvailableUntil,Description,Days,CoverPath,CreatedAt,UpdatedAt,Status")] OfficialTravel officialTravel)
+        public async Task<IActionResult> Edit(int id, [Bind("OfficialTravelId,CreatedByEmployeeId,RegionId,Title,ProjectYear,AvailableFrom,AvailableUntil,Description,Days,CoverPath,CreatedAt,Status")] OfficialTravel officialTravel)
         {
+            ModelState.Remove("CreatedBy");
+            ModelState.Remove("Region");
             if (id != officialTravel.OfficialTravelId)
             {
                 return NotFound();
@@ -108,6 +113,7 @@ namespace TravelAgencyBackend.Controllers
             {
                 try
                 {
+                    officialTravel.UpdatedAt = DateTime.Now;
                     _context.Update(officialTravel);
                     await _context.SaveChangesAsync();
                 }
@@ -124,9 +130,9 @@ namespace TravelAgencyBackend.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CreatedByEmployeeId"] = new SelectList(_context.Employees, "EmployeeId", "Email", officialTravel.CreatedByEmployeeId);
+            ViewData["CreatedByEmployeeId"] = new SelectList(_context.Employees, "EmployeeId", "Name", officialTravel.CreatedByEmployeeId);
             ViewData["RegionId"] = new SelectList(_context.Regions, "RegionId", "Country", officialTravel.RegionId);
-            ViewData["TravelStatusList"] = GetTravelStatusSelectList();
+            //ViewData["TravelStatusList"] = GetTravelStatusSelectList();
             return View(officialTravel);
         }
 
@@ -170,18 +176,18 @@ namespace TravelAgencyBackend.Controllers
             return _context.OfficialTravels.Any(e => e.OfficialTravelId == id);
         }
 
-        private IEnumerable<SelectListItem> GetTravelStatusSelectList()
-        {
-            return Enum.GetValues(typeof(TravelStatus))
-                .Cast<TravelStatus>()
-                .Select(e => new SelectListItem
-                {
-                    Value = e.ToString(),
-                    Text = e.GetType()
-                            .GetMember(e.ToString())
-                            .First()
-                            .GetCustomAttribute<DisplayAttribute>()?.Name ?? e.ToString()
-                });
-        }
+        //private IEnumerable<SelectListItem> GetTravelStatusSelectList()
+        //{
+        //    return Enum.GetValues(typeof(TravelStatus))
+        //        .Cast<TravelStatus>()
+        //        .Select(e => new SelectListItem
+        //        {
+        //            Value = e.ToString(),
+        //            Text = e.GetType()
+        //                    .GetMember(e.ToString())
+        //                    .First()
+        //                    .GetCustomAttribute<DisplayAttribute>()?.Name ?? e.ToString()
+        //        });
+        //}
     }
 }
