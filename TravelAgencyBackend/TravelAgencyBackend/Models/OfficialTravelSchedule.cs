@@ -28,5 +28,7 @@ namespace TravelAgencyBackend.Models
         public string? Note2 { get; set; }
 
         public OfficialTravelDetail OfficialTravelDetail { get; set; } = null!;
+
+        //public TravelSupplier TravelSupplier { get; set; } = null!;
     }
 }

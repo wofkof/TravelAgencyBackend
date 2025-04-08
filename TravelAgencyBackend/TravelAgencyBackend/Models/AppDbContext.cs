@@ -101,7 +101,6 @@ namespace TravelAgencyBackend.Models
                 entity.HasKey(p => p.ParticipantId);
 
                 entity.Property(p => p.Name).IsRequired().HasMaxLength(50);
-                entity.Property(p => p.Gender).HasMaxLength(10);
                 entity.Property(p => p.BirthDate).HasColumnType("date");
                 entity.Property(p => p.EnglishName).HasMaxLength(100);
                 entity.Property(p => p.IssuedPlace).HasMaxLength(50);
@@ -113,6 +112,11 @@ namespace TravelAgencyBackend.Models
                 entity.HasIndex(p => p.IdNumber).IsUnique();
                 entity.Property(p => p.PassportNumber).HasMaxLength(20);
                 entity.HasIndex(p => p.PassportNumber).IsUnique();
+
+                entity.Property(p => p.Gender)
+                      .HasConversion<string>()
+                      .HasMaxLength(20)
+                      .IsRequired();
 
                 entity.HasOne(p => p.Member)
                       .WithMany(m => m.Participants)
@@ -160,6 +164,7 @@ namespace TravelAgencyBackend.Models
                 entity.HasKey(p => p.PermissionId);
 
                 entity.Property(p => p.PermissionName).IsRequired().HasMaxLength(50);
+                entity.Property(p => p.Caption).HasMaxLength(100);
             });
 
             // M_RolePermission

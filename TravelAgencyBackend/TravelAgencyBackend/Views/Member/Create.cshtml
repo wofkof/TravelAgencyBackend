@@ -1,4 +1,4 @@
-﻿@model TravelAgencyBackend.Models.Member
+﻿@model TravelAgencyBackend.ViewModels.MemberCreateViewModel
 
 @{
     ViewData["Title"] = "新增會員";
@@ -39,8 +39,30 @@
                 <span asp-validation-for="Phone" class="text-danger"></span>
             </div>
             <hr>
+
+            @* 管理會員 *@
+            @if (PermissionChecker.CanManageMembers)
+            {
                 <button type="submit" class="btn btn-primary">新增</button>
+            }
+            else
+            {
+                <button type="submit" class="btn btn-primary disabled"
+                tabindex="-1" aria-disabled="true" onclick="return false;">
+                新增
+                </button>
+            }
+
+            @* 查看會員 *@
+            @if (PermissionChecker.CanViewMembers)
+            {
                 <a asp-action="Index" class="btn btn-secondary">返回列表</a>
+            }
+            else
+            {
+                <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">返回首頁</a>
+            }
+
         </form>
     </div>
 </div>
