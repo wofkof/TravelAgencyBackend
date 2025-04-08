@@ -648,10 +648,7 @@ namespace TravelAgencyBackend.Migrations
                     b.Property<int>("SoldSeats")
                         .HasColumnType("int");
 
-                    b.Property<int?>("TravelSupplierId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime");
 
                     b.HasKey("OfficialTravelDetailId");
@@ -659,8 +656,6 @@ namespace TravelAgencyBackend.Migrations
                     b.HasIndex("FlightId");
 
                     b.HasIndex("OfficialTravelId");
-
-                    b.HasIndex("TravelSupplierId");
 
                     b.ToTable("T_OfficialTravelDetail", (string)null);
                 });
@@ -1220,10 +1215,6 @@ namespace TravelAgencyBackend.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("TravelAgencyBackend.Models.TravelSupplier", null)
-                        .WithMany("OfficialTravelDetails")
-                        .HasForeignKey("TravelSupplierId");
-
                     b.Navigation("Flight");
 
                     b.Navigation("OfficialTravel");
@@ -1426,8 +1417,6 @@ namespace TravelAgencyBackend.Migrations
                     b.Navigation("Attractions");
 
                     b.Navigation("Hotels");
-
-                    b.Navigation("OfficialTravelDetails");
 
                     b.Navigation("Restaurants");
                 });

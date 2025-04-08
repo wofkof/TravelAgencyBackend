@@ -446,7 +446,7 @@ namespace TravelAgencyBackend.Migrations
                     Days = table.Column<int>(type: "int", nullable: false),
                     CoverPath = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime", nullable: true),
                     Status = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false)
                 },
                 constraints: table =>
@@ -531,7 +531,7 @@ namespace TravelAgencyBackend.Migrations
                     BookingDeadline = table.Column<DateTime>(type: "datetime", nullable: false),
                     GroupStatus = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime", nullable: true),
                     TravelSupplierId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>

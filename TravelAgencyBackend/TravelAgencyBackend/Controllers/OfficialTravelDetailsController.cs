@@ -60,6 +60,8 @@ namespace TravelAgencyBackend.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("OfficialTravelDetailId,OfficialTravelId,FlightId,DepartureDate,ReturnDate,Price,Seats,SoldSeats,MinimumGroupSize,BookingDeadline,GroupStatus,CreatedAt,UpdatedAt")] OfficialTravelDetail officialTravelDetail)
         {
+            ModelState.Remove("OfficialTravel");
+            ModelState.Remove("Flight");
             if (ModelState.IsValid)
             {
                 _context.Add(officialTravelDetail);
@@ -96,6 +98,8 @@ namespace TravelAgencyBackend.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("OfficialTravelDetailId,OfficialTravelId,FlightId,DepartureDate,ReturnDate,Price,Seats,SoldSeats,MinimumGroupSize,BookingDeadline,GroupStatus,CreatedAt,UpdatedAt")] OfficialTravelDetail officialTravelDetail)
         {
+            ModelState.Remove("OfficialTravel");
+            ModelState.Remove("Flight");
             if (id != officialTravelDetail.OfficialTravelDetailId)
             {
                 return NotFound();

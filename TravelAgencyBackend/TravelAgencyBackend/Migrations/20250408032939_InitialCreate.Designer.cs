@@ -12,8 +12,8 @@ using TravelAgencyBackend.Models;
 namespace TravelAgencyBackend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250408012126_UpdateAtNull")]
-    partial class UpdateAtNull
+    [Migration("20250408032939_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -654,7 +654,7 @@ namespace TravelAgencyBackend.Migrations
                     b.Property<int?>("TravelSupplierId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime");
 
                     b.HasKey("OfficialTravelDetailId");
