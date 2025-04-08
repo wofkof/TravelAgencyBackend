@@ -7,7 +7,19 @@
 <h1>與 @Model.MemberName 的對話</h1>
 
 <div class="mb-3">
-    <a asp-action="Index" class="btn btn-secondary">返回聊天室列表</a>
+
+    @* 管理聊天室 *@
+    @if (PermissionChecker.CanManageChatRooms)
+    {
+        <a asp-action="Index" class="btn btn-secondary">返回聊天室列表</a>
+    }
+    else
+    {
+        <a asp-action="Index" class="btn btn-secondary disabled"
+        tabindex="-1" aria-disabled="true" onclick="return false">
+            返回聊天室列表
+        </a>
+    }
 </div>
 
 <h4>聊天室</h4>
@@ -16,7 +28,19 @@
 {
     <form asp-action="Close" method="post" class="mb-3">
         <input type="hidden" name="id" value="@Model.ChatRoomId" />
-        <button type="submit" class="btn btn-warning" onclick="return confirm('確定要關閉聊天室嗎?')">關閉聊天室</button>
+
+        @* 管理聊天室 *@
+        @if (PermissionChecker.CanManageChatRooms)
+        {
+            <button type="submit" class="btn btn-warning" onclick="return confirm('確定要關閉聊天室嗎?')">關閉聊天室</button>
+        }
+        else
+        {
+            <button type="submit" class="btn btn-warning disabled"
+            tabindex="-1" aria-disabled="true" onclick="return false">
+                關閉聊天室
+            </button>
+        }
     </form>
 }
 else
@@ -50,7 +74,18 @@ else
         <textarea name="Content" class="form-control" rows="3" required maxlength="500"></textarea>
     </div>
 
-    <button type="submit" class="btn btn-primary">送出訊息</button>
+    @* 管理聊天室 *@
+    @if (PermissionChecker.CanManageChatRooms)
+    {
+        <button type="submit" class="btn btn-primary">送出訊息</button>
+    }
+    else
+    {
+        <button type="submit" class="btn btn-primary disabled"
+        tabindex="-1" aria-disabled="true" onclick="return false">
+        送出訊息
+        </button>
+    }
 </form>
 
 

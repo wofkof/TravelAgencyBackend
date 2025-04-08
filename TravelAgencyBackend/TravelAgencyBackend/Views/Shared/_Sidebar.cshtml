@@ -47,6 +47,7 @@
                     </a>
                     <ul>
                         <li>
+                            @* 查看會員 *@
                             @if (PermissionChecker.CanViewMembers)
                             {
                                 <a asp-controller="Member" asp-action="Index">
@@ -62,6 +63,7 @@
                             }
                         </li>  
                         <li>
+                            @* 管理會員 *@
                             @if (PermissionChecker.CanManageMembers)
                             {
                                 <a asp-controller="Member" asp-action="Create">
@@ -86,6 +88,7 @@
                     </a>
                     <ul>
                         <li>
+                            @* 查看參與人 *@
                             @if (PermissionChecker.CanViewParticipants)
                             {
                                 <a asp-controller="Participants" asp-action="Index">
@@ -110,14 +113,36 @@
                     </a>
                     <ul>
                         <li>
-                            <a asp-controller="ChatRoom" asp-action="Index">
-                                <i class="metismenu-icon"></i>聊天室列表
-                            </a>
+                            @* 管理聊天室 *@
+                            @if (PermissionChecker.CanManageChatRooms)
+                            {
+                                <a asp-controller="ChatRoom" asp-action="Index">
+                                    <i class="metismenu-icon"></i>聊天室列表
+                                </a>
+                            }
+                            else
+                            {
+                                <a asp-controller="ChatRoom" asp-action="Index"
+                                class="bg-light disabled" tabindex="-1" aria-disabled="true" onclick="return false">
+                                    <i class="metismenu-icon"></i>聊天室列表
+                                </a>
+                            }
                         </li>
                         <li>
-                            <a asp-controller="ChatRoom" asp-action="Create">
-                                <i class="metismenu-icon"></i>新增聊天室
-                            </a>
+                            @* 管理聊天室 *@
+                            @if (PermissionChecker.CanManageChatRooms)
+                            {
+                                <a asp-controller="ChatRoom" asp-action="Create">
+                                    <i class="metismenu-icon"></i>新增聊天室
+                                </a>
+                            }
+                            else
+                            {
+                                <a asp-controller="ChatRoom" asp-action="Create"
+                                   class="bg-light disabled" tabindex="-1" aria-disabled="true" onclick="return false">
+                                    <i class="metismenu-icon"></i>新增聊天室
+                                </a>
+                            }
                         </li>
                     </ul>
                 </li>

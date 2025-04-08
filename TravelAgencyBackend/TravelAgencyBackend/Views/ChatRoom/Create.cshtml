@@ -15,7 +15,18 @@
         <span asp-validation-for="MemberId" class="text-danger"></span>
     </div>
 
-    <button type="submit" class="btn btn-primary">建立聊天室</button>
+    @* 管理聊天室 *@
+    @if (PermissionChecker.CanManageChatRooms)
+    {
+        <button type="submit" class="btn btn-primary">建立聊天室</button>
+    }
+    else
+    {
+        <button type="submit" class="btn btn-primary disabled"
+        tabindex="-1" aria-disabled="true" onclick="return false">
+        建立聊天室
+        </button>
+    }
 </form>
 
 @section Scripts {

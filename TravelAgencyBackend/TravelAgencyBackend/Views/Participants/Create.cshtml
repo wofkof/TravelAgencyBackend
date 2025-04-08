@@ -71,8 +71,32 @@
         <span asp-validation-for="PassportIssueDate" class="text-danger"></span>
     </div>
 
-    <button type="submit" class="btn btn-primary">建立</button>
-    <a asp-action="Index" class="btn btn-secondary">返回列表</a>
+    @* 管理參與人 *@
+    @if (PermissionChecker.CanManageParticipants)
+    {
+        <button type="submit" class="btn btn-primary">建立</button>
+    }
+    else
+    {
+        <button type="submit" class="btn btn-primary disabled"
+        tabindex="-1" aria-disabled="true" onclick="return false">
+            建立
+        </button>
+    }
+
+    @* 查看參與人 *@
+    @if (PermissionChecker.CanViewParticipants)
+    {
+        <a asp-action="Index" class="btn btn-secondary">返回列表</a>
+    }
+	else
+	{
+		<a asp-action="Index" class="btn btn-secondary disabled"
+		   tabindex="-1" aria-disabled="true" onclick="return false">
+			返回列表
+		</a>
+	}
+
 </form>
 
 @section Scripts {
