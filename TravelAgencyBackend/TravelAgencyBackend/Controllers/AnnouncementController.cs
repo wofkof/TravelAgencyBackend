@@ -40,7 +40,14 @@ namespace TravelAgencyBackend.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            ViewBag.Employees = new SelectList(_context.Employees, "EmployeeId", "Name");
+            ViewBag.Employees = new SelectList(
+             _context.Employees
+            .Where(e => e.Status == EmployeeStatus.Active),
+            "EmployeeId",
+            "Name"
+            );
+
+
             return View();
         }
 
@@ -49,7 +56,14 @@ namespace TravelAgencyBackend.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Employees = new SelectList(_context.Employees, "EmployeeId", "Name");
+                ViewBag.Employees = new SelectList(
+            _context.Employees
+            .Where(e => e.Status == EmployeeStatus.Active),
+            "EmployeeId",
+            "Name"
+            );
+
+
                 return View(vm);
             }
 
