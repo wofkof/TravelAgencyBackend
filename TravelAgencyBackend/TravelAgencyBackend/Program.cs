@@ -1,11 +1,14 @@
 using Microsoft.EntityFrameworkCore;
 using TravelAgencyBackend.Models;
+using TravelAgencyBackend.Services;
 using TravelAgencyBackend.ViewComponent;
 
 var builder = WebApplication.CreateBuilder(args);
 
 //¨Ì¿àª`¤J
 builder.Services.AddControllersWithViews();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<PermissionCheckService>();
 builder.Services.AddScoped<DashboardService>();
 builder.Services.AddAutoMapper(typeof(Program));
 
