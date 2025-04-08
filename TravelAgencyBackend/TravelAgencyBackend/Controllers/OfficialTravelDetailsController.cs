@@ -48,7 +48,7 @@ namespace TravelAgencyBackend.Controllers
         // GET: OfficialTravelDetails/Create
         public IActionResult Create()
         {
-            ViewData["FlightId"] = new SelectList(_context.Flights, "FlightId", "FlightId");
+            ViewData["FlightId"] = new SelectList(_context.Flights, "FlightId", "AirlineCode");
             ViewData["OfficialTravelId"] = new SelectList(_context.OfficialTravels, "OfficialTravelId", "Title");
             return View();
         }
@@ -68,7 +68,7 @@ namespace TravelAgencyBackend.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["FlightId"] = new SelectList(_context.Flights, "FlightId", "FlightId", officialTravelDetail.FlightId);
+            ViewData["FlightId"] = new SelectList(_context.Flights, "FlightId", "AirlineCode", officialTravelDetail.FlightId);
             ViewData["OfficialTravelId"] = new SelectList(_context.OfficialTravels, "OfficialTravelId", "Title", officialTravelDetail.OfficialTravelId);
             return View(officialTravelDetail);
         }
@@ -86,7 +86,7 @@ namespace TravelAgencyBackend.Controllers
             {
                 return NotFound();
             }
-            ViewData["FlightId"] = new SelectList(_context.Flights, "FlightId", "FlightId", officialTravelDetail.FlightId);
+            ViewData["FlightId"] = new SelectList(_context.Flights, "FlightId", "AirlineCode", officialTravelDetail.FlightId);
             ViewData["OfficialTravelId"] = new SelectList(_context.OfficialTravels, "OfficialTravelId", "Title", officialTravelDetail.OfficialTravelId);
             return View(officialTravelDetail);
         }
@@ -125,7 +125,7 @@ namespace TravelAgencyBackend.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["FlightId"] = new SelectList(_context.Flights, "FlightId", "FlightId", officialTravelDetail.FlightId);
+            ViewData["FlightId"] = new SelectList(_context.Flights, "FlightId", "AirlineCode", officialTravelDetail.FlightId);
             ViewData["OfficialTravelId"] = new SelectList(_context.OfficialTravels, "OfficialTravelId", "Title", officialTravelDetail.OfficialTravelId);
             return View(officialTravelDetail);
         }

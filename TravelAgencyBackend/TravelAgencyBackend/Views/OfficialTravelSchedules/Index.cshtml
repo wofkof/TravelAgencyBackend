@@ -7,7 +7,9 @@
 <h1>Index</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Create New</a> | 
+    @Html.ActionLink("回到行程細節", "Index", "OfficialTravelDetails") | 
+    @Html.ActionLink("回到專案管理", "Index", "OfficialTravels")
 </p>
 <table class="table">
     <thead>

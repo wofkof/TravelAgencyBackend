@@ -62,7 +62,7 @@ namespace TravelAgencyBackend.Controllers
             {
                 _context.Add(officialTravelSchedule);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Create));
             }
             ViewData["OfficialTravelDetailId"] = new SelectList(_context.OfficialTravelDetails, "OfficialTravelDetailId", "OfficialTravelDetailId", officialTravelSchedule.OfficialTravelDetailId);
             return View(officialTravelSchedule);
