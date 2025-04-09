@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TravelAgencyBackend.Models;
+using TravelAgencyBackend.ViewModles;
+
 
 namespace TravelAgencyBackend.Controllers
 {
@@ -22,7 +26,8 @@ namespace TravelAgencyBackend.Controllers
         public async Task<IActionResult> Index()
         {
             var appDbContext = _context.OfficialTravels.Include(o => o.CreatedBy).Include(o => o.Region);
-            return View(await appDbContext.ToListAsync());
+
+            return View(appDbContext);
         }
 
         // GET: OfficialTravels/Details/5
@@ -58,22 +63,52 @@ namespace TravelAgencyBackend.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CreatedByEmployeeId,RegionId,Title,ProjectYear,AvailableFrom,AvailableUntil,Description,Days,CoverPath,Status")] OfficialTravel officialTravel)
+        public async Task<IActionResult> Create(ViewModels.OfficialTravelViewModel model)
         {
-            ModelState.Remove("CreatedBy");
-            ModelState.Remove("Region");
-
             if (ModelState.IsValid)
             {
-                officialTravel.CreatedAt = DateTime.Now;
+                string? coverPath = null;
+
+                if (model.CoverImage != null && model.CoverImage.Length > 0)
+                {
+                    var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "covers");
+                    if (!Directory.Exists(uploadsFolder))
+                        Directory.CreateDirectory(uploadsFolder);
+
+                    var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(model.CoverImage.FileName);
+                    var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await model.CoverImage.CopyToAsync(stream);
+                    }
+
+                    coverPath = "/uploads/covers/" + uniqueFileName;
+                }
+
+                var officialTravel = new OfficialTravel
+                {
+                    CreatedByEmployeeId = model.CreatedByEmployeeId,
+                    RegionId = model.RegionId,
+                    Title = model.Title,
+                    ProjectYear = model.ProjectYear,
+                    AvailableFrom = model.AvailableFrom,
+                    AvailableUntil = model.AvailableUntil,
+                    Description = model.Description,
+                    Days = model.Days,
+                    CoverPath = coverPath,
+                    Status = (TravelStatus)model.Status,
+                    CreatedAt = DateTime.Now
+                };
                 _context.Add(officialTravel);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            
+            ViewData["CreatedByEmployeeId"] = new SelectList(_context.Employees, "EmployeeId", "Name", model.CreatedByEmployeeId);
+            ViewData["RegionId"] = new SelectList(_context.Regions, "RegionId", "Country", model.RegionId);
+            return View(model);
 
-            ViewData["CreatedByEmployeeId"] = new SelectList(_context.Employees, "EmployeeId", "Name", officialTravel.CreatedByEmployeeId);
-            ViewData["RegionId"] = new SelectList(_context.Regions, "RegionId", "Country", officialTravel.RegionId);
-            return View(officialTravel);
         }
 
         // GET: OfficialTravels/Edit/5
@@ -91,6 +126,8 @@ namespace TravelAgencyBackend.Controllers
             }
             ViewData["CreatedByEmployeeId"] = new SelectList(_context.Employees, "EmployeeId", "Name", officialTravel.CreatedByEmployeeId);
             ViewData["RegionId"] = new SelectList(_context.Regions, "RegionId", "Country", officialTravel.RegionId);
+            //ViewData["TravelStatusList"] = GetTravelStatusSelectList();
+
             return View(officialTravel);
         }
 
@@ -103,7 +140,7 @@ namespace TravelAgencyBackend.Controllers
         {
             ModelState.Remove("CreatedBy");
             ModelState.Remove("Region");
-
+            
             if (id != officialTravel.OfficialTravelId)
             {
                 return NotFound();
@@ -132,6 +169,8 @@ namespace TravelAgencyBackend.Controllers
             }
             ViewData["CreatedByEmployeeId"] = new SelectList(_context.Employees, "EmployeeId", "Name", officialTravel.CreatedByEmployeeId);
             ViewData["RegionId"] = new SelectList(_context.Regions, "RegionId", "Country", officialTravel.RegionId);
+            //ViewData["TravelStatusList"] = GetTravelStatusSelectList();
+
             return View(officialTravel);
         }
 
@@ -174,5 +213,21 @@ namespace TravelAgencyBackend.Controllers
         {
             return _context.OfficialTravels.Any(e => e.OfficialTravelId == id);
         }
+
+
+        //private IEnumerable<SelectListItem> GetTravelStatusSelectList()
+        //{
+        //    return Enum.GetValues(typeof(TravelStatus))
+        //        .Cast<TravelStatus>()
+        //        .Select(e => new SelectListItem
+        //        {
+        //            Value = e.ToString(),
+        //            Text = e.GetType()
+        //                    .GetMember(e.ToString())
+        //                    .First()
+        //                    .GetCustomAttribute<DisplayAttribute>()?.Name ?? e.ToString()
+        //        });
+        //}
+
     }
 }

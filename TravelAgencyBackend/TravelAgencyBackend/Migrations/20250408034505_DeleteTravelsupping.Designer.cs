@@ -12,15 +12,15 @@ using TravelAgencyBackend.Models;
 namespace TravelAgencyBackend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250330201625_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250408034505_DeleteTravelsupping")]
+    partial class DeleteTravelsupping
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.14")
+                .HasAnnotation("ProductVersion", "9.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -596,7 +596,7 @@ namespace TravelAgencyBackend.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime");
 
                     b.HasKey("OfficialTravelId");
@@ -651,10 +651,7 @@ namespace TravelAgencyBackend.Migrations
                     b.Property<int>("SoldSeats")
                         .HasColumnType("int");
 
-                    b.Property<int?>("TravelSupplierId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime");
 
                     b.HasKey("OfficialTravelDetailId");
@@ -662,8 +659,6 @@ namespace TravelAgencyBackend.Migrations
                     b.HasIndex("FlightId");
 
                     b.HasIndex("OfficialTravelId");
-
-                    b.HasIndex("TravelSupplierId");
 
                     b.ToTable("T_OfficialTravelDetail", (string)null);
                 });
@@ -1223,10 +1218,6 @@ namespace TravelAgencyBackend.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("TravelAgencyBackend.Models.TravelSupplier", null)
-                        .WithMany("OfficialTravelDetails")
-                        .HasForeignKey("TravelSupplierId");
-
                     b.Navigation("Flight");
 
                     b.Navigation("OfficialTravel");
@@ -1429,8 +1420,6 @@ namespace TravelAgencyBackend.Migrations
                     b.Navigation("Attractions");
 
                     b.Navigation("Hotels");
-
-                    b.Navigation("OfficialTravelDetails");
 
                     b.Navigation("Restaurants");
                 });
