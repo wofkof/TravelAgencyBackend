@@ -1,0 +1,112 @@
+﻿@model TravelAgencyBackend.ViewModels.CustomTravelPendingViewModel 
+
+
+@{
+    ViewData["Title"] = "CreateContent";
+}
+
+<h2>新增行程內容</h2>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="CreateContent" method="post">
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>            
+            <div class="form-group"> 
+                <label asp-for="NewContent.CustomTravelId" class="control-label"></label>
+                <input asp-for="NewContent.CustomTravelId" class="form-control" readonly />
+                <span asp-validation-for="NewContent.CustomTravelId" class="text-danger"></span>
+            </div> 
+            <div class="form-group">
+                <label asp-for="NewContent.Category"  class="control-label"></label>
+                <select asp-for="NewContent.Category" 
+                asp-items="Html.GetEnumSelectList<Category>()"
+                        class="form-select d-inline w-auto mx-2" id="NewContent_Category">                   
+                </select>
+                <span asp-validation-for="NewContent.Category" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NewContent.ItemId" class="control-label"></label>                
+                <select asp-for="NewContent.ItemId" class="form-select" required id="NewContent_ItemId">
+                    <option selected disabled value="">請選擇項目</option>
+                    @{                       
+                        @foreach (var t in Model.Attraction)
+                        {
+                            <option data-category="3" value="@t.AttractionId" hidden>@t.ScenicSpotName</option>
+                        }
+                        
+                        foreach (var t in Model.Restaurant)
+                        {
+                            <option data-category="2" value="@t.RestaurantId" hidden>@t.RestaurantName</option>
+                        }
+
+                        @foreach (var h in Model.Hotel)
+                        {
+                            <option data-category="0" value="@h.HotelId" hidden>@h.HotelName</option>
+                        }
+
+                        @foreach (var t in Model.Transportation)
+                        {
+                            <option data-category="1" value="@t.TransportId" hidden>@t.TransportMethod</option>
+                        }
+
+                    }
+                </select>
+                <span asp-validation-for="NewContent.ItemId" class="text-danger"></span>
+            </div>            
+            <div class="form-group">
+                <label asp-for="NewContent.Day" class="control-label"></label>
+                <input asp-for="NewContent.Day" class="form-control" />
+                <span asp-validation-for="NewContent.Day" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NewContent.Time" class="control-label"></label>
+                <input asp-for="NewContent.Time" class="form-control" />
+                <span asp-validation-for="NewContent.Time" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NewContent.HotelName" class="control-label"></label>
+                <input asp-for="NewContent.HotelName" class="form-control" />
+                <span asp-validation-for="NewContent.HotelName" class="text-danger"></span>
+            </div>
+            <div class="mt-4">
+                <input type="submit" value="新增" class="btn btn-primary" />
+                <a asp-action="ContentList" asp-route-id="@Model.NewContent.CustomTravelId" class="btn btn-secondary">返回</a>
+            </div>
+            
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+
+                    document.addEventListener("DOMContentLoaded", function () {
+            const categorySelect = document.getElementById("NewContent_Category");
+            const itemSelect = document.getElementById("NewContent_ItemId");
+
+            // 定義過濾選項的函式
+            function filterOptionsByCategory() {
+                const selectedCategory = categorySelect.value;  // 這是從asp-items生成的option取得的選中的值
+
+                const allOptions = itemSelect.querySelectorAll('option[data-category]');
+                allOptions.forEach(opt => opt.hidden = true); // 隱藏所有選項
+
+                if (selectedCategory) {
+                    // 顯示符合選取類別的 options
+                    const visibleOptions = itemSelect.querySelectorAll(`option[data-category='${selectedCategory}']`);
+                    visibleOptions.forEach(opt => opt.hidden = false);
+                }
+            }
+
+            // 設定選項過濾功能，當類別改變時觸發
+            categorySelect.addEventListener("change", filterOptionsByCategory);
+
+            // 頁面載入時自動套用一次，確保顯示正確選項
+            filterOptionsByCategory();
+        });
+    </script>
+}

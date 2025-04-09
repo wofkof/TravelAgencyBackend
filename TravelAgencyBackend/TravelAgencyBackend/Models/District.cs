@@ -1,9 +1,14 @@
-﻿namespace TravelAgencyBackend.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace TravelAgencyBackend.Models
 {
     public class District
     {
+        [Display(Name = "區編號")]
         public int DistrictId { get; set; }
+        [Display(Name = "縣市編號")]
         public int CityId { get; set; }
+        [Display(Name = "區名稱")]
         public string DistrictName { get; set; } = null!;
 
 
