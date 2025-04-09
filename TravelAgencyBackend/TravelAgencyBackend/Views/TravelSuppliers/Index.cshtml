@@ -9,35 +9,21 @@
 <p>
 	<a asp-action="Create">Create New</a>
 </p>
-<table class="table">
+
+<table id="myTable" class="display">
 	<thead>
 		<tr>
-			<th>
-
-			</th>
-			<th>
-				供應商名稱
-			</th>
-			<th>
-				類型
-			</th>
-			<th>
-				聯絡人姓名
-			</th>
-			<th>
-				電話
-			</th>
-			<th>
-				電子郵件
-			</th>
-			<th>
-				備註
-			</th>
+			<th>編號</th>
+			<th>@Html.DisplayNameFor(model => model.SupplierName)</th>
+			<th>@Html.DisplayNameFor(model => model.SupplierType)</th>
+			<th>@Html.DisplayNameFor(model => model.ContactName)</th>
+			<th>@Html.DisplayNameFor(model => model.ContactPhone)</th>
+			<th>@Html.DisplayNameFor(model => model.ContactEmail)</th>
+			<th>@Html.DisplayNameFor(model => model.Note)</th>
 			<th></th>
 		</tr>
 	</thead>
 	<tbody>
-
 		@{
 			int count = 0;
 			foreach (var item in Model)
@@ -73,25 +59,6 @@
 				</tr>
 			}
 		}
-	</tbody>
-</table>
-
-<table id="myTable" class="display">
-	<thead>
-		<tr>
-			<th>Column 1</th>
-			<th>Column 2</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td>Row 1 Data 1</td>
-			<td>Row 1 Data 2</td>
-		</tr>
-		<tr>
-			<td>Row 2 Data 1</td>
-			<td>Row 2 Data 2</td>
-		</tr>
 	</tbody>
 </table>
 
