@@ -15,5 +15,8 @@ namespace TravelAgencyBackend.ViewModels
 
         public Content NewContent { get; set; } = new Content();
         public Content EditContent { get; set; }
+        public int SelectedCityId { get; set; }
+        public int SelectedDistrictId { get; set; }
+        
     }
 }

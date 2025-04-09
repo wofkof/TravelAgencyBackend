@@ -9,7 +9,10 @@
 <p>
 	@using (Html.BeginForm())
 	{
-		<div class="fs-5">關鍵字：@Html.TextBox("txtKeyword") <input type="submit" value="搜尋" class="btn btn-outline-info" /></div>
+		<div class="fs-5">
+			關鍵字：@Html.TextBox("txtKeyword")
+			<input type="submit" value="搜尋" class="btn btn-outline-info" />
+		</div>
 	}
 </p>
 
@@ -105,7 +108,7 @@
 				</td>
 				<td>
 					@Html.ActionLink("刪除", "DeleteOrder", "CustomTravelPending", new { id = item.CustomTravelId }, new { @class = "btn btn-outline-danger", onclick = "return confirm('確定要刪除嗎?')" })
-				</td>>
+				</td>
 			</tr>
 		}
 	</tbody>
