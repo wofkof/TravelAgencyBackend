@@ -33,6 +33,22 @@ body, html {
     overflow-y: auto;
 }
 
+
+ .app-sidebar .scrollbar-sidebar {
+     z-index: 15;
+     width: 100%;
+     max-height: calc(100vh - 20px);
+     overflow-y: auto;
+ }
+.form-label {
+    margin-bottom: 0.25rem; /* 減少標籤下方的邊距 */
+}
+
+.form-select {
+    height: 2.5rem; /* 設定統一的高度 */
+    line-height: 1.25; /* 調整行高 */
+}
+
 .app-main {
     margin-left: 0;
     transition: margin-left 0.3s ease;
