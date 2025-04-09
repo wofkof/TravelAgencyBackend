@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TravelAgencyBackend.Models;
-using TravelAgencyBackend.ViewModles;
+using TravelAgencyBackend.ViewModels;
 
 namespace TravelAgencyBackend.Controllers
 {
@@ -96,7 +96,7 @@ namespace TravelAgencyBackend.Controllers
                     Description = model.Description,
                     Days = model.Days,
                     CoverPath = coverPath,
-                    Status = (TravelStatus)model.Status,
+                    Status = (Models.TravelStatus)model.Status,
                     CreatedAt = DateTime.Now
                 };
 

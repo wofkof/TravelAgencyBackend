@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TravelAgencyBackend.Models;
-using TravelAgencyBackend.ViewModles;
+using TravelAgencyBackend.ViewModels;
 using TravelAgencyBackend.Helpers;
 using Microsoft.AspNetCore.OutputCaching;
 

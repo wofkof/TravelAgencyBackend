@@ -11,7 +11,7 @@
     @Html.ActionLink("回到專案管理", "Index", "OfficialTravels") | 
     @Html.ActionLink("檢視行程日程", "Index", "OfficialTravelSchedules")
 </p>
-<table class="table">
+<table id ="myTable" class="display">
     <thead>
         <tr>
             <th>
@@ -101,3 +101,11 @@
 }
     </tbody>
 </table>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#myTable').DataTable();
+        });
+    </script>
+}
