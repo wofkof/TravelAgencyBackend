@@ -1,0 +1,112 @@
+﻿@model TravelAgencyBackend.ViewModels.CustomTravelPendingViewModel
+
+@{
+	ViewData["Title"] = "List";
+}
+
+<h2>待審核訂單</h2>
+
+<p>
+	@using (Html.BeginForm())
+	{
+		<div class="fs-5">關鍵字：@Html.TextBox("txtKeyword") <input type="submit" value="搜尋" class="btn btn-outline-info" /></div>
+	}
+</p>
+
+<table class="table table-bordered table-striped table-hover">
+	<thead>
+		<tr>
+			<th>
+				@Html.DisplayNameFor(model => model.CustomTravel.First().CustomTravelId)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.CustomTravel.First().MemberId)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.CustomTravel.First().ReviewEmployeeId)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.CustomTravel.First().CreatedAt)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.CustomTravel.First().UpdatedAt)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.CustomTravel.First().DepartureDate)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.CustomTravel.First().EndDate)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.CustomTravel.First().Days)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.CustomTravel.First().People)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.CustomTravel.First().TotalAmount)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.CustomTravel.First().Status)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.CustomTravel.First().Note)
+			</th>
+			<th>檢視</th>
+			<th>修改</th>
+			<th>刪除</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model.CustomTravel)
+		{
+			<tr>
+				<td>
+					@Html.DisplayFor(modelItem => item.CustomTravelId)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.MemberId)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.ReviewEmployeeId)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.CreatedAt)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.UpdatedAt)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.DepartureDate)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.EndDate)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Days)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.People)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.TotalAmount)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Status)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Note)
+				</td>
+				<td>
+					@Html.ActionLink("檢視", "ContentList", "CustomTravelPending", new { id = item.CustomTravelId }, new { @class = "btn btn-outline-success" })
+				</td>
+				<td>
+					@Html.ActionLink("修改", "EditOrder", "CustomTravelPending", new { id = item.CustomTravelId }, new { @class = "btn btn-outline-warning" })
+				</td>
+				<td>
+					@Html.ActionLink("刪除", "DeleteOrder", "CustomTravelPending", new { id = item.CustomTravelId }, new { @class = "btn btn-outline-danger", onclick = "return confirm('確定要刪除嗎?')" })
+				</td>>
+			</tr>
+		}
+	</tbody>
+</table>

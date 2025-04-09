@@ -1,0 +1,39 @@
+﻿@model IEnumerable<TravelAgencyBackend.ViewModels.Announcement.AnnouncementViewModel>
+
+@{
+    ViewData["Title"] = "公告";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<a asp-action="Create" class="btn btn-primary mb-3">新增公告</a>
+
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>標題</th>
+            <th>內容</th>
+            <th>發佈人員</th>
+            <th>發佈時間</th>
+            <th>狀態</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Title</td>
+                <td>@(item.Content.Length > 30 ? item.Content.Substring(0, 30) + "..." : item.Content)</td>
+                <td>@item.EmployeeName</td>
+                <td>@item.SentAt.ToString("yyyy-MM-dd HH:mm")</td>
+                <td>@(item.Status == AnnouncementStatus.Announce ? "已公佈" : "未公佈")</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.AnnouncementId" class="btn btn-sm btn-warning">編輯</a>
+                    <a asp-action="Details" asp-route-id="@item.AnnouncementId" class="btn btn-sm btn-info">查看</a>
+                    <a asp-action="Delete" asp-route-id="@item.AnnouncementId" class="btn btn-sm btn-danger">刪除</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

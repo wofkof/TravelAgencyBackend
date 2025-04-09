@@ -1,25 +1,34 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TravelAgencyBackend.Models;
 using TravelAgencyBackend.ViewModels;
 using TravelAgencyBackend.Helpers;
-using Microsoft.AspNetCore.OutputCaching;
+using AutoMapper;
+using TravelAgencyBackend.ViewComponent;
+using TravelAgencyBackend.Services;
 
 namespace TravelAgencyBackend.Controllers
 {
-    public class MemberController : Controller
+    public class MemberController : BaseController
     {
         private readonly AppDbContext _context;
+        private readonly IMapper _mapper;
+        private readonly PermissionCheckService _perm;
 
-        public MemberController(AppDbContext context)
+        public MemberController(AppDbContext context, IMapper mapper, PermissionCheckService perm) 
+            : base(perm) 
         {
             _context = context;
+            _mapper = mapper;
+            _perm = perm;
         }
 
-        // 管理員能夠修改會員密碼
+        // 修改密碼（GET）
         public IActionResult ChangePassword(int id)
         {
+            var check = CheckPermissionOrForbid("修改會員密碼");
+            if (check != null) return check;
+
             var member = _context.Members.Find(id);
             if (member == null) return NotFound($"找不到 ID 為 {id} 的會員");
 
@@ -28,12 +37,15 @@ namespace TravelAgencyBackend.Controllers
             return View();
         }
 
-        // 管理員能夠修改會員密碼
+        // 修改密碼（POST）
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult ChangePassword(int id, string newPassword, string confirmPassword) 
+        public IActionResult ChangePassword(int id, string newPassword, string confirmPassword)
         {
-            if (newPassword != confirmPassword) 
+            var check = CheckPermissionOrForbid("修改會員密碼");
+            if (check != null) return check;
+
+            if (newPassword != confirmPassword)
             {
                 ModelState.AddModelError(string.Empty, "密碼與確認密碼不一致");
                 ViewBag.MemberId = id;
@@ -50,9 +62,12 @@ namespace TravelAgencyBackend.Controllers
             return RedirectToAction(nameof(Details), new { id });
         }
 
-        // 會員列表+搜尋功能
+        // Index（含搜尋與分頁）
         public IActionResult Index(MemberIndexViewModel model)
         {
+            var check = CheckPermissionOrForbid("查看會員");
+            if (check != null) return check;
+
             string keyword = model.SearchText?.Trim() ?? "";
 
             var query = _context.Members.AsNoTracking()
@@ -67,109 +82,128 @@ namespace TravelAgencyBackend.Controllers
 
             model.TotalCount = query.Count();
 
-            model.Members = query
+            var result = query
                 .OrderBy(m => m.MemberId)
                 .Skip((model.Page - 1) * model.PageSize)
                 .Take(model.PageSize)
                 .ToList();
 
+            model.Members = _mapper.Map<List<MemberListItemViewModel>>(result);
             return View(model);
         }
 
-        // 查看會員資料
+        // 詳細資料
         public IActionResult Details(int id)
         {
+            var check = CheckPermissionOrForbid("查看會員");
+            if (check != null) return check;
+
             var member = _context.Members.Find(id);
             if (member == null) return NotFound();
 
-            return View(member);
+            var vm = _mapper.Map<MemberDetailViewModel>(member);
+            return View(vm);
         }
 
-        // 新增會員
+        // 建立會員（GET）
         public IActionResult Create()
         {
+            var check = CheckPermissionOrForbid("管理會員");
+            if (check != null) return check;
+
             return View();
         }
 
-        // 新增會員
+        // 建立會員（POST）
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Member member)
+        public IActionResult Create(MemberCreateViewModel vm)
         {
-            if (_context.Members.Any(m => m.Account == member.Account))
-            {
-                ModelState.AddModelError("Account", "此帳號已被註冊");
-            }
-            if (_context.Members.Any(m => m.Email == member.Email))
-            {
-                ModelState.AddModelError("Email", "此信箱已被註冊");
-            }
-            if (_context.Members.Any(m => m.Phone == member.Phone))
-            {
-                ModelState.AddModelError("Phone", "此手機已被註冊");
-            }
+            var check = CheckPermissionOrForbid("管理會員");
+            if (check != null) return check;
 
-            if (ModelState.IsValid)
-            {
-                member.Password = PasswordHasher.Hash(member.Password);
-                member.CreatedAt = DateTime.Now;
-                member.Status = MemberStatus.Active;
-                _context.Members.Add(member);
-                _context.SaveChanges();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(member);
+            if (_context.Members.Any(m => m.Account == vm.Account))
+                ModelState.AddModelError("Account", "此帳號已被註冊");
+
+            if (_context.Members.Any(m => m.Email == vm.Email))
+                ModelState.AddModelError("Email", "此信箱已被註冊");
+
+            if (_context.Members.Any(m => m.Phone == vm.Phone))
+                ModelState.AddModelError("Phone", "此手機已被註冊");
+
+            if (!ModelState.IsValid)
+                return View(vm);
+
+            var member = _mapper.Map<Member>(vm);
+            member.Password = PasswordHasher.Hash(vm.Password);
+            member.CreatedAt = DateTime.Now;
+            member.Status = MemberStatus.Active;
+
+            _context.Members.Add(member);
+            _context.SaveChanges();
+            return RedirectToAction(nameof(Index));
         }
 
-        // 修改會員資料
+        // 編輯會員（GET）
         public IActionResult Edit(int id)
         {
+            var check = CheckPermissionOrForbid("管理會員");
+            if (check != null) return check;
+
             var member = _context.Members.Find(id);
             if (member == null) return NotFound($"找不到 ID 為 {id} 的會員");
 
-            return View(member);
+            var vm = _mapper.Map<MemberEditViewModel>(member);
+            return View(vm);
         }
 
-        // 修改會員資料
+        // 編輯會員（POST）
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, Member updatedMember)
+        public IActionResult Edit(int id, MemberEditViewModel vm)
         {
-            if (id != updatedMember.MemberId) return BadRequest("參數錯誤：id 不一致");
+            var check = CheckPermissionOrForbid("管理會員");
+            if (check != null) return check;
 
-            if (ModelState.IsValid)
-            {
-                var member = _context.Members.Find(id);
-                if (member == null) return NotFound($"找不到 ID 為 {id} 的會員");
+            if (id != vm.MemberId) return BadRequest("參數錯誤：id 不一致");
 
-                member.Name = updatedMember.Name;
-                member.Email = updatedMember.Email;
-                member.Phone = updatedMember.Phone;
-                member.Status = updatedMember.Status;
-                member.Note = updatedMember.Note;
-                member.UpdatedAt = DateTime.Now;
+            if (_context.Members.Any(m => m.Email == vm.Email && m.MemberId != vm.MemberId))
+                ModelState.AddModelError("Email", "該信箱已被註冊");
 
-                _context.SaveChanges();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(updatedMember);
+            if (_context.Members.Any(m => m.Phone == vm.Phone && m.MemberId != vm.MemberId))
+                ModelState.AddModelError("Phone", "該手機號碼已被註冊");
+
+            if (!ModelState.IsValid) return View(vm);
+
+            var member = _context.Members.Find(id);
+            if (member == null) return NotFound($"找不到 ID 為 {id} 的會員");
+
+            member.Name = vm.Name;
+            member.Email = vm.Email;
+            member.Phone = vm.Phone;
+            member.Status = vm.Status;
+            member.Note = vm.Note;
+            member.UpdatedAt = DateTime.Now;
+
+            _context.SaveChanges();
+            return RedirectToAction(nameof(Index));
         }
 
         // 刪除會員
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete(int id, Member deleteMember)
+        public IActionResult Delete(int id)
         {
-            if (id != deleteMember.MemberId) return BadRequest("參數錯誤：id 不一致");
+            var check = CheckPermissionOrForbid("管理會員");
+            if (check != null) return check;
 
             var member = _context.Members.Find(id);
-
             if (member == null) return NotFound($"找不到 ID 為 {id} 的會員");
 
             _context.Members.Remove(member);
             _context.SaveChanges();
+
             return RedirectToAction(nameof(Index));
         }
     }
 }
-

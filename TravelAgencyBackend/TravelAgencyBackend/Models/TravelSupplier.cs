@@ -19,7 +19,6 @@ namespace TravelAgencyBackend.Models
         [Display(Name = "備註")]
         public string? Note { get; set; }
 
-        
         public ICollection<Hotel> Hotels { get; set; } = new List<Hotel>();
         public ICollection<Restaurant> Restaurants { get; set; } = new List<Restaurant>();
         public ICollection<Attraction> Attractions { get; set; } = new List<Attraction>();
