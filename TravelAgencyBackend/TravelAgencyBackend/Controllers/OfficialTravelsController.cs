@@ -86,6 +86,7 @@ namespace TravelAgencyBackend.Controllers
 
                 var officialTravel = new OfficialTravel
                 {
+                    OfficialTravelId = model.OfficialTravelId,
                     CreatedByEmployeeId = model.CreatedByEmployeeId,
                     RegionId = model.RegionId,
                     Title = model.Title,
