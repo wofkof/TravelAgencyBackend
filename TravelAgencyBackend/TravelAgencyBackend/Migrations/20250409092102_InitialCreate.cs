@@ -88,7 +88,8 @@ namespace TravelAgencyBackend.Migrations
                 {
                     PermissionId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    PermissionName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                    PermissionName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Caption = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -193,12 +194,12 @@ namespace TravelAgencyBackend.Migrations
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Phone = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     IdNumber = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    Gender = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    BirthDate = table.Column<DateTime>(type: "date", nullable: false),
+                    Gender = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    BirthDate = table.Column<DateTime>(type: "date", nullable: true),
                     EnglishName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     PassportNumber = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     IssuedPlace = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    PassportIssueDate = table.Column<DateTime>(type: "date", nullable: false)
+                    PassportIssueDate = table.Column<DateTime>(type: "date", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -250,7 +251,9 @@ namespace TravelAgencyBackend.Migrations
                     BirthDate = table.Column<DateTime>(type: "date", nullable: false),
                     HireDate = table.Column<DateTime>(type: "date", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    Note = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true)
+                    Note = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    Gender = table.Column<int>(type: "int", nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -531,8 +534,7 @@ namespace TravelAgencyBackend.Migrations
                     BookingDeadline = table.Column<DateTime>(type: "datetime", nullable: false),
                     GroupStatus = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime", nullable: true),
-                    TravelSupplierId = table.Column<int>(type: "int", nullable: true)
+                    UpdatedAt = table.Column<DateTime>(type: "datetime", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -549,11 +551,6 @@ namespace TravelAgencyBackend.Migrations
                         principalTable: "T_OfficialTravel",
                         principalColumn: "OfficialTravelId",
                         onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_T_OfficialTravelDetail_T_TravelSupplier_TravelSupplierId",
-                        column: x => x.TravelSupplierId,
-                        principalTable: "T_TravelSupplier",
-                        principalColumn: "TravelSupplierId");
                 });
 
             migrationBuilder.CreateTable(
@@ -800,11 +797,6 @@ namespace TravelAgencyBackend.Migrations
                 column: "OfficialTravelId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_T_OfficialTravelDetail_TravelSupplierId",
-                table: "T_OfficialTravelDetail",
-                column: "TravelSupplierId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_T_OfficialTravelSchedule_OfficialTravelDetailId",
                 table: "T_OfficialTravelSchedule",
                 column: "OfficialTravelDetailId");
@@ -921,6 +913,9 @@ namespace TravelAgencyBackend.Migrations
                 name: "S_District");
 
             migrationBuilder.DropTable(
+                name: "T_TravelSupplier");
+
+            migrationBuilder.DropTable(
                 name: "T_Order");
 
             migrationBuilder.DropTable(
@@ -940,9 +935,6 @@ namespace TravelAgencyBackend.Migrations
 
             migrationBuilder.DropTable(
                 name: "T_OfficialTravel");
-
-            migrationBuilder.DropTable(
-                name: "T_TravelSupplier");
 
             migrationBuilder.DropTable(
                 name: "T_Member");
