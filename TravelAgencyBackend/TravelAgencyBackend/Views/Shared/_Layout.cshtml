@@ -38,5 +38,10 @@
     @await Html.PartialAsync("_Scripts")
 
     @RenderSection("Scripts", required: false)
+
+    @section Scripts {
+        <partial name="_ValidationScriptsPartial" />
+    }
+
 </body>
 </html>

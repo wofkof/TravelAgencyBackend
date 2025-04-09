@@ -168,6 +168,7 @@ namespace TravelAgencyBackend.Models
                 entity.HasKey(p => p.PermissionId);
 
                 entity.Property(p => p.PermissionName).IsRequired().HasMaxLength(50);
+                entity.Property(p => p.Caption).HasMaxLength(100);
             });
 
             // M_RolePermission

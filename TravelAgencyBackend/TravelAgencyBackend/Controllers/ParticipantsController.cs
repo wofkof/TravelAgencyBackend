@@ -8,22 +8,29 @@ using Microsoft.EntityFrameworkCore;
 using TravelAgencyBackend.Models;
 using TravelAgencyBackend.ViewModels;
 using AutoMapper;
+using TravelAgencyBackend.Services;
 
 namespace TravelAgencyBackend.Controllers
 {
-    public class ParticipantsController : Controller
+    public class ParticipantsController : BaseController
     {
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
+        private readonly PermissionCheckService _perm;
 
-        public ParticipantsController(AppDbContext context, IMapper mapper)
+        public ParticipantsController(AppDbContext context, IMapper mapper, PermissionCheckService perm)
+            : base(perm)
         {
             _context = context;
             _mapper = mapper;
+            _perm = perm;
         }
 
         public IActionResult Index(ParticipantIndexViewModel model, int? memberId)
         {
+            var check = CheckPermissionOrForbid("查看參與人");
+            if (check != null) return check;
+
             var query = _context.Participants.Include(p => p.Member).AsQueryable();
 
             if (memberId.HasValue)
@@ -63,6 +70,9 @@ namespace TravelAgencyBackend.Controllers
 
         public async Task<IActionResult> Details(int? id)
         {
+            var check = CheckPermissionOrForbid("查看參與人");
+            if (check != null) return check;
+
             if (id == null) return NotFound();
 
             var participant = await _context.Participants.Include(p => p.Member).FirstOrDefaultAsync(p => p.ParticipantId == id);
@@ -80,6 +90,9 @@ namespace TravelAgencyBackend.Controllers
 
         public IActionResult Create(int memberId)
         {
+            var check = CheckPermissionOrForbid("管理參與人");
+            if (check != null) return check;
+
             var member = _context.Members.Find(memberId);
             if (member == null) return NotFound($"找不到 ID 為 {memberId} 的參與人");
 
@@ -93,6 +106,9 @@ namespace TravelAgencyBackend.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(ParticipantCreateViewModel vm)
         {
+            var check = CheckPermissionOrForbid("管理參與人");
+            if (check != null) return check;
+
             if (_context.Participants.Any(p => p.IdNumber == vm.IdNumber))
                 ModelState.AddModelError("IdNumber", "身分證號已存在");
 
@@ -117,6 +133,9 @@ namespace TravelAgencyBackend.Controllers
 
         public IActionResult Edit(int id)
         {
+            var check = CheckPermissionOrForbid("管理參與人");
+            if (check != null) return check;
+
             var participant = _context.Participants.Include(p => p.Member).FirstOrDefault(p => p.ParticipantId == id);
             if (participant == null) return NotFound($"找不到 ID 為 {id} 的參與人");
 
@@ -130,6 +149,9 @@ namespace TravelAgencyBackend.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, ParticipantEditViewModel vm)
         {
+            var check = CheckPermissionOrForbid("管理參與人");
+            if (check != null) return check;
+
             if (id != vm.ParticipantId) return NotFound($"找不到 ID 為 {id} 的參與人");
 
             if (_context.Participants.Any(p => p.IdNumber == vm.IdNumber && p.ParticipantId != vm.ParticipantId))
@@ -159,6 +181,9 @@ namespace TravelAgencyBackend.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Delete(int id)
         {
+            var check = CheckPermissionOrForbid("管理參與人");
+            if (check != null) return check;
+
             var participant = _context.Participants.Find(id);
             if (participant == null) return NotFound($"找不到 ID 為 {id} 的參與人");
 
