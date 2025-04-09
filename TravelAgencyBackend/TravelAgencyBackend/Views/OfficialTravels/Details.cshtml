@@ -50,7 +50,10 @@
             @Html.DisplayNameFor(model => model.CoverPath)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CoverPath)
+            @if (!string.IsNullOrEmpty(Model.CoverPath))
+            {
+                <img src="@Model.CoverPath" alt="封面圖片" style="max-width: 200px;" />
+            }
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.CreatedAt)

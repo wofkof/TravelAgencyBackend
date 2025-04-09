@@ -23,6 +23,7 @@
   <ItemGroup>
     <Folder Include="Migrations\" />
     <Folder Include="wwwroot\fonts\" />
+    <Folder Include="wwwroot\uploads\covers\" />
   </ItemGroup>
 
 </Project>
