@@ -14,15 +14,15 @@ namespace TravelAgencyBackend.Services
             _httpContext = httpContext;
         }
 
-        private int CurrentEmployeeId
+        private int? CurrentEmployeeId
         {
-            get
+            get => _httpContext.HttpContext?.Session.GetInt32("EmployeeId");
+            set
             {
-                var employeeIdClaim = _httpContext.HttpContext?
-                    .User.FindFirst("EmployeeId")?
-                    .Value;
-                return string.IsNullOrEmpty(employeeIdClaim) 
-                    ? 1 : int.Parse(employeeIdClaim); // 開發測試用 ID=1
+                if (_httpContext.HttpContext != null)
+                {
+                    _httpContext.HttpContext.Session.SetInt32("EmployeeId", value ?? 0);
+                }
             }
         }
 

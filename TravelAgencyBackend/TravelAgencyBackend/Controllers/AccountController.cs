@@ -1,18 +1,22 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TravelAgencyBackend.Models;
+using TravelAgencyBackend.Services;
 using TravelAgencyBackend.ViewModels;
 using TravelAgencyBackend.ViewModels.Login;
 
 namespace TravelAgencyBackend.Controllers
 {
-    public class AccountController : Controller
+    public class AccountController : BaseController
     {
         private readonly AppDbContext _context;
+        private readonly PermissionCheckService _perm;
 
-        public AccountController(AppDbContext context)
+        public AccountController(AppDbContext context, PermissionCheckService perm)
+            : base(perm)
         {
             _context = context;
+            _perm = perm;
         }
 
         public IActionResult Login()

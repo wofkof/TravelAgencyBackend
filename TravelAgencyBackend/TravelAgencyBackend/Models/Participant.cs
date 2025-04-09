@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TravelAgencyBackend.Models
 {
-    public enum GenderType 
+    public enum GenderTypes 
     {
         [Display(Name ="男性")]
         Male,
@@ -25,7 +25,7 @@ namespace TravelAgencyBackend.Models
         
         public string IdNumber { get; set; } = null!;
         
-        public GenderType Gender { get; set; } = GenderType.Other;
+        public GenderTypes Gender { get; set; } = GenderTypes.Other;
         
         public DateTime? BirthDate { get; set; }
         

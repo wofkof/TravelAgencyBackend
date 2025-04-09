@@ -38,17 +38,22 @@ namespace TravelAgencyBackend.Controllers
 
 
         [HttpGet]
-        public IActionResult Create()
+        public IActionResult Create(int employeeId)
         {
-            ViewBag.Employees = new SelectList(
-             _context.Employees
-            .Where(e => e.Status == EmployeeStatus.Active),
-            "EmployeeId",
-            "Name"
-            );
+            //ViewBag.Employees = new SelectList(
+            // _context.Employees
+            //.Where(e => e.Status == EmployeeStatus.Active),
+            //"EmployeeId",
+            //"Name"
+            //);
+            
+            var employee = _context.Members.Find(employeeId);
+            var model = new AnnouncementViewModel { EmployeeId = employeeId };
+            ViewBag.Employees = employee.Name;
+            string employeeName = HttpContext.Session.GetString("EmployeeName");
+            //ViewBag.EmployeeName = employeeName;
 
-
-            return View();
+            return View(model);
         }
 
         [HttpPost]
