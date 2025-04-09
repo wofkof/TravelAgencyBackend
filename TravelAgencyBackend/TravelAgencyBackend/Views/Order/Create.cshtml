@@ -1,0 +1,158 @@
+﻿@model TravelAgencyBackend.ViewModels.Order.OrderCreateViewModel
+
+@{
+    ViewData["Title"] = "Create Order";
+}
+
+<h1 class="text-center mb-4">新增訂單</h1>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <form asp-action="Create" class="needs-validation" novalidate>
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <!-- 會員 -->
+            <div class="mb-3 row">
+                <label asp-for="MemberId" class="col-sm-3 col-form-label">會員</label>
+                <div class="col-sm-6">
+                    <select asp-for="MemberId" class="form-select form-select-sm" asp-items="ViewBag.MemberId"></select>
+                    <span asp-validation-for="MemberId" class="text-danger"></span>
+                </div>
+            </div>
+
+            <!-- 類別 -->
+            <div class="mb-3 row">
+                <label asp-for="Category" class="col-sm-3 col-form-label">類別</label>
+                <div class="col-sm-6">
+                    <select asp-for="Category" class="form-select form-select-sm" asp-items="Html.GetEnumSelectList<TravelAgencyBackend.Models.OrderCategory>()" id="Category"></select>
+                    <span asp-validation-for="Category" class="text-danger"></span>
+                </div>
+            </div>
+
+            <!-- 官方行程 -->
+            <div class="mb-3 row" id="officialTravelDiv">
+                <label class="col-sm-3 col-form-label">官方行程</label>
+                <div class="col-sm-6">
+                    <select class="form-select form-select-sm" id="officialItemId">
+                        @foreach (var item in Model.OfficialTravels)
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <!-- 客製化行程 -->
+            <div class="mb-3 row" id="customTravelDiv" style="display:none;">
+                <label class="col-sm-3 col-form-label">客製化行程</label>
+                <div class="col-sm-6">
+                    <select class="form-select form-select-sm" id="customItemId">
+                        @foreach (var item in Model.CustomTravels)
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <!-- 真正的綁定欄位 -->
+            <input type="hidden" asp-for="ItemId" id="ItemId" />
+
+            <!-- 參與者 -->
+            <div class="mb-3 row">
+                <label asp-for="ParticipantId" class="col-sm-3 col-form-label">參與者</label>
+                <div class="col-sm-6">
+                    <select asp-for="ParticipantId" class="form-select form-select-sm" asp-items="ViewBag.ParticipantId"></select>
+                    <span asp-validation-for="ParticipantId" class="text-danger"></span>
+                </div>
+            </div>
+
+            <!-- 參與人數 -->
+            <div class="mb-3 row">
+                <label asp-for="ParticipantsCount" class="col-sm-3 col-form-label">參與人數</label>
+                <div class="col-sm-6">
+                    <input asp-for="ParticipantsCount" class="form-control form-control-sm" placeholder="請輸入參與人數" />
+                    <span asp-validation-for="ParticipantsCount" class="text-danger"></span>
+                </div>
+            </div>
+
+            <!-- 總金額 -->
+            <div class="mb-3 row">
+                <label asp-for="TotalAmount" class="col-sm-3 col-form-label">總金額</label>
+                <div class="col-sm-6">
+                    <input asp-for="TotalAmount" class="form-control form-control-sm" placeholder="請輸入總金額" />
+                    <span asp-validation-for="TotalAmount" class="text-danger"></span>
+                </div>
+            </div>
+
+            <!-- 狀態 -->
+            <div class="mb-3 row">
+                <label asp-for="Status" class="col-sm-3 col-form-label">狀態</label>
+                <div class="col-sm-6">
+                    <select asp-for="Status" class="form-select form-select-sm" asp-items="Html.GetEnumSelectList<TravelAgencyBackend.Models.OrderStatus>()"></select>
+                    <span asp-validation-for="Status" class="text-danger"></span>
+                </div>
+            </div>
+
+            <!-- 付款方式 -->
+            <div class="mb-3 row">
+                <label asp-for="PaymentMethod" class="col-sm-3 col-form-label">付款方式</label>
+                <div class="col-sm-6">
+                    <select asp-for="PaymentMethod" class="form-select form-select-sm" asp-items="Html.GetEnumSelectList<TravelAgencyBackend.Models.PaymentMethod>()"></select>
+                    <span asp-validation-for="PaymentMethod" class="text-danger"></span>
+                </div>
+            </div>
+
+            <!-- 付款日期 -->
+            <div class="mb-4 row">
+                <label asp-for="PaymentDate" class="col-sm-3 col-form-label">付款日期</label>
+                <div class="col-sm-6">
+                    <input asp-for="PaymentDate" type="date" class="form-control form-control-sm" />
+                    <span asp-validation-for="PaymentDate" class="text-danger"></span>
+                </div>
+            </div>
+
+            <!-- 按鈕 -->
+            <div class="row">
+                <div class="col-sm-9 offset-sm-3 d-flex align-items-center">
+                    <button type="submit" class="btn btn-primary me-3">創建訂單</button>
+                    <a asp-action="Index" class="btn btn-secondary">返回列表</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+
+    <script>
+        function updateItemId() {
+            const category = parseInt(document.getElementById('Category').value);
+            const itemIdInput = document.getElementById('ItemId');
+            const official = document.getElementById('officialItemId');
+            const custom = document.getElementById('customItemId');
+
+            if (category === 0) {
+                document.getElementById('officialTravelDiv').style.display = 'flex';
+                document.getElementById('customTravelDiv').style.display = 'none';
+                itemIdInput.value = official.value;
+            } else if (category === 1) {
+                document.getElementById('officialTravelDiv').style.display = 'none';
+                document.getElementById('customTravelDiv').style.display = 'flex';
+                itemIdInput.value = custom.value;
+            } else {
+                document.getElementById('officialTravelDiv').style.display = 'none';
+                document.getElementById('customTravelDiv').style.display = 'none';
+                itemIdInput.value = '';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('Category').addEventListener('change', updateItemId);
+            document.getElementById('officialItemId').addEventListener('change', updateItemId);
+            document.getElementById('customItemId').addEventListener('change', updateItemId);
+            updateItemId();
+        });
+    </script>
+}
