@@ -46,14 +46,17 @@ namespace TravelAgencyBackend.Controllers
             //"EmployeeId",
             //"Name"
             //);
-            
-            var employee = _context.Members.Find(employeeId);
-            var model = new AnnouncementViewModel { EmployeeId = employeeId };
-            ViewBag.Employees = employee.Name;
-            string employeeName = HttpContext.Session.GetString("EmployeeName");
-            //ViewBag.EmployeeName = employeeName;
 
+            //聖凱寫入的
+            if (HttpContext.Session.GetInt32("EmployeeId") == null) return RedirectToAction("Login", "Account");
+
+            var employee = _context.Employees.Find(HttpContext.Session.GetInt32("EmployeeId"));
+            if (employee == null) return NotFound();
+
+            var model = new AnnouncementViewModel { EmployeeId = employee.EmployeeId };
+            ViewBag.Employees = employee.Name;
             return View(model);
+
         }
 
         [HttpPost]
