@@ -1,4 +1,8 @@
-﻿@model TravelAgencyBackend.Models.OfficialTravelSchedule
+﻿@model TravelAgencyBackend.ViewModels.ScheduleWithActivityNameViewModel
+
+@{
+    var s = Model.Schedule;
+}
 
 @{
     ViewData["Title"] = "Details";
@@ -11,62 +15,62 @@
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ItemId)
+            @Html.DisplayNameFor(model => s.ItemId)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ItemId)
+            @Html.DisplayFor(model => model.ActivityName)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Category)
+            @Html.DisplayNameFor(model => s.Category)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Category)
+            @Html.DisplayFor(model => s.Category)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Day)
+            @Html.DisplayNameFor(model => s.Day)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Day)
+            @Html.DisplayFor(model => s.Day)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.StartTime)
+            @Html.DisplayNameFor(model => s.StartTime)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.StartTime)
+            @Html.DisplayFor(model => s.StartTime)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Date)
+            @Html.DisplayNameFor(model => s.Date)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Date)
+            @Html.DisplayFor(model => s.Date)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
+            @Html.DisplayNameFor(model => s.Description)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
+            @Html.DisplayFor(model => s.Description)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Note1)
+            @Html.DisplayNameFor(model => s.Note1)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Note1)
+            @Html.DisplayFor(model => s.Note1)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Note2)
+            @Html.DisplayNameFor(model => s.Note2)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Note2)
+            @Html.DisplayFor(model => s.Note2)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.OfficialTravelDetail)
+            @Html.DisplayNameFor(model => s.OfficialTravelDetail)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.OfficialTravelDetail.OfficialTravelDetailId)
+            @Html.DisplayFor(model => s.OfficialTravelDetail.DepartureDate) 出發
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.OfficialTravelScheduleId">Edit</a> |
+    <a asp-action="Edit" asp-route-id="@s?.OfficialTravelScheduleId">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>

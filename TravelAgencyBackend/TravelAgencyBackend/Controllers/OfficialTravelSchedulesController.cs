@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TravelAgencyBackend.Models;
+using TravelAgencyBackend.ViewModels;
 
 namespace TravelAgencyBackend.Controllers
 {
@@ -26,6 +27,36 @@ namespace TravelAgencyBackend.Controllers
                 .ThenInclude(t => t.OfficialTravel);
             return View(appDbContext);
         }
+        //public IActionResult Index()
+        //{
+        //    var schedules = _context.OfficialTravelSchedules
+        //        .Include(s => s.OfficialTravelDetail)
+        //            .ThenInclude(d => d.OfficialTravel)
+        //        .ToList();
+
+        //    var hotels = _context.Hotels.ToDictionary(h => h.HotelId, h => h.HotelName);
+        //    var attractions = _context.Attractions.ToDictionary(a => a.AttractionId, a => a.ScenicSpotName);
+        //    var restaurants = _context.Restaurants.ToDictionary(r => r.RestaurantId, r => r.RestaurantName);
+
+        //    var viewModel = schedules.Select(s =>
+        //    {
+        //        string activityName = s.Category switch
+        //        {
+        //            TravelActivityType.Hotel => hotels.ContainsKey(s.ItemId) ? hotels[s.ItemId] : "查無飯店",
+        //            TravelActivityType.Attraction => attractions.ContainsKey(s.ItemId) ? attractions[s.ItemId] : "查無景點",
+        //            TravelActivityType.Restaurant => restaurants.ContainsKey(s.ItemId) ? restaurants[s.ItemId] : "查無餐廳",
+        //            _ => "未知類型"
+        //        };
+
+        //        return new ScheduleWithActivityNameViewModel
+        //        {
+        //            Schedule = s,
+        //            ActivityName = activityName
+        //        };
+        //    }).ToList();
+
+        //    return View(viewModel);
+        //}
 
         // GET: OfficialTravelSchedules/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -35,16 +66,46 @@ namespace TravelAgencyBackend.Controllers
                 return NotFound();
             }
 
-            var officialTravelSchedule = await _context.OfficialTravelSchedules
+            var schedule = await _context.OfficialTravelSchedules
                 .Include(o => o.OfficialTravelDetail)
                 .FirstOrDefaultAsync(m => m.OfficialTravelScheduleId == id);
-            if (officialTravelSchedule == null)
+
+            if (schedule == null)
             {
                 return NotFound();
             }
 
-            return View(officialTravelSchedule);
+            // 根據活動類型查詢對應的資料表
+            string activityName = schedule.Category switch
+            {
+                TravelActivityType.Hotel => await _context.Hotels
+                    .Where(h => h.HotelId == schedule.ItemId)
+                    .Select(h => h.HotelName)
+                    .FirstOrDefaultAsync() ?? "",
+
+                TravelActivityType.Attraction => await _context.Attractions
+                    .Where(a => a.AttractionId == schedule.ItemId)
+                    .Select(a => a.ScenicSpotName)
+                    .FirstOrDefaultAsync() ?? "",
+
+                TravelActivityType.Restaurant => await _context.Restaurants
+                    .Where(r => r.RestaurantId == schedule.ItemId)
+                    .Select(r => r.RestaurantName)
+                    .FirstOrDefaultAsync() ?? "",
+
+                _ => ""
+            };
+
+            // 建立 ViewModel
+            var viewModel = new ScheduleWithActivityNameViewModel
+            {
+                Schedule = schedule,
+                ActivityName = activityName
+            };
+
+            return View(viewModel);
         }
+
 
         // GET: OfficialTravelSchedules/Create
         public IActionResult Create()
