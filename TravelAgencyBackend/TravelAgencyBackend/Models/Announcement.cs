@@ -7,7 +7,9 @@ namespace TravelAgencyBackend.Models
         [Display(Name = "已公佈")]
         Announce,
         [Display(Name = "未公佈")]
-        Unannounced
+        Unannounced,
+        [Display(Name = "已刪除")]
+        Deleted
     }
     public class Announcement
     {

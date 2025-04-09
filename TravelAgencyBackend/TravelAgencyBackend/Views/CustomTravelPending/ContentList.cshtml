@@ -1,0 +1,78 @@
+﻿@model TravelAgencyBackend.ViewModels.CustomTravelPendingViewModel
+
+@{
+    ViewData["Title"] = "ContentList";
+}
+
+<h2>訂單行程內容</h2>
+
+<p>
+    
+    <a asp-action="CreateContent" asp-route-id="@ViewBag.CoustomTravelId" class="btn btn-outline-success">新增內容</a>
+
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Content.First().ContentId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Content.First().CustomTravelId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Content.First().ItemId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Content.First().Category)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Content.First().Day)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Content.First().Time)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Content.First().HotelName)
+            </th>
+            <th>修改</th>
+            <th>刪除</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Content) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ContentId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CustomTravelId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ItemId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Category)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Day)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Time)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.HotelName)
+            </td>
+                <td>
+                    @Html.ActionLink("修改", "EditContent", "CustomTravelPending", new { id = item.ContentId }, new { @class = "btn btn-outline-warning" })
+                </td>
+                <td>
+                    @Html.ActionLink("刪除", "DeleteContent", "CustomTravelPending", new { id = item.ContentId }, new { @class = "btn btn-outline-danger" ,  onclick = "return confirm('確定要刪除嗎?')" })
+                </td>
+        </tr>
+}
+    </tbody>
+</table>
+<div class="mt-4">
+    <a asp-action="List" class="btn btn-secondary">返回</a>
+</div>

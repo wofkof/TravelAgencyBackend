@@ -1,0 +1,45 @@
+﻿@model TravelAgencyBackend.ViewModels.Employee.EmployeeDetailViewModel
+
+@{
+    ViewData["Title"] = "員工詳細資料";
+}
+
+<h2>員工詳細資料</h2>
+
+<div class="card">
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-2">姓名</dt>
+            <dd class="col-sm-10">@Model.Name</dd>
+
+            <dt class="col-sm-2">性別</dt>
+            <dd class="col-sm-10">@Model.Gender</dd>
+
+            <dt class="col-sm-2">生日</dt>
+            <dd class="col-sm-10">@Model.BirthDate.ToString("yyyy/MM/dd")</dd>
+
+            <dt class="col-sm-2">電話</dt>
+            <dd class="col-sm-10">@Model.Phone</dd>
+
+            <dt class="col-sm-2">信箱</dt>
+            <dd class="col-sm-10">@Model.Email</dd>
+
+            <dt class="col-sm-2">地址</dt>
+            <dd class="col-sm-10">@Model.Address</dd>
+
+            <dt class="col-sm-2">入職日期</dt>
+            <dd class="col-sm-10">@Model.HireDate.ToString("yyyy/MM/dd")</dd>
+
+            <dt class="col-sm-2">狀態</dt>
+            <dd class="col-sm-10">@Model.Status</dd>
+
+            <dt class="col-sm-2">備註</dt>
+            <dd class="col-sm-10">@Model.Note</dd>
+        </dl>
+
+        
+        <a asp-action="Edit" asp-route-id="@Model.EmployeeId" class="btn btn-primary">編輯</a>
+        <a asp-action="Delete" asp-route-id="@Model.EmployeeId" class="btn btn-danger" onclick="return confirm('你確定要刪除這位員工嗎？')">刪除</a>
+        <a asp-action="List" class="btn btn-secondary">返回列表</a>
+    </div>
+</div>

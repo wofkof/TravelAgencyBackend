@@ -1,4 +1,4 @@
-﻿@model TravelAgencyBackend.Models.Member
+﻿@model TravelAgencyBackend.ViewModels.MemberEditViewModel
 
 @{
     ViewData["Title"] = "編輯會員";
@@ -14,9 +14,7 @@
             @Html.AntiForgeryToken()
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="MemberId" />
-            <input type="hidden" asp-for="Account" />
-            <input type="hidden" asp-for="Password" />
-                
+
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
@@ -43,9 +41,31 @@
                 <span asp-validation-for="Note" class="text-danger"></span>
             </div>
             <hr>
-            <button type="submit" class="btn btn-primary" onclick="alert('資料更新成功!')">儲存變更</button>
+
+            @* 管理會員 *@
+            @if (PermissionChecker.CanManageMembers)
+            {
+                <button type="submit" class="btn btn-primary">儲存變更</button>
+            }
+            else
+            {
+                <button type="submit" class="btn btn-primary disabled"
+                tabindex="-1" aria-disabled="true" onclick="return false;">
+                    儲存變更
+                </button>
+            }
+
             <div class="vr"></div>
-            <a asp-action="Details" asp-route-id="@Model.MemberId" class="btn btn-secondary">返回查看</a>
+
+            @* 查看會員 *@
+            @if (PermissionChecker.CanViewMembers)
+            {
+                <a asp-action="Details" asp-route-id="@Model.MemberId" class="btn btn-secondary">返回查看</a>
+            }
+            else
+            {
+                <a asp-controller="Home" asp-action="Index" asp-route-id="@Model.MemberId" class="btn btn-secondary">返回首頁</a>
+            }
         </form>
     </div>
 </div>

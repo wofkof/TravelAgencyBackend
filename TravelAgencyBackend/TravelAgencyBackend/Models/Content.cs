@@ -15,12 +15,19 @@ namespace TravelAgencyBackend.Models
     }
     public class Content
     {
+        [Display(Name = "內容編號")]
         public int ContentId { get; set; }
+        [Display(Name = "客製化行程編號")]
         public int CustomTravelId { get; set; }
-        public int ItemId { get; set; } 
-        public Category Category { get; set; } 
+        [Display(Name = "行程分類編號")]
+        public int ItemId { get; set; }
+        [Display(Name = "行程分類名稱")]
+        public Category Category { get; set; }
+        [Display(Name = "日程")]
         public int Day { get; set; }
+        [Display(Name = "時間")]
         public TimeSpan Time { get; set; }
+        [Display(Name = "住宿名稱(備註)")]
         public string? HotelName { get; set; } 
 
         public CustomTravel CustomTravel { get; set; } = null!;

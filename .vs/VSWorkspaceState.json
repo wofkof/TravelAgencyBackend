@@ -1,0 +1,13 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\TravelAgencyBackend",
+    "\\TravelAgencyBackend\\TravelAgencyBackend",
+    "\\TravelAgencyBackend\\TravelAgencyBackend\\Controllers",
+    "\\TravelAgencyBackend\\TravelAgencyBackend\\Helpers",
+    "\\TravelAgencyBackend\\TravelAgencyBackend\\Migrations",
+    "\\TravelAgencyBackend\\TravelAgencyBackend\\Models"
+  ],
+  "SelectedNode": "\\TravelAgencyBackend\\TravelAgencyBackend\\Models\\Employee.cs",
+  "PreviewInSolutionExplorer": false
+}
