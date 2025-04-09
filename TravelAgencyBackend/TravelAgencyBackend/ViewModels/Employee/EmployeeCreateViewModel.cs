@@ -49,5 +49,9 @@ namespace TravelAgencyBackend.ViewModels.Employee
         [Display(Name = "職位")]
         public int? RoleId { get; set; }
 
+        [Display(Name = "大頭貼")]
+        public IFormFile? Photo { get; set; }  // 上傳圖檔
+
+
     }
 }

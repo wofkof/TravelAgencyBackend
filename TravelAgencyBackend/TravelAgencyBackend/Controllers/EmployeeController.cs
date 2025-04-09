@@ -7,6 +7,7 @@ using TravelAgencyBackend.ViewModles.Employee;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using TravelAgencyBackend.Helpers;
+using Microsoft.AspNetCore.Hosting;
 
 
 
@@ -14,10 +15,8 @@ namespace TravelAgencyBackend.Controllers
 {
     public class EmployeeController : Controller
     {
-        //public IActionResult Index()
-        //{
-        //    return View();
-        //}
+        private readonly IWebHostEnvironment _webHostEnvironment;
+
         private readonly AppDbContext _context;
 
         public EmployeeController(AppDbContext context)
@@ -161,53 +160,109 @@ namespace TravelAgencyBackend.Controllers
             return View(vm);
         }
 
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Create(EmployeeCreateViewModel vm)
+        //{
+        //    ViewBag.RoleList = new SelectList(_context.Roles, "RoleId", "RoleName", vm.RoleId);
+        //    ViewBag.GenderList = EnumHelper.GetSelectListWithDisplayName<GenderType>();
+        //    ViewBag.StatusList = EnumHelper.GetSelectListWithDisplayName<EmployeeStatus>(excludeDeleted: true);
+
+
+        //    if (_context.Employees.Any(e => e.Email == vm.Email && e.Status != EmployeeStatus.Deleted))
+        //    {
+        //        ModelState.AddModelError("Email", "此信箱已被使用，請改用其他信箱。");
+        //    }
+
+        //    // ✅ 驗證 Phone 是否重複
+        //    if (_context.Employees.Any(e => e.Phone == vm.Phone && e.Status != EmployeeStatus.Deleted))
+        //    {
+        //        ModelState.AddModelError("Phone", "此電話號碼已被使用，請再次確認輸入內容。");
+        //    }
+
+        //    // ❌ 有驗證錯誤就直接回原畫面
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return View(vm);
+        //    }
+
+        //    // ✅ 建立新員工實體
+        //    var emp = new Employee
+        //    {
+        //        Name = vm.Name,
+        //        Password = vm.Password,
+        //        Email = vm.Email,
+        //        Phone = vm.Phone,
+        //        BirthDate = vm.BirthDate,
+        //        HireDate = vm.HireDate,
+        //        Gender = vm.Gender!.Value,
+        //        Status = vm.Status!.Value,
+        //        Address = vm.Address,
+        //        Note = vm.Note,
+        //        RoleId = vm.RoleId!.Value,
+
+        //    };
+
+        //    _context.Add(emp);
+        //    await _context.SaveChangesAsync();
+        //    return RedirectToAction(nameof(List));
+        //}
+
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(EmployeeCreateViewModel vm)
         {
-            ViewBag.RoleList = new SelectList(_context.Roles, "RoleId", "RoleName", vm.RoleId);
-            ViewBag.GenderList = EnumHelper.GetSelectListWithDisplayName<GenderType>();
-            ViewBag.StatusList = EnumHelper.GetSelectListWithDisplayName<EmployeeStatus>(excludeDeleted: true);
-
-
-            if (_context.Employees.Any(e => e.Email == vm.Email && e.Status != EmployeeStatus.Deleted))
-            {
-                ModelState.AddModelError("Email", "此信箱已被使用，請改用其他信箱。");
-            }
-
-            // ✅ 驗證 Phone 是否重複
-            if (_context.Employees.Any(e => e.Phone == vm.Phone && e.Status != EmployeeStatus.Deleted))
-            {
-                ModelState.AddModelError("Phone", "此電話號碼已被使用，請再次確認輸入內容。");
-            }
-
-            // ❌ 有驗證錯誤就直接回原畫面
             if (!ModelState.IsValid)
             {
                 return View(vm);
             }
 
-            // ✅ 建立新員工實體
-            var emp = new Employee
+            string? fileName = null;
+
+            // 📁 1. 處理圖片上傳
+            if (vm.Photo != null && vm.Photo.Length > 0)
+            {
+                // 圖片儲存資料夾：/wwwroot/uploads/
+                string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");
+                if (!Directory.Exists(uploadsFolder))
+                    Directory.CreateDirectory(uploadsFolder);
+
+                // 使用 GUID 命名圖片檔案，避免重名
+                fileName = Guid.NewGuid().ToString() + Path.GetExtension(vm.Photo.FileName);
+                string filePath = Path.Combine(uploadsFolder, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await vm.Photo.CopyToAsync(stream);
+                }
+            }
+
+            // ✅ 2. 沒上傳就指定預設圖片
+            fileName ??= "default-avatar.png";
+
+            // 🧱 3. 建立 Employee 實體
+            var employee = new Employee
             {
                 Name = vm.Name,
                 Password = vm.Password,
                 Email = vm.Email,
                 Phone = vm.Phone,
-                BirthDate = vm.BirthDate,
-                HireDate = vm.HireDate,
+                BirthDate = vm.BirthDate,      
+                HireDate = vm.HireDate,        
                 Gender = vm.Gender!.Value,
                 Status = vm.Status!.Value,
+                RoleId = vm.RoleId!.Value,
                 Address = vm.Address,
                 Note = vm.Note,
-                RoleId = vm.RoleId!.Value,
-
+                ImagePath = fileName
             };
 
-            _context.Add(emp);
+
+            _context.Employees.Add(employee);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(List));
+
+            return RedirectToAction("List");
         }
+
 
 
         public async Task<IActionResult> Edit(int? id)

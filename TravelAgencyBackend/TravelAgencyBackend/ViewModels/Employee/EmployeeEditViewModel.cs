@@ -48,5 +48,10 @@ namespace TravelAgencyBackend.ViewModels.Employee
 
         // 🔐 密碼為 null 代表不修改
         public string? Password { get; set; }
+
+        [Display(Name = "大頭貼")]
+        public IFormFile? Photo { get; set; }  // 上傳圖檔
+
+
     }
 }

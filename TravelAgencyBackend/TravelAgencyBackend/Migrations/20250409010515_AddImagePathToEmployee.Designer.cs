@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TravelAgencyBackend.Models;
 
@@ -11,13 +12,15 @@ using TravelAgencyBackend.Models;
 namespace TravelAgencyBackend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250409010515_AddImagePathToEmployee")]
+    partial class AddImagePathToEmployee
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.3")
+                .HasAnnotation("ProductVersion", "8.0.14")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -604,7 +607,7 @@ namespace TravelAgencyBackend.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<DateTime?>("UpdatedAt")
+                    b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime");
 
                     b.HasKey("OfficialTravelId");
@@ -659,7 +662,10 @@ namespace TravelAgencyBackend.Migrations
                     b.Property<int>("SoldSeats")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("UpdatedAt")
+                    b.Property<int?>("TravelSupplierId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime");
 
                     b.HasKey("OfficialTravelDetailId");
@@ -667,6 +673,8 @@ namespace TravelAgencyBackend.Migrations
                     b.HasIndex("FlightId");
 
                     b.HasIndex("OfficialTravelId");
+
+                    b.HasIndex("TravelSupplierId");
 
                     b.ToTable("T_OfficialTravelDetail", (string)null);
                 });
@@ -793,7 +801,7 @@ namespace TravelAgencyBackend.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ParticipantId"));
 
-                    b.Property<DateTime?>("BirthDate")
+                    b.Property<DateTime>("BirthDate")
                         .HasColumnType("date");
 
                     b.Property<string>("EnglishName")
@@ -803,8 +811,8 @@ namespace TravelAgencyBackend.Migrations
 
                     b.Property<string>("Gender")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
                     b.Property<string>("IdNumber")
                         .IsRequired()
@@ -824,7 +832,7 @@ namespace TravelAgencyBackend.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<DateTime?>("PassportIssueDate")
+                    b.Property<DateTime>("PassportIssueDate")
                         .HasColumnType("date");
 
                     b.Property<string>("PassportNumber")
@@ -860,10 +868,6 @@ namespace TravelAgencyBackend.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PermissionId"));
-
-                    b.Property<string>("Caption")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("PermissionName")
                         .IsRequired()
@@ -1230,6 +1234,10 @@ namespace TravelAgencyBackend.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("TravelAgencyBackend.Models.TravelSupplier", null)
+                        .WithMany("OfficialTravelDetails")
+                        .HasForeignKey("TravelSupplierId");
+
                     b.Navigation("Flight");
 
                     b.Navigation("OfficialTravel");
@@ -1432,6 +1440,8 @@ namespace TravelAgencyBackend.Migrations
                     b.Navigation("Attractions");
 
                     b.Navigation("Hotels");
+
+                    b.Navigation("OfficialTravelDetails");
 
                     b.Navigation("Restaurants");
                 });
