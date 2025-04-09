@@ -16,7 +16,7 @@ namespace TravelAgencyBackend.Models
         public int OfficialTravelId { get; set; }
         [Display(Name = "負責人")]
         public int CreatedByEmployeeId { get; set; }
-        [Display(Name = "國家")]
+        [Display(Name = "地區/縣市")]
         public int RegionId { get; set; }
         [Display(Name = "專案名稱")]
         public string Title { get; set; } = null!;

@@ -22,7 +22,8 @@ namespace TravelAgencyBackend.Controllers
         public async Task<IActionResult> Index()
         {
             var appDbContext = _context.OfficialTravelSchedules
-                .Include(o => o.OfficialTravelDetail);
+                .Include(o => o.OfficialTravelDetail)
+                .ThenInclude(t => t.OfficialTravel);
             return View(appDbContext);
         }
 
@@ -63,7 +64,7 @@ namespace TravelAgencyBackend.Controllers
             {
                 _context.Add(officialTravelSchedule);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Create));
             }
             ViewData["OfficialTravelDetailId"] = new SelectList(_context.OfficialTravelDetails, "OfficialTravelDetailId", "OfficialTravelDetailId", officialTravelSchedule.OfficialTravelDetailId);
             return View(officialTravelSchedule);

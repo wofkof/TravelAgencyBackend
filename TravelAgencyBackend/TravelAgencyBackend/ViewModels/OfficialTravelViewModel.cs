@@ -19,7 +19,7 @@ namespace TravelAgencyBackend.ViewModels // ← 修改成正確拼法
         public int OfficialTravelId { get; set; }
         [Display(Name = "負責人")]
         public int CreatedByEmployeeId { get; set; }
-        [Display(Name = "國家")]
+        [Display(Name = "地區/縣市")]
         public int RegionId { get; set; }
 
         [Required]
