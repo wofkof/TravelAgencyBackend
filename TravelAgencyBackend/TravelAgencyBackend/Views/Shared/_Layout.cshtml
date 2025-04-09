@@ -18,6 +18,9 @@
 
     <!-- Icon Font -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pixeden-stroke-7-icon@1.2.3/pe-icon-7-stroke/dist/pe-icon-7-stroke.min.css">
+    
+    <!-- 在 head 中加入 DataTables 的 CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
 </head>
 <body class="loading">
     <div class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
@@ -36,6 +39,9 @@
     </div>
 
     @await Html.PartialAsync("_Scripts")
+    <!-- 在 body 結尾加入 jQuery 和 DataTables 的 JS -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
     @RenderSection("Scripts", required: false)
 

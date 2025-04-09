@@ -1,0 +1,105 @@
+﻿@model IEnumerable<TravelAgencyBackend.Models.TravelSupplier>
+
+@{
+	ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+	<a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+	<thead>
+		<tr>
+			<th>
+
+			</th>
+			<th>
+				供應商名稱
+			</th>
+			<th>
+				類型
+			</th>
+			<th>
+				聯絡人姓名
+			</th>
+			<th>
+				電話
+			</th>
+			<th>
+				電子郵件
+			</th>
+			<th>
+				備註
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+
+		@{
+			int count = 0;
+			foreach (var item in Model)
+			{
+				count++;
+				<tr>
+					<td>
+						@count
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.SupplierName)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.SupplierType)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.ContactName)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.ContactPhone)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.ContactEmail)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.Note)
+					</td>
+					<td>
+						<a asp-action="Edit" asp-route-id="@item.TravelSupplierId">Edit</a> |
+						<a asp-action="Details" asp-route-id="@item.TravelSupplierId">Details</a> |
+						<a asp-action="Delete" asp-route-id="@item.TravelSupplierId">Delete</a>
+					</td>
+				</tr>
+			}
+		}
+	</tbody>
+</table>
+
+<table id="myTable" class="display">
+	<thead>
+		<tr>
+			<th>Column 1</th>
+			<th>Column 2</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>Row 1 Data 1</td>
+			<td>Row 1 Data 2</td>
+		</tr>
+		<tr>
+			<td>Row 2 Data 1</td>
+			<td>Row 2 Data 2</td>
+		</tr>
+	</tbody>
+</table>
+
+
+@section Scripts {
+	<script>
+		$(document).ready(function () {
+			$('#myTable').DataTable();
+		});
+	</script>
+}
