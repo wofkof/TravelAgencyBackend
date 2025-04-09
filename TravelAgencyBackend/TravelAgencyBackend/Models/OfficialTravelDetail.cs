@@ -25,7 +25,7 @@ namespace TravelAgencyBackend.Models
         public DateTime BookingDeadline { get; set; }
         public GroupStatus GroupStatus { get; set; } = GroupStatus.Pending;
         public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
 
         public ICollection<OfficialTravelSchedule> Schedules { get; set; } = new List<OfficialTravelSchedule>();
        

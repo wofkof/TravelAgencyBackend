@@ -18,7 +18,16 @@
             </div>
         </div>
     </div>
-    
+
+    <div>
+        <a asp-controller="Account" asp-action="Login">
+            <i class="metismenu-icon pe-7s-user"></i>登入
+        </a>
+        <a asp-controller="Account" asp-action="Login">
+            登出
+        </a>
+    </div>
+
         <a class="nav-link" asp-controller="ChatRoom" asp-action="Index">
             @if (unreadCount > 0)
             {
@@ -29,7 +38,7 @@
                 <span class="text-muted">無新訊息</span>
             }
         </a>
-    
+
     <!-- 手機版的 sidebar toggle（行動裝置） -->
     <div class="app-header__mobile-menu">
         <div>

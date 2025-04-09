@@ -5,18 +5,23 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using NuGet.Protocol.Plugins;
 using TravelAgencyBackend.Models;
+using TravelAgencyBackend.Services;
 using TravelAgencyBackend.ViewModels;
 
 namespace TravelAgencyBackend.Controllers
 {
-    public class ChatRoomController : Controller
+    public class ChatRoomController : BaseController
     {
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
-        public ChatRoomController(AppDbContext context, IMapper mapper) 
+        private readonly PermissionCheckService _perm;
+
+        public ChatRoomController(AppDbContext context, IMapper mapper, PermissionCheckService perm)
+            : base(perm)
         {
             _context = context;
             _mapper = mapper;
+            _perm = perm;
         }
 
         //取訊息Json
@@ -43,6 +48,9 @@ namespace TravelAgencyBackend.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Close(int id) 
         {
+            var check = CheckPermissionOrForbid("管理聊天室");
+            if (check != null) return check;
+
             var chatRoom = _context.ChatRooms
                 .FirstOrDefault(c => c.ChatRoomId == id);
             if (chatRoom == null) return NotFound("聊天室已不存在");
@@ -58,6 +66,9 @@ namespace TravelAgencyBackend.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult SendMessage(SendMessageViewModel vm)
         {
+            var check = CheckPermissionOrForbid("管理聊天室");
+            if (check != null) return check;
+
             if (!ModelState.IsValid)
             {
                 TempData["SendError"] = "請輸入訊息內容（最多500字）";
@@ -89,6 +100,9 @@ namespace TravelAgencyBackend.Controllers
         //聊天室列表
         public IActionResult Index()
         {
+            var check = CheckPermissionOrForbid("管理聊天室");
+            if (check != null) return check;
+
             // TODO: 目前登入員工 ID
             int emoployeeId = 1;
             //int.Parse(User.FindFirst("EmployeeId").Value);
@@ -106,6 +120,9 @@ namespace TravelAgencyBackend.Controllers
         //查看聊天室
         public IActionResult Details(int id)
         {
+            var check = CheckPermissionOrForbid("管理聊天室");
+            if (check != null) return check;
+
             var chatRoom = _context.ChatRooms
                 .Include(c => c.Member)
                 .Include(c => c.Messages)
@@ -137,6 +154,9 @@ namespace TravelAgencyBackend.Controllers
         // 建立聊天室
         public IActionResult Create()
         {
+            var check = CheckPermissionOrForbid("管理聊天室");
+            if (check != null) return check;
+
             var members = _context.Members
                 .OrderBy(m => m.Name)
                 .Select(m => new SelectListItem
@@ -160,6 +180,9 @@ namespace TravelAgencyBackend.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(ChatRoomCreateViewModel vm)
         {
+            var check = CheckPermissionOrForbid("管理聊天室");
+            if (check != null) return check;
+
             if (!ModelState.IsValid)
             {
                 // 重新填充會員選單

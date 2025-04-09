@@ -10,7 +10,6 @@
         public string ContactEmail { get; set; } = string.Empty;
         public string? Note { get; set; }
 
-        public ICollection<OfficialTravelDetail> OfficialTravelDetails { get; set; } = new List<OfficialTravelDetail>();
         public ICollection<Hotel> Hotels { get; set; } = new List<Hotel>();
         public ICollection<Restaurant> Restaurants { get; set; } = new List<Restaurant>();
         public ICollection<Attraction> Attractions { get; set; } = new List<Attraction>();

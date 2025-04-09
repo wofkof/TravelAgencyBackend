@@ -50,7 +50,7 @@ namespace TravelAgencyBackend.ViewModels
         public DateTime? BirthDate { get; set; }
 
         [DisplayName("性別")]
-        public GenderType Gender { get; set; } = GenderType.Other;
+        public GenderTypes Gender { get; set; } = GenderTypes.Other;
 
         [DisplayName("備註")]
         public string? Note { get; set; }
@@ -105,7 +105,7 @@ namespace TravelAgencyBackend.ViewModels
         public DateTime? BirthDate { get; set; }
 
         [DisplayName("性別")]
-        public GenderType Gender { get; set; } = GenderType.Other;
+        public GenderTypes Gender { get; set; } = GenderTypes.Other;
 
         [DisplayName("備註")]
         public string? Note { get; set; }

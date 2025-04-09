@@ -1,4 +1,5 @@
-﻿<div class="app-sidebar sidebar-shadow">
+﻿
+<div class="app-sidebar sidebar-shadow">
     <div class="scrollbar-sidebar">
         <div class="app-sidebar__inner">
             <ul class="vertical-nav-menu">
@@ -17,20 +18,25 @@
                     </a>
                     <ul>
                         <li>
-                            <a asp-controller="" asp-action="">
+                            <a asp-controller="Employee" asp-action="List">
                                 <i class="metismenu-icon"></i>員工列表
                             </a>
                         </li>
                         <li>
-                            <a asp-controller="" asp-action="">
-                                <i class="metismenu-icon"></i>角色權限
+                            <a asp-controller="Role" asp-action="Index">
+                                <i class="metismenu-icon"></i>角色
                             </a>
                         </li>
                         <li>
-                            <a asp-controller="" asp-action="">
-                                <i class="metismenu-icon"></i>新增會員
+                            <a asp-controller="Permission" asp-action="Index">
+                                <i class="metismenu-icon"></i>權限
                             </a>
-                        </li> 
+                        </li>
+                        <li>
+                            <a asp-controller="Employee" asp-action="Create">
+                                <i class="metismenu-icon"></i>新增員工
+                            </a>
+                        </li>                      
                     </ul>
                 </li>
                 @* 會員 *@
@@ -41,14 +47,36 @@
                     </a>
                     <ul>
                         <li>
-                            <a asp-controller="Member" asp-action="Index">
-                                <i class="metismenu-icon"></i>會員列表
-                            </a>
-                        </li>
+                            @* 查看會員 *@
+                            @if (PermissionChecker.CanViewMembers)
+                            {
+                                <a asp-controller="Member" asp-action="Index">
+                                    <i class="metismenu-icon"></i>會員列表
+                                </a>
+                            }
+                            else
+                            {
+                                <a asp-controller="Member" asp-action="Index"
+                                class="bg-light disabled" tabindex="-1" aria-disabled="true" onclick="return false;">
+                                    <i class="metismenu-icon"></i>會員列表
+                                </a>
+                            }
+                        </li>  
                         <li>
-                            <a asp-controller="Member" asp-action="Create">
-                                <i class="metismenu-icon"></i>新增會員
-                            </a>
+                            @* 管理會員 *@
+                            @if (PermissionChecker.CanManageMembers)
+                            {
+                                <a asp-controller="Member" asp-action="Create">
+                                    <i class="metismenu-icon"></i>新增會員
+                                </a>
+                            }
+                            else
+                            {
+                                <a asp-controller="Member" asp-action="Create"
+                                class="bg-light disabled" tabindex="-1" aria-disabled="true" onclick="return false;">
+                                    <i class="metismenu-icon"></i>新增會員
+                                </a>
+                            }
                         </li>
                     </ul>
                 </li>
@@ -60,9 +88,20 @@
                     </a>
                     <ul>
                         <li>
-                            <a asp-controller="Participants" asp-action="Index">
-                                <i class="metismenu-icon"></i>參與人列表
-                            </a>
+                            @* 查看參與人 *@
+                            @if (PermissionChecker.CanViewParticipants)
+                            {
+                                <a asp-controller="Participants" asp-action="Index">
+                                    <i class="metismenu-icon"></i>參與人列表
+                                </a>
+                            }
+                            else
+                            {
+                                <a asp-controller="Participants" asp-action="Index"
+                                class="bg-light disabled" tabindex="-1" aria-disabled="true" onclick="return false;">
+                                    <i class="metismenu-icon"></i>參與人列表
+                                </a>
+                            }
                         </li>
                     </ul>
                 </li>
@@ -74,14 +113,36 @@
                     </a>
                     <ul>
                         <li>
-                            <a asp-controller="ChatRoom" asp-action="Index">
-                                <i class="metismenu-icon"></i>聊天室列表
-                            </a>
+                            @* 管理聊天室 *@
+                            @if (PermissionChecker.CanManageChatRooms)
+                            {
+                                <a asp-controller="ChatRoom" asp-action="Index">
+                                    <i class="metismenu-icon"></i>聊天室列表
+                                </a>
+                            }
+                            else
+                            {
+                                <a asp-controller="ChatRoom" asp-action="Index"
+                                class="bg-light disabled" tabindex="-1" aria-disabled="true" onclick="return false">
+                                    <i class="metismenu-icon"></i>聊天室列表
+                                </a>
+                            }
                         </li>
                         <li>
-                            <a asp-controller="ChatRoom" asp-action="Create">
-                                <i class="metismenu-icon"></i>新增聊天室
-                            </a>
+                            @* 管理聊天室 *@
+                            @if (PermissionChecker.CanManageChatRooms)
+                            {
+                                <a asp-controller="ChatRoom" asp-action="Create">
+                                    <i class="metismenu-icon"></i>新增聊天室
+                                </a>
+                            }
+                            else
+                            {
+                                <a asp-controller="ChatRoom" asp-action="Create"
+                                   class="bg-light disabled" tabindex="-1" aria-disabled="true" onclick="return false">
+                                    <i class="metismenu-icon"></i>新增聊天室
+                                </a>
+                            }
                         </li>
                     </ul>
                 </li>
@@ -93,9 +154,9 @@
                     </a>
                     <ul>
                         <li>
-                            <a asp-controller="" asp-action="">
+                            <a asp-controller="Cart" asp-action="List">
                                 <i class="metismenu-icon"></i>檢視購物車
-                            </a> 
+                            </a>
                         </li>
                     </ul>
                 </li>
@@ -107,13 +168,13 @@
                     </a>
                     <ul>
                         <li>
-                            <a asp-controller="" asp-action="">
+                            <a asp-controller="Announcement" asp-action="List">
                                 <i class="metismenu-icon"></i>查看公告
                             </a>
                         </li>
                         <li>
-                            <a asp-controller="" asp-action="">
-                                <i class="metismenu-icon"></i>發表
+                            <a asp-controller="Announcement" asp-action="Create">
+                                <i class="metismenu-icon"></i>新增公告
                             </a>
                         </li>
                     </ul>
@@ -126,13 +187,21 @@
                     </a>
                     <ul>
                         <li>
-                            <a asp-controller="" asp-action="">
-                                <i class="metismenu-icon"></i>查看官方行程
+                            <a asp-controller="OfficialTravels" asp-action="Index">
+                                <i class="metismenu-icon"></i>管理官方行程
                             </a>
                         </li>
                         <li>
-                            <a asp-controller="" asp-action="">
-                                <i class="metismenu-icon"></i>新增官方行程
+                            <a asp-controller="TravelSuppliers" asp-action="Index">
+                                <i class="metismenu-icon"></i>供應商業務管理
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-controller="Regions" asp-action="Index">
+                                <i class="metismenu-icon"></i>地區管理(測試)
+                            </a>
+                            <a asp-controller="Flights" asp-action="Index">
+                                <i class="metismenu-icon"></i>航班一覽表(測試)
                             </a>
                         </li>
                     </ul>
@@ -164,7 +233,7 @@
                     </a>
                     <ul>
                         <li>
-                            <a asp-controller="" asp-action="">
+                            <a asp-controller="Order" asp-action="index">
                                 <i class="metismenu-icon"></i>查看訂單
                             </a>
                         </li>

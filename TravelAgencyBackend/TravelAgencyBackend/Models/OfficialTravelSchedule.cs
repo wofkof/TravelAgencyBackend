@@ -16,6 +16,7 @@ namespace TravelAgencyBackend.Models
         public int OfficialTravelScheduleId { get; set; }
 
         public int OfficialTravelDetailId { get; set; }
+
         public int ItemId { get; set; }
         public TravelActivityType Category { get; set; }
 
@@ -27,6 +28,6 @@ namespace TravelAgencyBackend.Models
         public string? Note1 { get; set; }
         public string? Note2 { get; set; }
 
-        public OfficialTravelDetail OfficialTravelDetail { get; set; } = null!;
+        public OfficialTravelDetail? OfficialTravelDetail { get; set; }
     }
 }
