@@ -2,21 +2,24 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TravelAgencyBackend.Models;
+using TravelAgencyBackend.Services;
 using TravelAgencyBackend.ViewModels.Announcement;
 
 namespace TravelAgencyBackend.Controllers
 {
-    public class AnnouncementController : Controller
+    public class AnnouncementController : BaseController
     {
         public IActionResult Index()
         {
             return View();
         }
         private readonly AppDbContext _context;
-
-        public AnnouncementController(AppDbContext context)
+        private readonly PermissionCheckService _perm;
+        public AnnouncementController(AppDbContext context, PermissionCheckService perm)
+            :base(perm)
         {
             _context = context;
+            _perm = perm;
         }
         public IActionResult List()
         {
@@ -47,10 +50,9 @@ namespace TravelAgencyBackend.Controllers
             //"Name"
             //);
 
-            //聖凱寫入的
+            var employee = _context.Employees.Find(HttpContext.Session.GetInt32("EmployeeId"));
             if (HttpContext.Session.GetInt32("EmployeeId") == null) return RedirectToAction("Login", "Account");
 
-            var employee = _context.Employees.Find(HttpContext.Session.GetInt32("EmployeeId"));
             if (employee == null) return NotFound();
 
             var model = new AnnouncementViewModel { EmployeeId = employee.EmployeeId };
