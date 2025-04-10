@@ -12,9 +12,9 @@
         <form asp-action="CreateDistrict">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>            
             <div class="form-group">
-                <label asp-for="CityId" class="control-label"></label>                
+                <label asp-for="CityId" class="control-label">縣市</label>                
                 <select asp-for="CityId" class="form-control" asp-items="ViewBag.Cities">
-                    <option value="">-- 請選擇城市 --</option>
+                    <option value="">請選擇縣市</option>
                 </select>
                 <span asp-validation-for="CityId" class="text-danger"></span>
             </div>

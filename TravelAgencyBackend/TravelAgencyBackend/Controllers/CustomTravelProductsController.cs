@@ -192,6 +192,7 @@ namespace TravelAgencyBackend.Controllers
         public IActionResult CreateAttraction()
         {
             ViewBag.Districts = new SelectList(_context.Districts, "DistrictId", "DistrictName");
+            ViewBag.TravelSuppliers = new SelectList(_context.TravelSuppliers, "TravelSupplierId", "SupplierName");
             return View();
         }
         [HttpPost]
@@ -200,6 +201,10 @@ namespace TravelAgencyBackend.Controllers
             if (!_context.Districts.Any(c => c.DistrictId == p.District.DistrictId))
             {
                 ModelState.AddModelError("DistrictId", "請選擇有效的區");
+            }
+            if (!_context.TravelSuppliers.Any(c => c.TravelSupplierId == p.TravelSupplier.TravelSupplierId))
+            {
+                ModelState.AddModelError("TravelSupplierId", "請選擇有效的供應商");
             }
 
             _context.Attractions.Add(p);
@@ -228,6 +233,7 @@ namespace TravelAgencyBackend.Controllers
             if (d == null)
                 return RedirectToAction("List");
             ViewBag.Districts = new SelectList(_context.Districts, "DistrictId", "DistrictName");
+            ViewBag.TravelSuppliers = new SelectList(_context.TravelSuppliers, "TravelSupplierId", "SupplierName");
             return View(d);
         }
         [HttpPost]
@@ -244,6 +250,10 @@ namespace TravelAgencyBackend.Controllers
             {
                 ModelState.AddModelError("DistrictId", "請選擇有效的區");
             }
+            if (!_context.TravelSuppliers.Any(c => c.TravelSupplierId == uiAttraction.TravelSupplier.TravelSupplierId))
+            {
+                ModelState.AddModelError("TravelSupplierId", "請選擇有效的供應商");
+            }
             _context.SaveChanges();
             return RedirectToAction("List");
         }
@@ -252,6 +262,7 @@ namespace TravelAgencyBackend.Controllers
         public IActionResult CreateRestaurant()
         {
             ViewBag.Districts = new SelectList(_context.Districts, "DistrictId", "DistrictName");
+            ViewBag.TravelSuppliers = new SelectList(_context.TravelSuppliers, "TravelSupplierId", "SupplierName");
             return View();
         }
         [HttpPost]
@@ -260,6 +271,10 @@ namespace TravelAgencyBackend.Controllers
             if (!_context.Districts.Any(c => c.DistrictId == p.District.DistrictId))
             {
                 ModelState.AddModelError("DistrictId", "請選擇有效的區");
+            }
+            if (!_context.TravelSuppliers.Any(c => c.TravelSupplierId == p.TravelSupplier.TravelSupplierId))
+            {
+                ModelState.AddModelError("TravelSupplierId", "請選擇有效的供應商");
             }
             _context.Restaurants.Add(p);
             _context.SaveChanges();
@@ -287,6 +302,7 @@ namespace TravelAgencyBackend.Controllers
             if (d == null)
                 return RedirectToAction("List");
             ViewBag.Districts = new SelectList(_context.Districts, "DistrictId", "DistrictName");
+            ViewBag.TravelSuppliers = new SelectList(_context.TravelSuppliers, "TravelSupplierId", "SupplierName");
             return View(d);
         }
         [HttpPost]
@@ -302,6 +318,10 @@ namespace TravelAgencyBackend.Controllers
             {
                 ModelState.AddModelError("DistrictId", "請選擇有效的區");
             }
+            if (!_context.TravelSuppliers.Any(c => c.TravelSupplierId == uiRestaurant.TravelSupplier.TravelSupplierId))
+            {
+                ModelState.AddModelError("TravelSupplierId", "請選擇有效的供應商");
+            }
             _context.SaveChanges();
             return RedirectToAction("List");
         }
@@ -310,6 +330,7 @@ namespace TravelAgencyBackend.Controllers
         public IActionResult CreateHotel()
         {
             ViewBag.Districts = new SelectList(_context.Districts, "DistrictId", "DistrictName");
+            ViewBag.TravelSuppliers = new SelectList(_context.TravelSuppliers, "TravelSupplierId", "SupplierName");
             return View();
         }
         [HttpPost]
@@ -318,6 +339,10 @@ namespace TravelAgencyBackend.Controllers
             if (!_context.Districts.Any(c => c.DistrictId == p.District.DistrictId))
             {
                 ModelState.AddModelError("DistrictId", "請選擇有效的區");
+            }
+            if (!_context.TravelSuppliers.Any(c => c.TravelSupplierId == p.TravelSupplier.TravelSupplierId))
+            {
+                ModelState.AddModelError("TravelSupplierId", "請選擇有效的供應商");
             }
             _context.Hotels.Add(p);
             _context.SaveChanges();
@@ -345,6 +370,7 @@ namespace TravelAgencyBackend.Controllers
             if (d == null)
                 return RedirectToAction("List");
             ViewBag.Districts = new SelectList(_context.Districts, "DistrictId", "DistrictName");
+            ViewBag.TravelSuppliers = new SelectList(_context.TravelSuppliers, "TravelSupplierId", "SupplierName");
             return View(d);
         }
         [HttpPost]
@@ -359,6 +385,10 @@ namespace TravelAgencyBackend.Controllers
             if (!_context.Districts.Any(c => c.DistrictId == uiHotel.District.DistrictId))
             {
                 ModelState.AddModelError("DistrictId", "請選擇有效的區");
+            }
+            if (!_context.TravelSuppliers.Any(c => c.TravelSupplierId == uiHotel.TravelSupplier.TravelSupplierId))
+            {
+                ModelState.AddModelError("TravelSupplierId", "請選擇有效的供應商");
             }
             _context.SaveChanges();
             return RedirectToAction("List");

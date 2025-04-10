@@ -4,7 +4,7 @@
     ViewData["Title"] = "EditHotel";
 }
 
-<h2>修改景點項目</h2>
+<h2>修改住宿項目</h2>
 
 <hr />
 <div class="row">
@@ -13,15 +13,17 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" name="HotelId" value="@Model.HotelId" />
             <div class="form-group">
-                <label asp-for="DistrictId" class="control-label"></label>
+                <label asp-for="DistrictId" class="control-label">區</label>
                 <select asp-for="DistrictId" class="form-control" asp-items="ViewBag.Districts">
-                    <option value="">-- 請選擇區 --</option>
+                    <option value="">請選擇區</option>
                 </select>
                 <span asp-validation-for="DistrictId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="TravelSupplierId" class="control-label"></label>
-                <input asp-for="TravelSupplierId" class="form-control" />
+                <label asp-for="TravelSupplierId" class="control-label">供應商</label>
+                <select asp-for="TravelSupplierId" class="form-control" asp-items="ViewBag.TravelSuppliers">
+                    <option value="">請選擇供應商</option>
+                </select>
                 <span asp-validation-for="TravelSupplierId" class="text-danger"></span>
             </div>
             <div class="form-group">
