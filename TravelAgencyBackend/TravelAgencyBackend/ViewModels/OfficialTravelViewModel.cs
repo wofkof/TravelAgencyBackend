@@ -40,6 +40,8 @@ namespace TravelAgencyBackend.ViewModels // ← 修改成正確拼法
         [Display(Name = "行程時長")]
         public int Days { get; set; }
 
+
+
         [Display(Name = "封面圖片")]
         [Required(ErrorMessage = "請選擇封面圖片")]
         public IFormFile? CoverImage { get; set; }
@@ -55,6 +57,6 @@ namespace TravelAgencyBackend.ViewModels // ← 修改成正確拼法
 
         public ICollection<OfficialTravelDetail> Details { get; set; } = new List<OfficialTravelDetail>();
 
-        
+
     }
 }
