@@ -112,24 +112,34 @@ namespace TravelAgencyBackend.Controllers
 
         }
 
-        // GET: OfficialTravels/Edit/5
+        
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var officialTravel = await _context.OfficialTravels.FindAsync(id);
-            if (officialTravel == null)
-            {
-                return NotFound();
-            }
-            ViewData["CreatedByEmployeeId"] = new SelectList(_context.Employees, "EmployeeId", "Name", officialTravel.CreatedByEmployeeId);
-            ViewData["RegionId"] = new SelectList(_context.Regions, "RegionId", "Name", officialTravel.RegionId);
-            //ViewData["TravelStatusList"] = GetTravelStatusSelectList();
+            var travel = await _context.OfficialTravels.FindAsync(id);
+            if (travel == null) return NotFound();
 
-            return View(officialTravel);
+            var vm = new OfficialTravelEditViewModel
+            {
+                OfficialTravelId = travel.OfficialTravelId,
+                CreatedByEmployeeId = travel.CreatedByEmployeeId,
+                RegionId = travel.RegionId,
+                Title = travel.Title,
+                ProjectYear = travel.ProjectYear,
+                AvailableFrom = travel.AvailableFrom,
+                AvailableUntil = travel.AvailableUntil,
+                Description = travel.Description,
+                Days = travel.Days,
+                CoverPath = travel.CoverPath,
+                CreatedAt = travel.CreatedAt,
+                Status = (ViewModels.TravelStatus)travel.Status
+            };
+
+            ViewData["CreatedByEmployeeId"] = new SelectList(_context.Employees, "EmployeeId", "Name", travel.CreatedByEmployeeId);
+            ViewData["RegionId"] = new SelectList(_context.Regions, "RegionId", "Country", travel.RegionId);
+
+            return View(vm);
         }
 
         // POST: OfficialTravels/Edit/5
@@ -137,43 +147,71 @@ namespace TravelAgencyBackend.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("OfficialTravelId,CreatedByEmployeeId,RegionId,Title,ProjectYear,AvailableFrom,AvailableUntil,Description,Days,CoverPath,CreatedAt,Status")] OfficialTravel officialTravel)
+        public async Task<IActionResult> Edit(int id, OfficialTravelEditViewModel vm)
         {
-            ModelState.Remove("CreatedBy");
-            ModelState.Remove("Region");
-            
-            if (id != officialTravel.OfficialTravelId)
-            {
-                return NotFound();
-            }
+            if (id != vm.OfficialTravelId) return NotFound();
 
             if (ModelState.IsValid)
             {
-                try
+                var travelToUpdate = await _context.OfficialTravels.FindAsync(id);
+                if (travelToUpdate == null) return NotFound();
+
+                // 更新其他屬性
+                travelToUpdate.Title = vm.Title;
+                travelToUpdate.RegionId = vm.RegionId;
+                travelToUpdate.CreatedByEmployeeId = vm.CreatedByEmployeeId;
+                travelToUpdate.ProjectYear = vm.ProjectYear;
+                travelToUpdate.AvailableFrom = vm.AvailableFrom;
+                travelToUpdate.AvailableUntil = vm.AvailableUntil;
+                travelToUpdate.Description = vm.Description;
+                travelToUpdate.Days = vm.Days;
+                travelToUpdate.Status = (Models.TravelStatus)vm.Status;
+                travelToUpdate.UpdatedAt = DateTime.Now;
+
+                // 處理封面圖片
+                if (vm.Cover != null && vm.Cover.Length > 0)
                 {
-                    officialTravel.UpdatedAt = DateTime.Now;
-                    _context.Update(officialTravel);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!OfficialTravelExists(officialTravel.OfficialTravelId))
+                    // 檢查並刪除舊的圖片
+                    if (!string.IsNullOrEmpty(travelToUpdate.CoverPath))
                     {
-                        return NotFound();
+                        var oldImagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", travelToUpdate.CoverPath.TrimStart('/'));
+                        if (System.IO.File.Exists(oldImagePath))
+                        {
+                            System.IO.File.Delete(oldImagePath);  // 刪除舊圖片
+                        }
                     }
-                    else
+
+                    // 上傳新圖片
+                    var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "covers");
+                    if (!Directory.Exists(uploadsFolder))
+                        Directory.CreateDirectory(uploadsFolder);
+
+                    var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(vm.Cover.FileName);
+                    var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
                     {
-                        throw;
+                        await vm.Cover.CopyToAsync(stream);  // 儲存圖片
                     }
+
+                    // 更新封面圖片路徑
+                    travelToUpdate.CoverPath = "/uploads/covers/" + uniqueFileName;
                 }
+
+                // 儲存更新
+                _context.Update(travelToUpdate);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CreatedByEmployeeId"] = new SelectList(_context.Employees, "EmployeeId", "Name", officialTravel.CreatedByEmployeeId);
-            ViewData["RegionId"] = new SelectList(_context.Regions, "RegionId", "Name", officialTravel.RegionId);
-            //ViewData["TravelStatusList"] = GetTravelStatusSelectList();
 
-            return View(officialTravel);
+            // 若ModelState無效，重新載入View，並提供選擇列表
+            ViewData["CreatedByEmployeeId"] = new SelectList(_context.Employees, "EmployeeId", "Name", vm.CreatedByEmployeeId);
+            ViewData["RegionId"] = new SelectList(_context.Regions, "RegionId", "Country", vm.RegionId);
+
+            return View(vm);
         }
+
+
 
         // GET: OfficialTravels/Delete/5
         public async Task<IActionResult> Delete(int? id)

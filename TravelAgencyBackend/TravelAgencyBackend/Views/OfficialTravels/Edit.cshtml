@@ -1,4 +1,5 @@
-﻿@model TravelAgencyBackend.Models.OfficialTravel
+﻿@model TravelAgencyBackend.ViewModels.OfficialTravelEditViewModel
+
 
 @{
     ViewData["Title"] = "Edit";
@@ -53,10 +54,17 @@
                 <input asp-for="Days" class="form-control" />
                 <span asp-validation-for="Days" class="text-danger"></span>
             </div>
+            @if (!string.IsNullOrEmpty(Model.CoverPath))
+            {
+                <div class="form-group">
+                    <p>目前封面：</p>
+                    <img src="@Model.CoverPath" alt="封面圖片" style="max-width: 200px;" />
+                </div>
+            }
             <div class="form-group">
-                <label asp-for="CoverPath" class="control-label"></label>
-                <input asp-for="CoverPath" class="form-control"/>
-                <span asp-validation-for="CoverPath" class="text-danger"></span>
+                <label asp-for="Cover" class="control-label"></label>
+                <input asp-for="Cover" class="form-control" type="file"/>
+                <span asp-validation-for="Cover" class="text-danger"></span>
             </div>
             
                 <input asp-for="CreatedAt" class="form-control" type="hidden"/>
