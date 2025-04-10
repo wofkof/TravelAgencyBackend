@@ -82,10 +82,10 @@ namespace TravelAgencyBackend.Controllers
             {
                 ModelState.AddModelError("MemberId", "請選擇有效的會員");
             }
-            //if (!_context.Employees.Any(c => c.EmployeeId == uiCustomTravel.ReviewEmployeeId))
-            //{
-            //    ModelState.AddModelError("EmployeeId", "請選擇有效的審核員工");
-            //}
+            if (!_context.Employees.Any(c => c.EmployeeId == uiCustomTravel.ReviewEmployeeId))
+            {
+                ModelState.AddModelError("EmployeeId", "請選擇有效的審核員工");
+            }
 
             _context.SaveChanges();
             return RedirectToAction("List");

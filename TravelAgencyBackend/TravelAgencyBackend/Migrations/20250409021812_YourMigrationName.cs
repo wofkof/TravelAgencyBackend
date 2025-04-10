@@ -11,7 +11,9 @@ namespace TravelAgencyBackend.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             //migrationBuilder.DropForeignKey(
+
             //    name: "FK_T_OfficialTravelDetail_TravelSupplier_TravelSupplierId",
+
             //    table: "T_OfficialTravelDetail");
 
             //migrationBuilder.DropIndex(
