@@ -139,7 +139,7 @@ namespace TravelAgencyBackend.Models
 
                 entity.Property(c => c.Category)
                       .HasConversion<string>()
-                      .HasMaxLength(20)
+                      .HasMaxLength(255)
                       .IsRequired();
                 entity.Property(c => c.Status)
                       .HasConversion<string>()
