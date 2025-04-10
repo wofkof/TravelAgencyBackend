@@ -33,7 +33,7 @@
                     <option selected disabled value="">請選擇區</option>
                     @foreach (var t in Model.District)
                     {
-                        <option value="@t.DistrictId">@t.DistrictName</option>
+                        <option value="@t.DistrictId" data-city="@t.CityId">@t.DistrictName</option>
                     }
 
                 </select>
