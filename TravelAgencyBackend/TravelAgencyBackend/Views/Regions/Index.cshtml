@@ -4,10 +4,10 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>地區管理</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">新增</a>
 </p>
 <table id="myTable" class="display">
     <thead>
@@ -31,7 +31,7 @@
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
-                <a asp-action="Delete" asp-route-id="@item.RegionId">Delete</a>
+                <a asp-action="Delete" asp-route-id="@item.RegionId">刪除</a>
             </td>
         </tr>
 }

@@ -10,17 +10,17 @@ namespace TravelAgencyBackend.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_T_OfficialTravelDetail_T_TravelSupplier_TravelSupplierId",
-                table: "T_OfficialTravelDetail");
+            //migrationBuilder.DropForeignKey(
+            //    name: "FK_T_OfficialTravelDetail_TravelSupplier_TravelSupplierId",
+            //    table: "T_OfficialTravelDetail");
 
-            migrationBuilder.DropIndex(
-                name: "IX_T_OfficialTravelDetail_TravelSupplierId",
-                table: "T_OfficialTravelDetail");
+            //migrationBuilder.DropIndex(
+            //    name: "IX_T_OfficialTravelDetail_TravelSupplierId",
+            //    table: "T_OfficialTravelDetail");
 
-            migrationBuilder.DropColumn(
-                name: "TravelSupplierId",
-                table: "T_OfficialTravelDetail");
+            //migrationBuilder.DropColumn(
+            //    name: "TravelSupplierId",
+            //    table: "T_OfficialTravelDetail");
         }
 
         /// <inheritdoc />
