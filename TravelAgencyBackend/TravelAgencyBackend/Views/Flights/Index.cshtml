@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>航班資料</h1>
 <p>
     <a asp-action="Create">新增(測試)</a> 
 </p>
@@ -17,15 +17,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.AirlineName)
             </th>
-            @* <th> *@
-            @*     @Html.DisplayNameFor(model => model.DepartureAirportCode) *@
-            @* </th> *@
             <th>
                 @Html.DisplayNameFor(model => model.DepartureAirportName)
             </th>
-            @* <th> *@
-            @*     @Html.DisplayNameFor(model => model.ArrivalAirportCode) *@
-            @* </th> *@
             <th>
                 @Html.DisplayNameFor(model => model.ArrivalAirportName)
             </th>
@@ -41,9 +35,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.AircraftType)
             </th>
-            @* <th> *@
-            @*     @Html.DisplayNameFor(model => model.FlightUid) *@
-            @* </th> *@
             <th>
                 @Html.DisplayNameFor(model => model.SyncedAt)
             </th>
@@ -59,15 +50,9 @@
             <td>
                 @Html.DisplayFor(modelItem => item.AirlineName)
             </td>
-            @* <td> *@
-            @*     @Html.DisplayFor(modelItem => item.DepartureAirportCode) *@
-            @* </td> *@
             <td>
                 @Html.DisplayFor(modelItem => item.DepartureAirportName)
             </td>
-            @* <td> *@
-            @*     @Html.DisplayFor(modelItem => item.ArrivalAirportCode) *@
-            @* </td> *@
             <td>
                 @Html.DisplayFor(modelItem => item.ArrivalAirportName)
             </td>
@@ -83,14 +68,11 @@
             <td>
                 @Html.DisplayFor(modelItem => item.AircraftType)
             </td>
-            @* <td> *@
-            @*     @Html.DisplayFor(modelItem => item.FlightUid) *@
-            @* </td> *@
             <td>
                 @Html.DisplayFor(modelItem => item.SyncedAt)
             </td>
             <td>
-                <a asp-action="Details" asp-route-id="@item.FlightId">Details</a>
+                <a asp-action="Details" asp-route-id="@item.FlightId">檢視</a>
             </td>
         </tr>
 }
