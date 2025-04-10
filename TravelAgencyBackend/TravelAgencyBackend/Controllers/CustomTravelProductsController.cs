@@ -198,11 +198,11 @@ namespace TravelAgencyBackend.Controllers
         [HttpPost]
         public IActionResult CreateAttraction(Attraction p)
         {
-            if (!_context.Districts.Any(c => c.DistrictId == p.District.DistrictId))
+            if (!_context.Districts.Any(c => c.DistrictId == p.DistrictId))
             {
                 ModelState.AddModelError("DistrictId", "請選擇有效的區");
             }
-            if (!_context.TravelSuppliers.Any(c => c.TravelSupplierId == p.TravelSupplier.TravelSupplierId))
+            if (!_context.TravelSuppliers.Any(c => c.TravelSupplierId == p.TravelSupplierId))
             {
                 ModelState.AddModelError("TravelSupplierId", "請選擇有效的供應商");
             }
@@ -246,11 +246,11 @@ namespace TravelAgencyBackend.Controllers
             dbAttraction.DistrictId = uiAttraction.DistrictId;
             dbAttraction.TravelSupplierId = uiAttraction.TravelSupplierId;
             dbAttraction.ScenicSpotName = uiAttraction.ScenicSpotName;
-            if (!_context.Districts.Any(c => c.DistrictId == uiAttraction.District.DistrictId))
+            if (!_context.Districts.Any(c => c.DistrictId == uiAttraction.DistrictId))
             {
                 ModelState.AddModelError("DistrictId", "請選擇有效的區");
             }
-            if (!_context.TravelSuppliers.Any(c => c.TravelSupplierId == uiAttraction.TravelSupplier.TravelSupplierId))
+            if (!_context.TravelSuppliers.Any(c => c.TravelSupplierId == uiAttraction.TravelSupplierId))
             {
                 ModelState.AddModelError("TravelSupplierId", "請選擇有效的供應商");
             }
@@ -268,11 +268,11 @@ namespace TravelAgencyBackend.Controllers
         [HttpPost]
         public IActionResult CreateRestaurant(Restaurant p)
         {
-            if (!_context.Districts.Any(c => c.DistrictId == p.District.DistrictId))
+            if (!_context.Districts.Any(c => c.DistrictId == p.DistrictId))
             {
                 ModelState.AddModelError("DistrictId", "請選擇有效的區");
             }
-            if (!_context.TravelSuppliers.Any(c => c.TravelSupplierId == p.TravelSupplier.TravelSupplierId))
+            if (!_context.TravelSuppliers.Any(c => c.TravelSupplierId == p.TravelSupplierId))
             {
                 ModelState.AddModelError("TravelSupplierId", "請選擇有效的供應商");
             }
@@ -314,11 +314,11 @@ namespace TravelAgencyBackend.Controllers
             dbRestaurant.DistrictId = uiRestaurant.DistrictId;
             dbRestaurant.TravelSupplierId = uiRestaurant.TravelSupplierId;
             dbRestaurant.RestaurantName = uiRestaurant.RestaurantName;
-            if (!_context.Districts.Any(c => c.DistrictId == uiRestaurant.District.DistrictId))
+            if (!_context.Districts.Any(c => c.DistrictId == uiRestaurant.DistrictId))
             {
                 ModelState.AddModelError("DistrictId", "請選擇有效的區");
             }
-            if (!_context.TravelSuppliers.Any(c => c.TravelSupplierId == uiRestaurant.TravelSupplier.TravelSupplierId))
+            if (!_context.TravelSuppliers.Any(c => c.TravelSupplierId == uiRestaurant.TravelSupplierId))
             {
                 ModelState.AddModelError("TravelSupplierId", "請選擇有效的供應商");
             }
@@ -336,11 +336,11 @@ namespace TravelAgencyBackend.Controllers
         [HttpPost]
         public IActionResult CreateHotel(Hotel p)
         {
-            if (!_context.Districts.Any(c => c.DistrictId == p.District.DistrictId))
+            if (!_context.Districts.Any(c => c.DistrictId == p.DistrictId))
             {
                 ModelState.AddModelError("DistrictId", "請選擇有效的區");
             }
-            if (!_context.TravelSuppliers.Any(c => c.TravelSupplierId == p.TravelSupplier.TravelSupplierId))
+            if (!_context.TravelSuppliers.Any(c => c.TravelSupplierId == p.TravelSupplierId))
             {
                 ModelState.AddModelError("TravelSupplierId", "請選擇有效的供應商");
             }
@@ -382,11 +382,11 @@ namespace TravelAgencyBackend.Controllers
             dbHotel.DistrictId = uiHotel.DistrictId;
             dbHotel.TravelSupplierId = uiHotel.TravelSupplierId;
             dbHotel.HotelName = uiHotel.HotelName;
-            if (!_context.Districts.Any(c => c.DistrictId == uiHotel.District.DistrictId))
+            if (!_context.Districts.Any(c => c.DistrictId == uiHotel.DistrictId))
             {
                 ModelState.AddModelError("DistrictId", "請選擇有效的區");
             }
-            if (!_context.TravelSuppliers.Any(c => c.TravelSupplierId == uiHotel.TravelSupplier.TravelSupplierId))
+            if (!_context.TravelSuppliers.Any(c => c.TravelSupplierId == uiHotel.TravelSupplierId))
             {
                 ModelState.AddModelError("TravelSupplierId", "請選擇有效的供應商");
             }
