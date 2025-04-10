@@ -5,7 +5,7 @@
 namespace TravelAgencyBackend.Migrations
 {
     /// <inheritdoc />
-    public partial class DeleteTravelsupping : Migration
+    public partial class YourMigrationName : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

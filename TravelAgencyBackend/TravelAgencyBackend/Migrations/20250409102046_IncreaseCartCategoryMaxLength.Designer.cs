@@ -12,15 +12,15 @@ using TravelAgencyBackend.Models;
 namespace TravelAgencyBackend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250407202649_MakeUpdatedAt")]
-    partial class MakeUpdatedAt
+    [Migration("20250409102046_IncreaseCartCategoryMaxLength")]
+    partial class IncreaseCartCategoryMaxLength
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.14")
+                .HasAnnotation("ProductVersion", "9.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -100,8 +100,8 @@ namespace TravelAgencyBackend.Migrations
 
                     b.Property<string>("Category")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime");
@@ -298,6 +298,11 @@ namespace TravelAgencyBackend.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EmployeeId"));
 
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("date");
 
@@ -305,6 +310,9 @@ namespace TravelAgencyBackend.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("Gender")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("HireDate")
                         .HasColumnType("date");
@@ -651,10 +659,7 @@ namespace TravelAgencyBackend.Migrations
                     b.Property<int>("SoldSeats")
                         .HasColumnType("int");
 
-                    b.Property<int?>("TravelSupplierId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime");
 
                     b.HasKey("OfficialTravelDetailId");
@@ -662,8 +667,6 @@ namespace TravelAgencyBackend.Migrations
                     b.HasIndex("FlightId");
 
                     b.HasIndex("OfficialTravelId");
-
-                    b.HasIndex("TravelSupplierId");
 
                     b.ToTable("T_OfficialTravelDetail", (string)null);
                 });
@@ -857,6 +860,10 @@ namespace TravelAgencyBackend.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PermissionId"));
+
+                    b.Property<string>("Caption")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("PermissionName")
                         .IsRequired()
@@ -1223,10 +1230,6 @@ namespace TravelAgencyBackend.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("TravelAgencyBackend.Models.TravelSupplier", null)
-                        .WithMany("OfficialTravelDetails")
-                        .HasForeignKey("TravelSupplierId");
-
                     b.Navigation("Flight");
 
                     b.Navigation("OfficialTravel");
@@ -1429,8 +1432,6 @@ namespace TravelAgencyBackend.Migrations
                     b.Navigation("Attractions");
 
                     b.Navigation("Hotels");
-
-                    b.Navigation("OfficialTravelDetails");
 
                     b.Navigation("Restaurants");
                 });

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace TravelAgencyBackend.Helpers // 請依照您的專案結構調整命名空間
+namespace TravelAgencyBackend.Helpers 
 {
     public class PaginatedList<T> : List<T>
     {

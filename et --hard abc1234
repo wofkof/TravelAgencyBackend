@@ -1,0 +1,35 @@
+[33m9348ff6[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mdev-舒婷[m[33m)[m 同步main，更新資料庫
+[33m081b143[m Merge branch 'main' into dev-舒婷
+[33m54088bc[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m 補push
+[33mac9911e[m Merge branch 'main' into dev-舒婷
+[33m26ba4af[m 串接登入和公告與員工
+[33m9284eaf[m 完成美化Employee頁，大頭貼上傳功能製作中
+[33mad1054d[m Merge pull request #5 from wofkof/dev-舒婷
+[33m179b54f[m Merge branch 'main' into dev-舒婷
+[33m0b9a009[m Merge pull request #3 from wofkof/權限功能
+[33m679bf56[m 能放的權限都先放了
+[33m4382a4a[m 權限功能到參與人
+[33m3bb16c9[m[33m ([m[1;31morigin/dev-舒婷[m[33m)[m 完成Employee_List的分頁製作
+[33m4ecf914[m 完成Employee的List頁使用者體驗提升
+[33ma76e4e9[m 設定Announcement的發布者只可是狀態為Active的員工
+[33mcd8f6e9[m Employee的CRUD功能優化：新增時驗證信箱、電話是否重複及員工的詳細資訊及其他小體驗優化
+[33m6affdb1[m 管理會員權限
+[33m8bcc687[m 完成Login頁設計(內部功能)尚未完成
+[33md177fab[m Merge pull request #2 from wofkof/聊天室功能
+[33m236a1d8[m 整合ViewModels+使用Mapping
+[33m48372ed[m 完成Announcement的List.Create.Edit.Delete.Details功能
+[33m6d9fbc2[m 完成Employee的Delete功能
+[33m8b43696[m Merge pull request #1 from wofkof/聊天室功能
+[33mc0bebea[m 聊天室功能+參與人功能
+[33m5282205[m 完成Employee的Edit功能
+[33mb58b373[m 完成Employee的Create功能
+[33meabb2bf[m 完成Employee的List功能
+[33ma95a0b4[m 未讀訊息通知
+[33m97b130f[m 聊天室功能
+[33m469304d[m 修改Employee.cs：新增性別及地址兩個欄位(T_Employee)
+[33mc11168e[m ArchitectUI+聊天室還在製作中
+[33mc17aebe[m 會員CRUD
+[33mf79e277[m Update README.md
+[33m86fdf93[m Update README.md
+[33mc768bc2[m Create README.md
+[33me8508ca[m 第一版設定

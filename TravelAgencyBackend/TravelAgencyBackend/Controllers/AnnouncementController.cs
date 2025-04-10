@@ -60,20 +60,16 @@ namespace TravelAgencyBackend.Controllers
         }
 
         [HttpPost]
+        [HttpPost]
         public IActionResult Create(AnnouncementViewModel vm)
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Employees = new SelectList(
-            _context.Employees
-            .Where(e => e.Status == EmployeeStatus.Active),
-            "EmployeeId",
-            "Name"
-            );
-
-
                 return View(vm);
             }
+
+            var employeeId = HttpContext.Session.GetInt32("EmployeeId");
+            if (employeeId == null) return RedirectToAction("Login", "Account");
 
             var announcement = new Announcement
             {
@@ -81,11 +77,12 @@ namespace TravelAgencyBackend.Controllers
                 Content = vm.Content,
                 SentAt = vm.SentAt,
                 Status = vm.Status,
-                EmployeeId = vm.EmployeeId
+                EmployeeId = employeeId.Value
             };
 
             _context.Announcements.Add(announcement);
             _context.SaveChanges();
+
             return RedirectToAction("List");
         }
         public IActionResult Details(int id)

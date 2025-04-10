@@ -97,8 +97,8 @@ namespace TravelAgencyBackend.Migrations
 
                     b.Property<string>("Category")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime");
@@ -313,6 +313,9 @@ namespace TravelAgencyBackend.Migrations
 
                     b.Property<DateTime>("HireDate")
                         .HasColumnType("date");
+
+                    b.Property<string>("ImagePath")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()

@@ -20,7 +20,11 @@ namespace TravelAgencyBackend.ViewModels.Employee
         [Display(Name = "聯絡信箱")]
         public string Email { get; set; } = null!;
 
+        //[Display(Name = "入職日期")]
+        //public DateTime? HireDate { get; set; }
+
         [Display(Name = "備註")]
         public string? Note { get; set; }
+        public string? ImagePath { get; set; } 
     }
 }

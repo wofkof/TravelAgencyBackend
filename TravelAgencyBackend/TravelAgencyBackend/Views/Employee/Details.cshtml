@@ -2,44 +2,71 @@
 
 @{
     ViewData["Title"] = "員工詳細資料";
+
+    // ✅ 檢查是否有有效的圖片路徑，否則顯示預設圖
+    var imagePath = !string.IsNullOrEmpty(Model.ImagePath)
+        ? Url.Content("~/uploads/" + Model.ImagePath)
+        : Url.Content("~/images/default.png");
 }
 
-<h2>員工詳細資料</h2>
+<h1 class="mb-4 text-start">員工詳細資料</h1>
 
-<div class="card">
-    <div class="card-body">
-        <dl class="row">
-            <dt class="col-sm-2">姓名</dt>
-            <dd class="col-sm-10">@Model.Name</dd>
+<div class="row">
+    <div class="col-md-8">
+        <table class="table table-bordered table-hover">
+            <tbody>
+                <tr>
+                    <th scope="row" style="width: 20%">姓名</th>
+                    <td>@Model.Name</td>
+                </tr>
+                <tr>
+                    <th scope="row">性別</th>
+                    <td>@Model.Gender</td>
+                </tr>
+                <tr>
+                    <th scope="row">生日</th>
+                    <td>@Model.BirthDate.ToString("yyyy/MM/dd")</td>
+                </tr>
+                <tr>
+                    <th scope="row">電話</th>
+                    <td>@Model.Phone</td>
+                </tr>
+                <tr>
+                    <th scope="row">信箱</th>
+                    <td>@Model.Email</td>
+                </tr>
+                <tr>
+                    <th scope="row">地址</th>
+                    <td>@Model.Address</td>
+                </tr>
+                <tr>
+                    <th scope="row">入職日期</th>
+                    <td>@Model.HireDate.ToString("yyyy/MM/dd")</td>
+                </tr>
+                <tr>
+                    <th scope="row">狀態</th>
+                    <td>@Model.Status</td>
+                </tr>
+                <tr>
+                    <th scope="row">備註</th>
+                    <td>@Model.Note</td>
+                </tr>
+            </tbody>
+        </table>
 
-            <dt class="col-sm-2">性別</dt>
-            <dd class="col-sm-10">@Model.Gender</dd>
+        <div class="mt-4 d-flex gap-3">
+            <a asp-action="Edit" asp-route-id="@Model.EmployeeId" class="btn btn-outline-primary btn-lg px-4">編輯</a>
+            <a asp-action="List" class="btn btn-outline-secondary btn-lg px-4">返回列表</a>
+            <a asp-action="Delete" asp-route-id="@Model.EmployeeId" class="btn btn-outline-danger btn-lg px-4" onclick="return confirm('你確定要刪除這位員工嗎？')">刪除</a>
+        </div>
+    </div>
 
-            <dt class="col-sm-2">生日</dt>
-            <dd class="col-sm-10">@Model.BirthDate.ToString("yyyy/MM/dd")</dd>
-
-            <dt class="col-sm-2">電話</dt>
-            <dd class="col-sm-10">@Model.Phone</dd>
-
-            <dt class="col-sm-2">信箱</dt>
-            <dd class="col-sm-10">@Model.Email</dd>
-
-            <dt class="col-sm-2">地址</dt>
-            <dd class="col-sm-10">@Model.Address</dd>
-
-            <dt class="col-sm-2">入職日期</dt>
-            <dd class="col-sm-10">@Model.HireDate.ToString("yyyy/MM/dd")</dd>
-
-            <dt class="col-sm-2">狀態</dt>
-            <dd class="col-sm-10">@Model.Status</dd>
-
-            <dt class="col-sm-2">備註</dt>
-            <dd class="col-sm-10">@Model.Note</dd>
-        </dl>
-
-        
-        <a asp-action="Edit" asp-route-id="@Model.EmployeeId" class="btn btn-primary">編輯</a>
-        <a asp-action="Delete" asp-route-id="@Model.EmployeeId" class="btn btn-danger" onclick="return confirm('你確定要刪除這位員工嗎？')">刪除</a>
-        <a asp-action="List" class="btn btn-secondary">返回列表</a>
+    <div class="col-md-4 text-center">
+        <label class="form-label d-block">員工照片</label>
+        <div>
+            <img id="previewImage"
+                 src="@(string.IsNullOrWhiteSpace(Model.ImagePath) ? Url.Content("~/images/default.png") : Url.Content("~/uploads/" + Model.ImagePath))"
+                 alt="預覽圖片" class="img-fluid rounded" style="max-height: 200px;" />
+        </div>
     </div>
 </div>
