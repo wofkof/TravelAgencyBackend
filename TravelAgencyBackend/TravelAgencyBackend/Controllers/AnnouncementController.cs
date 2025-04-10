@@ -23,6 +23,9 @@ namespace TravelAgencyBackend.Controllers
         }
         public IActionResult List()
         {
+            var check = CheckPermissionOrForbid("查看公告");
+            if (check != null) return check;
+
             var data = _context.Announcements
                 .Where(a => a.Status != AnnouncementStatus.Deleted)
                 .Include(a => a.Employee)
@@ -50,6 +53,9 @@ namespace TravelAgencyBackend.Controllers
             //"Name"
             //);
 
+            var check = CheckPermissionOrForbid("發布公告");
+            if (check != null) return check;
+
             var employee = _context.Employees.Find(HttpContext.Session.GetInt32("EmployeeId"));
             if (HttpContext.Session.GetInt32("EmployeeId") == null) return RedirectToAction("Login", "Account");
 
@@ -65,6 +71,9 @@ namespace TravelAgencyBackend.Controllers
         [HttpPost]
         public IActionResult Create(AnnouncementViewModel vm)
         {
+            var check = CheckPermissionOrForbid("發布公告");
+            if (check != null) return check;
+
             if (!ModelState.IsValid)
             {
                 return View(vm);
@@ -89,6 +98,9 @@ namespace TravelAgencyBackend.Controllers
         }
         public IActionResult Details(int id)
         {
+            var check = CheckPermissionOrForbid("發布公告");
+            if (check != null) return check;
+
             var data = _context.Announcements
                 .Include(a => a.Employee)
                 .FirstOrDefault(a => a.AnnouncementId == id);
@@ -115,6 +127,9 @@ namespace TravelAgencyBackend.Controllers
         [HttpGet]
         public IActionResult Edit(int id)
         {
+            var check = CheckPermissionOrForbid("發布公告");
+            if (check != null) return check;
+
             var data = _context.Announcements
                 .Include(a => a.Employee)
                 .FirstOrDefault(a => a.AnnouncementId == id);
@@ -143,6 +158,9 @@ namespace TravelAgencyBackend.Controllers
         [HttpPost]
         public IActionResult Edit(int id, AnnouncementViewModel vm)
         {
+            var check = CheckPermissionOrForbid("發布公告");
+            if (check != null) return check;
+
             if (id != vm.AnnouncementId)
             {
                 return BadRequest();
@@ -174,6 +192,9 @@ namespace TravelAgencyBackend.Controllers
         [HttpGet]
         public IActionResult Delete(int id)
         {
+            var check = CheckPermissionOrForbid("發布公告");
+            if (check != null) return check;
+
             var data = _context.Announcements
                 .Include(a => a.Employee)
                 .FirstOrDefault(a => a.AnnouncementId == id);
@@ -199,6 +220,9 @@ namespace TravelAgencyBackend.Controllers
         [HttpPost, ActionName("Delete")]
         public IActionResult DeleteConfirmed(int id)
         {
+            var check = CheckPermissionOrForbid("發布公告");
+            if (check != null) return check;
+
             var data = _context.Announcements.FirstOrDefault(a => a.AnnouncementId == id);
             if (data == null)
                 return NotFound();

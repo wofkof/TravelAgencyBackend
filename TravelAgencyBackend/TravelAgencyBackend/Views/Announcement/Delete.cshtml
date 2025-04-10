@@ -29,6 +29,26 @@
 
 <form asp-action="Delete" method="post">
     <input type="hidden" asp-for="AnnouncementId" />
-    <button type="submit" class="btn btn-danger">確認刪除</button>
-    <a asp-action="List" class="btn btn-secondary">取消</a>
+    @if (PermissionChecker.CanPushAnnouncements)
+    {
+        <button type="submit" class="btn btn-danger">確認刪除</button>
+    }
+    else
+    {
+        <button type="submit" class="btn btn-danger disabled"
+        tabindex="-1" aria-disabled="true" onclick="return false;">
+            確認刪除
+        </button>
+    }
+    @if (PermissionChecker.CanViewAnnouncements)
+    {
+        <a asp-action="List" class="btn btn-secondary">取消</a>
+    }
+    else
+    {
+        <a asp-action="List" class="btn btn-secondary disabled"
+           tabindex="-1" aria-disabled="true" onclick="return false;">
+        取消
+        </a>
+    }
 </form>

@@ -28,5 +28,15 @@
         <td>@(Model.Status == AnnouncementStatus.Announce ? "已公佈" : "未公佈")</td>
     </tr>
 </table>
+@if (PermissionChecker.CanViewAnnouncements)
+{
+    <a asp-action="List" class="btn btn-secondary">返回列表</a>
+}
+else
+{
+    <a asp-action="List" class="btn btn-secondary disabled"
+       tabindex="-1" aria-disabled="true" onclick="return false;">
+    返回列表
+    </a>
+}
 
-<a asp-action="List" class="btn btn-secondary">返回列表</a>

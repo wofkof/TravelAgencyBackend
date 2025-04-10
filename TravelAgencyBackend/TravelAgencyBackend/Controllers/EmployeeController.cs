@@ -152,14 +152,26 @@ namespace TravelAgencyBackend.Controllers
             return View(vm);
         }
 
+        private void SetRole(object? selectRoleId = null) 
+        {
+            var allRoleNames = new[] { "業務人員", "客服人員", "內容管理員", "一般員工" };
+            var allRoles = _context.Roles.Where(r => allRoleNames.Contains(r.RoleName)).ToList();
+
+            ViewBag.RoleList = new SelectList(allRoles, "RoleId", "RoleName", selectRoleId);
+            ViewBag.GenderList = EnumHelper.GetSelectListWithDisplayName<GenderType>();
+            ViewBag.StatusList = EnumHelper.GetSelectListWithDisplayName<EmployeeStatus>(excludeDeleted: true);
+        }
+
         public IActionResult Create()
         {
             var check = CheckPermissionOrForbid("管理員工");
             if (check != null) return check;
 
-            ViewBag.RoleList = new SelectList(_context.Roles, "RoleId", "RoleName");
-            ViewBag.GenderList = EnumHelper.GetSelectListWithDisplayName<GenderType>();
-            ViewBag.StatusList = EnumHelper.GetSelectListWithDisplayName<EmployeeStatus>(excludeDeleted: true);
+            SetRole();
+
+            //ViewBag.RoleList = new SelectList(_context.Roles, "RoleId", "RoleName");
+            //ViewBag.GenderList = EnumHelper.GetSelectListWithDisplayName<GenderType>();
+            //ViewBag.StatusList = EnumHelper.GetSelectListWithDisplayName<EmployeeStatus>(excludeDeleted: true);
 
 
             var vm = new EmployeeCreateViewModel
@@ -225,6 +237,15 @@ namespace TravelAgencyBackend.Controllers
             var check = CheckPermissionOrForbid("管理員工");
             if (check != null) return check;
 
+            if (_context.Employees.Any(m => m.Phone == vm.Phone))
+                ModelState.AddModelError("Phone", "此手機已被註冊");
+
+            if (!ModelState.IsValid) 
+            {
+                SetRole(vm.RoleId);
+                return View(vm);
+            }
+
             string? fileName = null;
 
             if (vm.Photo != null && vm.Photo.Length > 0)
@@ -269,6 +290,8 @@ namespace TravelAgencyBackend.Controllers
         {
             var check = CheckPermissionOrForbid("管理員工");
             if (check != null) return check;
+
+            SetRole();
 
             if (id == null) return NotFound();
 
