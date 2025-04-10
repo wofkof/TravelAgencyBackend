@@ -85,7 +85,7 @@ namespace TravelAgencyBackend.Controllers
 
         public async Task<IActionResult> List(EmployeeKeyWordViewModel p, int page = 1)
         {
-            var check = CheckPermissionOrForbid("修改會員密碼");
+            var check = CheckPermissionOrForbid("查看員工");
             if (check != null) return check;
 
             int pageSize = 10;
@@ -154,6 +154,9 @@ namespace TravelAgencyBackend.Controllers
 
         public IActionResult Create()
         {
+            var check = CheckPermissionOrForbid("管理員工");
+            if (check != null) return check;
+
             ViewBag.RoleList = new SelectList(_context.Roles, "RoleId", "RoleName");
             ViewBag.GenderList = EnumHelper.GetSelectListWithDisplayName<GenderType>();
             ViewBag.StatusList = EnumHelper.GetSelectListWithDisplayName<EmployeeStatus>(excludeDeleted: true);
@@ -219,6 +222,9 @@ namespace TravelAgencyBackend.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(EmployeeCreateViewModel vm)
         {
+            var check = CheckPermissionOrForbid("管理員工");
+            if (check != null) return check;
+
             string? fileName = null;
 
             if (vm.Photo != null && vm.Photo.Length > 0)
@@ -261,6 +267,9 @@ namespace TravelAgencyBackend.Controllers
 
         public async Task<IActionResult> Edit(int? id)
         {
+            var check = CheckPermissionOrForbid("管理員工");
+            if (check != null) return check;
+
             if (id == null) return NotFound();
 
             var emp = await _context.Employees.FindAsync(id);
@@ -315,6 +324,9 @@ namespace TravelAgencyBackend.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, EmployeeEditViewModel vm)
         {
+            var check = CheckPermissionOrForbid("管理員工");
+            if (check != null) return check;
+
             if (id != vm.EmployeeId) return NotFound();
 
             if (_context.Employees.Any(m => m.Phone == vm.Phone && m.EmployeeId != vm.EmployeeId ))
