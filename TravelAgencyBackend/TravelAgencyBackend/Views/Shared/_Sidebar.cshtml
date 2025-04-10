@@ -58,7 +58,7 @@
                             else
                             {
                                 <a asp-controller="Employee" asp-action="Create"
-                                   class="bg-light disabled" tabindex="-1" aria-disabled="true" onclick="return false;">
+                                class="bg-light disabled" tabindex="-1" aria-disabled="true" onclick="return false;">
                                     <i class="metismenu-icon"></i>新增員工
                                 </a>
                             }
@@ -165,7 +165,7 @@
                             else
                             {
                                 <a asp-controller="ChatRoom" asp-action="Create"
-                                   class="bg-light disabled" tabindex="-1" aria-disabled="true" onclick="return false">
+                                class="bg-light disabled" tabindex="-1" aria-disabled="true" onclick="return false">
                                     <i class="metismenu-icon"></i>新增聊天室
                                 </a>
                             }
@@ -179,11 +179,23 @@
                         <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
                     </a>
                     <ul>
-                        <li>
-                            <a asp-controller="Carts" asp-action="Index">
-                                <i class="metismenu-icon"></i>檢視購物車
-                            </a>
-                        </li>
+                        @if (PermissionChecker.CanViewCarts)
+                        {
+                            <li>
+                                <a asp-controller="Carts" asp-action="Index">
+                                    <i class="metismenu-icon"></i>檢視購物車
+                                </a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li>
+                                <a asp-controller="Carts" asp-action="Index"
+                                   class="bg-light disabled" tabindex="-1" aria-disabled="true" onclick="return false">
+                                    <i class="metismenu-icon"></i>檢視購物車
+                                </a>
+                            </li>
+                        }
                     </ul>
                 </li>
                 @* 公告 *@
@@ -194,14 +206,34 @@
                     </a>
                     <ul>
                         <li>
-                            <a asp-controller="Announcement" asp-action="List">
-                                <i class="metismenu-icon"></i>查看公告
-                            </a>
+                            @if (PermissionChecker.CanViewAnnouncements)
+                            {
+                                <a asp-controller="Announcement" asp-action="List">
+                                    <i class="metismenu-icon"></i>查看公告
+                                </a>
+                            }
+                            else
+                            {
+                                <a asp-controller="Announcement" asp-action="List"
+                                class="bg-light disabled" tabindex="-1" aria-disabled="true" onclick="return false">
+                                    <i class="metismenu-icon"></i>查看公告
+                                </a>
+                            }
                         </li>
                         <li>
-                            <a asp-controller="Announcement" asp-action="Create">
-                                <i class="metismenu-icon"></i>新增公告
-                            </a>
+                            @if (PermissionChecker.CanPushAnnouncements)
+                            {
+                                <a asp-controller="Announcement" asp-action="Create">
+                                    <i class="metismenu-icon"></i>新增公告
+                                </a>
+                            }
+                            else
+                            {
+                                <a asp-controller="Announcement" asp-action="Create"
+                                   class="bg-light disabled" tabindex="-1" aria-disabled="true" onclick="return false">
+                                    <i class="metismenu-icon"></i>新增公告
+                                </a>
+                            }
                         </li>
                     </ul>
                 </li>

@@ -14,7 +14,18 @@
 </form>
 
 <p>
-    <a asp-action="Create">新增</a>
+    @if (PermissionChecker.CanManageCarts)
+    {
+        <a asp-action="Create">新增</a>
+    }
+    else
+    {
+        <a asp-action="Create"
+        class="disabled"   
+        tabindex="-1" aria-disabled="true" onclick="return false;">
+            新增
+        </a>
+    }
 </p>
 
 <table class="table">
@@ -38,9 +49,42 @@
                 <td>@Html.DisplayFor(m => item.Status)</td>
                 <td>@Html.DisplayFor(m => item.Member.Account)</td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.CartId">編輯</a> |
-                    <a asp-action="Details" asp-route-id="@item.CartId">詳細</a> |
-                    <a asp-action="Delete" asp-route-id="@item.CartId">刪除</a>
+                    @if (PermissionChecker.CanManageCarts)
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.CartId">編輯</a>
+
+                    }
+                    else
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.CartId" class="disabled"
+                        tabindex="-1" aria-disabled="true" onclick="return false;">
+                            編輯
+                        </a>
+                    }
+                    |
+                    @if (PermissionChecker.CanViewCarts)
+                    {
+                        <a asp-action="Details" asp-route-id="@item.CartId">詳細</a>
+                    }
+                    else
+                    {
+                        <a asp-action="Details" asp-route-id="@item.CartId" class="disabled"
+                        tabindex="-1" aria-disabled="true" onclick="return false;">
+                            詳細
+                        </a>
+                    }
+                    |
+                    @if (PermissionChecker.CanManageCarts)
+                    {
+                        <a asp-action="Delete" asp-route-id="@item.CartId">刪除</a>
+                    }
+                    else
+                    {
+                        <a asp-action="Delete" asp-route-id="@item.CartId" class="disabled"
+                           tabindex="-1" aria-disabled="true" onclick="return false;">
+                        刪除
+                        </a>
+                    }
                 </td>
             </tr>
         }

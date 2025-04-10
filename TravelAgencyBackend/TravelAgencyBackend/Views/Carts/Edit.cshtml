@@ -41,7 +41,17 @@
 </div>
 
 <div>
-    <a asp-action="Index">返回列表</a>
+    @if (PermissionChecker.CanManageCarts)
+    {
+        <a asp-action="Index">返回列表</a>
+    }
+    else
+    {
+        <a asp-action="Index" class="disabled"
+           tabindex="-1" aria-disabled="true" onclick="return false;">
+        返回列表
+        </a>
+    }
 </div>
 
 @section Scripts {

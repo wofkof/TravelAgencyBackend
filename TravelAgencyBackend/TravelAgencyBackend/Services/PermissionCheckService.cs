@@ -59,7 +59,7 @@ namespace TravelAgencyBackend.Services
         public bool CanViewOrders => HasPermission("查看訂單");
         public bool CanManageOrders => HasPermission("管理訂單");
         public bool CanViewHome => HasPermission("查看首頁");
-        
-
+        public bool CanViewCarts => HasPermission("查看購物車");
+        public bool CanManageCarts => HasPermission("管理購物車");
     }
 }

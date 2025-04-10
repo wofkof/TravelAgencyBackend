@@ -98,7 +98,7 @@ namespace TravelAgencyBackend.Controllers
         }
         public IActionResult Details(int id)
         {
-            var check = CheckPermissionOrForbid("發布公告");
+            var check = CheckPermissionOrForbid("查看公告");
             if (check != null) return check;
 
             var data = _context.Announcements
