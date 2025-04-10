@@ -4,7 +4,7 @@
     ViewData["Title"] = "EditDistrict";
 }
 
-<h2>新增區項目</h2>
+<h2>修改區項目</h2>
 
 <hr />
 <div class="row">
@@ -14,7 +14,9 @@
             <input type="hidden" name="DistrictId" value="@Model.DistrictId" />
             <div class="form-group">
                 <label asp-for="CityId" class="control-label"></label>
-                <input asp-for="CityId" class="form-control" />
+                <select asp-for="CityId" class="form-control" asp-items="ViewBag.Cities">
+                    <option value="">-- 請選擇縣市 --</option>
+                </select>
                 <span asp-validation-for="CityId" class="text-danger"></span>
             </div>
             <div class="form-group">
