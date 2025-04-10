@@ -12,7 +12,7 @@ using TravelAgencyBackend.Models;
 namespace TravelAgencyBackend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250408032939_InitialCreate")]
+    [Migration("20250409072101_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -298,6 +298,11 @@ namespace TravelAgencyBackend.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EmployeeId"));
 
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("date");
 
@@ -305,6 +310,9 @@ namespace TravelAgencyBackend.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("Gender")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("HireDate")
                         .HasColumnType("date");
@@ -651,9 +659,6 @@ namespace TravelAgencyBackend.Migrations
                     b.Property<int>("SoldSeats")
                         .HasColumnType("int");
 
-                    b.Property<int?>("TravelSupplierId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime");
 
@@ -662,8 +667,6 @@ namespace TravelAgencyBackend.Migrations
                     b.HasIndex("FlightId");
 
                     b.HasIndex("OfficialTravelId");
-
-                    b.HasIndex("TravelSupplierId");
 
                     b.ToTable("T_OfficialTravelDetail", (string)null);
                 });
@@ -790,7 +793,7 @@ namespace TravelAgencyBackend.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ParticipantId"));
 
-                    b.Property<DateTime>("BirthDate")
+                    b.Property<DateTime?>("BirthDate")
                         .HasColumnType("date");
 
                     b.Property<string>("EnglishName")
@@ -800,8 +803,8 @@ namespace TravelAgencyBackend.Migrations
 
                     b.Property<string>("Gender")
                         .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("IdNumber")
                         .IsRequired()
@@ -821,7 +824,7 @@ namespace TravelAgencyBackend.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<DateTime>("PassportIssueDate")
+                    b.Property<DateTime?>("PassportIssueDate")
                         .HasColumnType("date");
 
                     b.Property<string>("PassportNumber")
@@ -857,6 +860,10 @@ namespace TravelAgencyBackend.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PermissionId"));
+
+                    b.Property<string>("Caption")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("PermissionName")
                         .IsRequired()
@@ -1223,10 +1230,6 @@ namespace TravelAgencyBackend.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("TravelAgencyBackend.Models.TravelSupplier", null)
-                        .WithMany("OfficialTravelDetails")
-                        .HasForeignKey("TravelSupplierId");
-
                     b.Navigation("Flight");
 
                     b.Navigation("OfficialTravel");
@@ -1429,8 +1432,6 @@ namespace TravelAgencyBackend.Migrations
                     b.Navigation("Attractions");
 
                     b.Navigation("Hotels");
-
-                    b.Navigation("OfficialTravelDetails");
 
                     b.Navigation("Restaurants");
                 });
