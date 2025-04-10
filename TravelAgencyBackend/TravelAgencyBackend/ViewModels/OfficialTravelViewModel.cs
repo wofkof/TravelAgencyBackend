@@ -58,11 +58,5 @@ namespace TravelAgencyBackend.ViewModels // ← 修改成正確拼法
 
         public ICollection<OfficialTravelDetail> Details { get; set; } = new List<OfficialTravelDetail>();
 
-<<<<<<< HEAD
-=======
-        public Employee CreatedBy { get; set; } = null!;
-        public Region Region { get; set; } = null!;
->>>>>>> 17dec6ad21864f800ba07b9b3ff97feac4129be5
-
     }
 }
