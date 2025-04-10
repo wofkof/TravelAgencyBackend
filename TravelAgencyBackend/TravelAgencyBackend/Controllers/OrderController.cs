@@ -7,7 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TravelAgencyBackend.Helpers;
 using TravelAgencyBackend.Models;
-using TravelAgencyBackend.ViewModels.Order; // 確保 using 新的 ViewModel
+using TravelAgencyBackend.ViewModels.Order; 
 
 namespace TravelAgencyBackend.Controllers
 {
@@ -170,8 +170,55 @@ namespace TravelAgencyBackend.Controllers
             return itemName;
         }
 
-        // ... 其他 Action 方法 (Details, Create, Edit, Delete) ...
-        // GET: Order/Details/5
+        // GET: Order/SimpleDetails/5
+        [HttpGet("Order/SimpleDetails/{id}")]
+        public async Task<IActionResult> SimpleDetails(int? id, int? originItemId, OrderCategory? originCategory)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var order = await _context.Orders
+                .Include(o => o.Member)
+                .Include(o => o.Participant)
+                // .Include(o => o.CustomTravel) // 根據需要決定是否 Include
+                // .Include(o => o.OfficialTravelDetail) // 根據需要決定是否 Include
+                .FirstOrDefaultAsync(m => m.OrderId == id);
+
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            var viewModel = new OrderSimpleDetailsViewModel
+            {
+                OrderId = order.OrderId,
+                MemberName = order.Member?.Name ?? "N/A",
+                ItemName = await GetItemName(order.ItemId, order.Category),
+                ParticipantsCount = order.ParticipantsCount,
+                TotalAmount = order.TotalAmount,
+                CreatedAt = order.CreatedAt,
+                Status = order.Status
+                // 如果 ViewModel 需要，也可以把 originItemId/Category 加進去
+            };
+
+            // --- 將來源行程的 ID 和 Category 存入 ViewBag ---
+            if (originItemId.HasValue && originCategory.HasValue)
+            {
+                ViewBag.OriginItemId = originItemId.Value;
+                ViewBag.OriginCategory = originCategory.Value;
+                ViewBag.HasOriginInfo = true; // 標記有來源資訊
+            }
+            else
+            {
+                ViewBag.HasOriginInfo = false;
+            }
+
+            return View(viewModel);
+        }
+
+        // --- 保留原本的 Details Action ---
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -214,6 +261,16 @@ namespace TravelAgencyBackend.Controllers
             };
 
             return View(orderDetailsViewModel);
+        }
+
+        // GetItemName 輔助方法 (如果 OrderController 沒有，需要從 TravelRecordController 複製或移到共用 Helper)
+        private async Task<string> GetItemName(int? itemId, OrderCategory? category)
+        {
+            if (!itemId.HasValue || !category.HasValue) return "N/A";
+            string itemName = "N/A";
+            if (category.Value == OrderCategory.OfficialTravelDetail) { var t = await _context.OfficialTravels.FindAsync(itemId.Value); itemName = t?.Title ?? "官方行程未找到"; }
+            else if (category.Value == OrderCategory.CustomTravel) { var t = await _context.CustomTravels.FindAsync(itemId.Value); itemName = t?.Note ?? "客製化行程未找到"; }
+            return itemName;
         }
 
         // GET: Order/Create
@@ -347,79 +404,86 @@ namespace TravelAgencyBackend.Controllers
                 return NotFound();
             }
 
-            // 後端驗證 ItemId
-            if (orderEditViewModel.Category == OrderCategory.OfficialTravelDetail)
-            {
-                var exists = await _context.OfficialTravels.AnyAsync(ot => ot.OfficialTravelId == orderEditViewModel.ItemId);
-                if (!exists) ModelState.AddModelError("ItemId", "無效的官方行程");
-            }
-            else if (orderEditViewModel.Category == OrderCategory.CustomTravel)
-            {
-                var exists = await _context.CustomTravels.AnyAsync(ct => ct.CustomTravelId == orderEditViewModel.ItemId);
-                if (!exists) ModelState.AddModelError("ItemId", "無效的客製化行程");
-            }
-            else
-            {
-                ModelState.AddModelError("Category", "請選擇有效的行程類別");
-            }
+            // ... (ViewModel 驗證邏輯) ...
+            if (orderEditViewModel.Category == OrderCategory.OfficialTravelDetail) { /* ... */ }
+            else if (orderEditViewModel.Category == OrderCategory.CustomTravel) { /* ... */ }
+            else { /* ... */ }
 
 
             if (ModelState.IsValid)
             {
+                var order = await _context.Orders.FindAsync(id);
+                if (order == null)
+                {
+                    return NotFound();
+                }
+
+                // 更新 Order 物件的屬性
+                order.MemberId = orderEditViewModel.MemberId;
+                order.ItemId = orderEditViewModel.ItemId;
+                order.Category = orderEditViewModel.Category;
+                order.ParticipantId = orderEditViewModel.ParticipantId;
+                order.ParticipantsCount = orderEditViewModel.ParticipantsCount;
+                order.TotalAmount = orderEditViewModel.TotalAmount;
+                order.Status = orderEditViewModel.Status; // 更新狀態
+                order.PaymentMethod = orderEditViewModel.PaymentMethod;
+                order.PaymentDate = orderEditViewModel.PaymentDate;
+                order.Note = orderEditViewModel.Note;
+
                 try
                 {
-                    var order = await _context.Orders.FindAsync(id);
-                    if (order == null)
-                    {
-                        return NotFound();
-                    }
-
-                    // 更新 Order 物件的屬性
-                    order.MemberId = orderEditViewModel.MemberId;
-                    order.ItemId = orderEditViewModel.ItemId;
-                    order.Category = orderEditViewModel.Category;
-                    order.ParticipantId = orderEditViewModel.ParticipantId;
-                    order.ParticipantsCount = orderEditViewModel.ParticipantsCount;
-                    order.TotalAmount = orderEditViewModel.TotalAmount;
-                    order.Status = orderEditViewModel.Status;
-                    order.PaymentMethod = orderEditViewModel.PaymentMethod;
-                    order.PaymentDate = orderEditViewModel.PaymentDate;
-                    order.Note = orderEditViewModel.Note;
-                    // 不需要更新 CreatedAt
-
                     _context.Update(order);
-                    await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync(); // *** 第一次儲存：更新訂單 ***
+
+                    // --- 開始檢查是否要自動新增 TravelRecord ---
+
+                    // 1. 檢查訂單狀態是否為「已付款」 (Paid)
+                    if (order.Status == OrderStatus.Paid) // <--- 確認使用 OrderStatus.Paid
+                    {
+                        // 2. 檢查是否已經為此訂單建立過 TravelRecord
+                        bool recordExists = await _context.TravelRecords.AnyAsync(tr => tr.OrderId == order.OrderId);
+
+                        if (!recordExists)
+                        {
+                            // 3. 如果狀態是「已付款」且紀錄不存在，則建立新的 TravelRecord
+                            var newRecord = new TravelRecord
+                            {
+                                OrderId = order.OrderId,
+                                TotalAmount = order.TotalAmount,
+                                TotalParticipants = order.ParticipantsCount,
+                                CreatedAt = DateTime.Now
+                            };
+
+                            _context.TravelRecords.Add(newRecord);
+                            await _context.SaveChangesAsync(); // *** 第二次儲存：新增 TravelRecord ***
+                        }
+                    }
+                    // --- 檢查結束 ---
+
                     TempData["SuccessMessage"] = "訂單更新成功！";
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!OrderExists(orderEditViewModel.OrderId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        // 可以記錄錯誤或顯示錯誤訊息
-                        ModelState.AddModelError(string.Empty, "儲存時發生衝突，請重新載入資料。");
-                        // throw; // 開發時可以打開看詳細錯誤
-                    }
+                    if (!OrderExists(orderEditViewModel.OrderId)) { return NotFound(); }
+                    else { ModelState.AddModelError(string.Empty, "儲存時發生衝突，請重新載入資料。"); }
+                    // 重新載入下拉選單等資料
+                    ViewData["MemberId"] = new SelectList(_context.Members, "MemberId", "Name", orderEditViewModel.MemberId);
+                    ViewData["ParticipantId"] = new SelectList(_context.Participants, "ParticipantId", "Name", orderEditViewModel.ParticipantId);
+                    // ... (重新載入 OfficialTravels, CustomTravels 下拉選單) ...
+                    return View(orderEditViewModel);
                 }
                 return RedirectToAction(nameof(Index));
             }
 
-            // 如果 ModelState 無效，重新取得下拉式選單的資料，並傳回 View
-            var officialTravels = _context.OfficialTravels.Select(ot => new { Value = ot.OfficialTravelId, Text = ot.Title }).ToList();
-            var customTravels = _context.CustomTravels.Select(ct => new { Value = ct.CustomTravelId, Text = ct.Note }).ToList();
-
-            orderEditViewModel.OfficialTravels = new SelectList(officialTravels, "Value", "Text", orderEditViewModel.Category == OrderCategory.OfficialTravelDetail ? orderEditViewModel.ItemId : (int?)null);
-            orderEditViewModel.CustomTravels = new SelectList(customTravels, "Value", "Text", orderEditViewModel.Category == OrderCategory.CustomTravel ? orderEditViewModel.ItemId : (int?)null);
-
-
+            // 如果 ModelState 無效，重新載入下拉選單等資料
             ViewData["MemberId"] = new SelectList(_context.Members, "MemberId", "Name", orderEditViewModel.MemberId);
             ViewData["ParticipantId"] = new SelectList(_context.Participants, "ParticipantId", "Name", orderEditViewModel.ParticipantId);
+            // ... (重新載入 OfficialTravels, CustomTravels 下拉選單) ...
 
             return View(orderEditViewModel);
         }
+
+
         // GET: Order/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {

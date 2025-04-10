@@ -12,6 +12,9 @@ namespace TravelAgencyBackend.ViewModels.Order
         [Display(Name = "會員")] // 顯示會員名稱，標籤用 "會員"
         public int MemberId { get; set; }
 
+        [Display(Name = "會員名稱")] // 或直接用 "會員"
+        public string MemberName { get; set; }
+
         // [Display(Name = "項目編號")] // 可以保留或移除 ItemId 的顯示
         // public int ItemId { get; set; }
 
