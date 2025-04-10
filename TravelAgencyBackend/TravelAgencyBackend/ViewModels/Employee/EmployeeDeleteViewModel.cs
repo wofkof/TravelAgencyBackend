@@ -13,6 +13,8 @@ namespace TravelAgencyBackend.ViewModels.Employee
         public string RoleName { get; set; } = null!;
 
         [Display(Name = "電話")]
+        [RegularExpression(@"^09\d{8}$", ErrorMessage = "手機號碼格式不正確")]
+        [StringLength(10, MinimumLength = 10)]
         public string Phone { get; set; } = null!;
 
         [Display(Name = "聯絡信箱")]
