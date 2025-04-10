@@ -14,13 +14,17 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="CustomTravelId" value="@Model.CustomTravelId" />
             <div class="form-group">
-                <label asp-for="MemberId" class="control-label"></label>
-                <input asp-for="MemberId" class="form-control" />
+                <label asp-for="MemberId" class="control-label">會員</label>
+                <select asp-for="MemberId" class="form-control" asp-items="ViewBag.Members">
+                    <option value="">請選擇會員</option>
+                </select>
                 <span asp-validation-for="MemberId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ReviewEmployeeId" class="control-label"></label>
-                <input asp-for="ReviewEmployeeId" class="form-control" />
+                <label asp-for="ReviewEmployeeId" class="control-label">審核員工</label>
+                <select asp-for="ReviewEmployeeId" class="form-control" asp-items="ViewBag.ReviewEmployees"> 
+                    <option value="">請選擇審核員工</option> 
+                </select> 
                 <span asp-validation-for="ReviewEmployeeId" class="text-danger"></span>
             </div>
             <div class="form-group">

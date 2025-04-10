@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using TravelAgencyBackend.Models;
 using TravelAgencyBackend.ViewModels;
 
@@ -55,6 +56,8 @@ namespace TravelAgencyBackend.Controllers
             CustomTravel d = _context.CustomTravels.FirstOrDefault(p => p.CustomTravelId == id);
             if (d == null)
                 return RedirectToAction("List");
+            ViewBag.Members = new SelectList(_context.Members, "MemberId", "Name");
+            ViewBag.ReviewEmployees = new SelectList(_context.Employees, "EmployeeId", "Name");
             return View(d);
         }
         [HttpPost]
@@ -74,6 +77,15 @@ namespace TravelAgencyBackend.Controllers
             dbCustomTravel.TotalAmount = uiCustomTravel.TotalAmount;
             dbCustomTravel.Status = uiCustomTravel.Status;
             dbCustomTravel.Note = uiCustomTravel.Note;
+
+            if (!_context.Members.Any(c => c.MemberId == uiCustomTravel.MemberId))
+            {
+                ModelState.AddModelError("MemberId", "請選擇有效的會員");
+            }
+            //if (!_context.Employees.Any(c => c.EmployeeId == uiCustomTravel.ReviewEmployeeId))
+            //{
+            //    ModelState.AddModelError("EmployeeId", "請選擇有效的審核員工");
+            //}
 
             _context.SaveChanges();
             return RedirectToAction("List");
