@@ -6,7 +6,17 @@
 
 <h1>航班資料</h1>
 <p>
-    <a asp-action="Create">新增(測試)</a> 
+    @if (PermissionChecker.CanManageOfficialTravels)
+    {
+        <a asp-action="Create">新增(測試)</a>
+    }
+    else
+    {
+        <a asp-action="Create" class="disabled"
+        tabindex="-1" aria-disabled="true" onclick="return false;">
+            新增(測試)
+        </a>
+    }
 </p>
 <table id="myTable" class="display">
     <thead>
@@ -42,38 +52,48 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.AirlineCode)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AirlineName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DepartureAirportName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ArrivalAirportName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DepartureTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ArrivalTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AircraftType)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SyncedAt)
-            </td>
-            <td>
-                <a asp-action="Details" asp-route-id="@item.FlightId">檢視</a>
-            </td>
+        @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AirlineCode)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AirlineName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DepartureAirportName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ArrivalAirportName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DepartureTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ArrivalTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AircraftType)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SyncedAt)
+                </td>
+                <td>
+                    @if (PermissionChecker.CanViewOfficialTravels)
+                    {
+                        <a asp-action="Details" asp-route-id="@item.FlightId">檢視</a>
+                    }
+                    else
+                    {
+                        <a asp-action="Details" asp-route-id="@item.FlightId" class="disabled"
+                           tabindex="-1" aria-disabled="true" onclick="return false;">
+                        檢視
+                        </a>
+                    }
+                </td>
         </tr>
 }
     </tbody>

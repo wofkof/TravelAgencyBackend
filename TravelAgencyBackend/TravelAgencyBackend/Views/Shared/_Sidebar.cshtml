@@ -244,24 +244,52 @@
                         <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
                     </a>
                     <ul>
-                        <li>
-                            <a asp-controller="OfficialTravels" asp-action="Index">
-                                <i class="metismenu-icon"></i>管理官方行程
-                            </a>
-                        </li>
-                        <li>
-                            <a asp-controller="TravelSuppliers" asp-action="Index">
-                                <i class="metismenu-icon"></i>供應商業務管理
-                            </a>
-                        </li>
-                        <li>
-                            <a asp-controller="Regions" asp-action="Index">
-                                <i class="metismenu-icon"></i>地區管理(測試)
-                            </a>
-                            <a asp-controller="Flights" asp-action="Index">
-                                <i class="metismenu-icon"></i>航班一覽表(測試)
-                            </a>
-                        </li>
+                        @if (PermissionChecker.CanViewOfficialTravels)
+                        {
+                            <li>
+                                <a asp-controller="OfficialTravels" asp-action="Index">
+                                    <i class="metismenu-icon"></i>管理官方行程
+                                </a>
+                            </li>
+                            <li>
+                                <a asp-controller="TravelSuppliers" asp-action="Index">
+                                    <i class="metismenu-icon"></i>供應商業務管理
+                                </a>
+                            </li>
+                            <li>
+                                <a asp-controller="Regions" asp-action="Index">
+                                    <i class="metismenu-icon"></i>地區管理(測試)
+                                </a>
+                                <a asp-controller="Flights" asp-action="Index">
+                                    <i class="metismenu-icon"></i>航班一覽表(測試)
+                                </a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li>
+                                <a asp-controller="OfficialTravels" asp-action="Index"
+                                   class="bg-light disabled" tabindex="-1" aria-disabled="true" onclick="return false">
+                                    <i class="metismenu-icon"></i>管理官方行程
+                                </a>
+                            </li>
+                            <li>
+                                <a asp-controller="TravelSuppliers" asp-action="Index"
+                                   class="bg-light disabled" tabindex="-1" aria-disabled="true" onclick="return false">
+                                    <i class="metismenu-icon"></i>供應商業務管理
+                                </a>
+                            </li>
+                            <li>
+                                <a asp-controller="Regions" asp-action="Index" 
+                                   class="bg-light disabled" tabindex="-1" aria-disabled="true" onclick="return false">
+                                    <i class="metismenu-icon"></i>地區管理(測試)
+                                </a>
+                                <a asp-controller="Flights" asp-action="Index"
+                                   class="bg-light disabled" tabindex="-1" aria-disabled="true" onclick="return false">
+                                    <i class="metismenu-icon"></i>航班一覽表(測試)
+                                </a>
+                            </li>
+                        }
                     </ul>
                 </li>
                 @* 自訂行程 *@
@@ -287,7 +315,7 @@
                             }
                         </li>
                         <li>
-                            @if (PermissionChecker.CanViewCustomTravels)
+                            @if (PermissionChecker.CanManageCustomTravels)
                             {
                                 <a asp-controller="CustomTravelProducts" asp-action="List">
                                     <i class="metismenu-icon"></i>新增自訂行程

@@ -57,7 +57,15 @@
                 <span asp-validation-for="Note2" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create and Next" class="btn btn-primary" />
+                @if (PermissionChecker.CanManageOfficialTravels)
+                {
+                    <input type="submit" value="Create and Next" class="btn btn-primary" />
+                }
+                else
+                {
+                    <input type="submit" value="Create and Next" class="btn btn-primary disabled"
+                    tabindex="-1" aria-disabled="true" onclick="return false;" />
+                }
 
             </div>
         </form>
@@ -78,7 +86,17 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    @if (PermissionChecker.CanViewOfficialTravels)
+    {
+        <a asp-action="Index">Back to List</a>
+    }
+    else
+    {
+        <a asp-action="Index" class="disabled"
+           tabindex="-1" aria-disabled="true" onclick="return false;">
+        Back to List
+        </a>
+    }
 </div>
 
 @section Scripts {

@@ -315,7 +315,6 @@ namespace TravelAgencyBackend.Controllers
 
             };
 
-            ViewBag.RoleList = new SelectList(_context.Roles, "RoleId", "RoleName", emp.RoleId);
             ViewBag.GenderList = Enum.GetValues(typeof(GenderType))
             .Cast<GenderType>()
             .Select(g => new SelectListItem
@@ -354,11 +353,12 @@ namespace TravelAgencyBackend.Controllers
 
             if (_context.Employees.Any(m => m.Phone == vm.Phone && m.EmployeeId != vm.EmployeeId ))
                 ModelState.AddModelError("Phone", "此電話號碼已被使用。");
-
+            
             if (!ModelState.IsValid)
             {
                 // ❗這段是你目前少的
-                ViewBag.RoleList = new SelectList(_context.Roles, "RoleId", "RoleName", vm.RoleId);
+                SetRole(vm.RoleId);
+                
                 ViewBag.GenderList = Enum.GetValues(typeof(GenderType))
                     .Cast<GenderType>()
                     .Select(g => new SelectListItem

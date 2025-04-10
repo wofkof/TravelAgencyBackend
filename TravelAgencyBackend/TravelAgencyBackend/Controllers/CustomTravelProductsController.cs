@@ -21,7 +21,7 @@ namespace TravelAgencyBackend.Controllers
 
         public IActionResult List(KeywordViewModel p)
         {
-            var check = CheckPermissionOrForbid("查看客製化行程");
+            var check = CheckPermissionOrForbid("管理客製化行程");
             if (check != null) return check;
 
             IEnumerable<City> City = null;

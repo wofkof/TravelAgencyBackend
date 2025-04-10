@@ -7,7 +7,18 @@
 <h1>行程管理</h1>
 
 <p>
-    <a asp-action="Create">新增行程</a> | 
+    @if (PermissionChecker.CanManageOfficialTravels)
+    {
+        <a asp-action="Create">新增行程</a>
+    }
+    else
+    {
+        <a asp-action="Create" class="disabled"
+        tabindex="-1" aria-disabled="true" onclick="return false;">
+            新增行程
+        </a>
+    }
+    | 
     @Html.ActionLink("回到專案管理", "Index", "OfficialTravels") | 
     @Html.ActionLink("檢視行程日程", "Index", "OfficialTravelSchedules")
 </p>
@@ -54,51 +65,83 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.DepartureDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ReturnDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Seats)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SoldSeats)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MinimumGroupSize)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BookingDeadline)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.GroupStatus)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedAt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UpdatedAt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.OfficialTravel.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Flight.FlightId)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.OfficialTravelDetailId">編輯</a> |
-                <a asp-action="Details" asp-route-id="@item.OfficialTravelDetailId">檢視</a> |
-                <a asp-action="Delete" asp-route-id="@item.OfficialTravelDetailId">刪除</a>
-            </td>
+        @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DepartureDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReturnDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Seats)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SoldSeats)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MinimumGroupSize)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BookingDeadline)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GroupStatus)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreatedAt)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UpdatedAt)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OfficialTravel.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Flight.FlightId)
+                </td>
+                <td>
+                    @if (PermissionChecker.CanManageOfficialTravels)
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.OfficialTravelDetailId">編輯</a>
+                    }
+                    else
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.OfficialTravelDetailId" class="disabled"
+                        tabindex="-1" aria-disabled="true" onclick="return false;">
+                            編輯
+                        </a>
+                    }
+                    |
+                    @if (PermissionChecker.CanViewOfficialTravels)
+                    {
+                        <a asp-action="Details" asp-route-id="@item.OfficialTravelDetailId">檢視</a>
+                    }
+                    else
+                    {
+                        <a asp-action="Details" asp-route-id="@item.OfficialTravelDetailId" class="disabled"
+                        tabindex="-1" aria-disabled="true" onclick="return false;">
+                            檢視
+                        </a>
+                    }
+                    |
+                    @if (PermissionChecker.CanManageOfficialTravels)
+                    {
+                        <a asp-action="Delete" asp-route-id="@item.OfficialTravelDetailId">刪除</a>
+                    }
+                    else
+                    {
+                        <a asp-action="Delete" asp-route-id="@item.OfficialTravelDetailId" class="disabled"
+                           tabindex="-1" aria-disabled="true" onclick="return false;">
+                        刪除
+                        </a>
+                    }
+                </td>
         </tr>
-}
+        }
     </tbody>
 </table>
 

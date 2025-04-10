@@ -84,6 +84,27 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.OfficialTravelDetailId">編輯</a> |
-    <a asp-action="Index">回到行程目錄</a>
+    @if (PermissionChecker.CanManageOfficialTravels)
+    {
+        <a asp-action="Edit" asp-route-id="@Model?.OfficialTravelDetailId">編輯</a>
+    }
+    else
+    {
+        <a asp-action="Edit" asp-route-id="@Model?.OfficialTravelDetailId" class="disabled"
+        tabindex="-1" aria-disabled="true" onclick="return false;">
+            編輯
+        </a>
+    }
+    |
+    @if (PermissionChecker.CanViewOfficialTravels)
+    {
+        <a asp-action="Index">回到行程目錄</a>
+    }
+    else
+    {
+        <a asp-action="Index" class="disabled"
+           tabindex="-1" aria-disabled="true" onclick="return false;">
+        回到行程目錄
+        </a>
+    }
 </div>

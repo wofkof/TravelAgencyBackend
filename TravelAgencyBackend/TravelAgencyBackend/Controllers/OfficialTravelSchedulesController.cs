@@ -6,22 +6,29 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TravelAgencyBackend.Models;
+using TravelAgencyBackend.Services;
 using TravelAgencyBackend.ViewModels;
 
 namespace TravelAgencyBackend.Controllers
 {
-    public class OfficialTravelSchedulesController : Controller
+    public class OfficialTravelSchedulesController : BaseController
     {
         private readonly AppDbContext _context;
+        private readonly PermissionCheckService _perm;
 
-        public OfficialTravelSchedulesController(AppDbContext context)
+        public OfficialTravelSchedulesController(AppDbContext context, PermissionCheckService perm)
+            : base(perm)
         {
             _context = context;
+            _perm = perm;
         }
 
         // GET: OfficialTravelSchedules
         public async Task<IActionResult> Index()
         {
+            var check = CheckPermissionOrForbid("查看官方行程");
+            if (check != null) return check;
+
             var appDbContext = _context.OfficialTravelSchedules
                 .Include(o => o.OfficialTravelDetail)
                 .ThenInclude(t => t.OfficialTravel);
@@ -61,6 +68,9 @@ namespace TravelAgencyBackend.Controllers
         // GET: OfficialTravelSchedules/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            var check = CheckPermissionOrForbid("查看官方行程");
+            if (check != null) return check;
+
             if (id == null)
             {
                 return NotFound();
@@ -110,6 +120,9 @@ namespace TravelAgencyBackend.Controllers
         // GET: OfficialTravelSchedules/Create
         public IActionResult Create()
         {
+            var check = CheckPermissionOrForbid("管理官方行程");
+            if (check != null) return check;
+
             ViewData["OfficialTravelDetailId"] = new SelectList(_context.OfficialTravelDetails, "OfficialTravelDetailId", "OfficialTravelDetailId");
             return View();
         }
@@ -121,6 +134,9 @@ namespace TravelAgencyBackend.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("OfficialTravelScheduleId,OfficialTravelDetailId,ItemId,Category,Day,StartTime,Date,Description,Note1,Note2")] OfficialTravelSchedule officialTravelSchedule)
         {
+            var check = CheckPermissionOrForbid("管理官方行程");
+            if (check != null) return check;
+
             if (ModelState.IsValid)
             {
                 _context.Add(officialTravelSchedule);
@@ -134,6 +150,9 @@ namespace TravelAgencyBackend.Controllers
         // GET: OfficialTravelSchedules/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            var check = CheckPermissionOrForbid("管理官方行程");
+            if (check != null) return check;
+
             if (id == null)
             {
                 return NotFound();
@@ -155,6 +174,9 @@ namespace TravelAgencyBackend.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("OfficialTravelScheduleId,OfficialTravelDetailId,ItemId,Category,Day,StartTime,Date,Description,Note1,Note2")] OfficialTravelSchedule officialTravelSchedule)
         {
+            var check = CheckPermissionOrForbid("管理官方行程");
+            if (check != null) return check;
+
             if (id != officialTravelSchedule.OfficialTravelScheduleId)
             {
                 return NotFound();
@@ -187,6 +209,9 @@ namespace TravelAgencyBackend.Controllers
         // GET: OfficialTravelSchedules/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            var check = CheckPermissionOrForbid("管理官方行程");
+            if (check != null) return check;
+
             if (id == null)
             {
                 return NotFound();
@@ -208,6 +233,9 @@ namespace TravelAgencyBackend.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            var check = CheckPermissionOrForbid("管理官方行程");
+            if (check != null) return check;
+
             var officialTravelSchedule = await _context.OfficialTravelSchedules.FindAsync(id);
             if (officialTravelSchedule != null)
             {
