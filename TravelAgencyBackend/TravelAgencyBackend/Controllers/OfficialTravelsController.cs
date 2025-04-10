@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TravelAgencyBackend.Models;
-using TravelAgencyBackend.ViewModles;
+using TravelAgencyBackend.ViewModels;
 
 
 namespace TravelAgencyBackend.Controllers
@@ -54,7 +54,7 @@ namespace TravelAgencyBackend.Controllers
         public IActionResult Create()
         {
             ViewData["CreatedByEmployeeId"] = new SelectList(_context.Employees, "EmployeeId", "Name");
-            ViewData["RegionId"] = new SelectList(_context.Regions, "RegionId", "Country");
+            ViewData["RegionId"] = new SelectList(_context.Regions, "RegionId", "Name");
             return View();
         }
 
@@ -88,6 +88,7 @@ namespace TravelAgencyBackend.Controllers
 
                 var officialTravel = new OfficialTravel
                 {
+                    OfficialTravelId = model.OfficialTravelId,
                     CreatedByEmployeeId = model.CreatedByEmployeeId,
                     RegionId = model.RegionId,
                     Title = model.Title,
@@ -97,7 +98,7 @@ namespace TravelAgencyBackend.Controllers
                     Description = model.Description,
                     Days = model.Days,
                     CoverPath = coverPath,
-                    Status = (TravelStatus)model.Status,
+                    Status = (Models.TravelStatus)model.Status,
                     CreatedAt = DateTime.Now
                 };
                 _context.Add(officialTravel);
@@ -106,7 +107,7 @@ namespace TravelAgencyBackend.Controllers
             }
             
             ViewData["CreatedByEmployeeId"] = new SelectList(_context.Employees, "EmployeeId", "Name", model.CreatedByEmployeeId);
-            ViewData["RegionId"] = new SelectList(_context.Regions, "RegionId", "Country", model.RegionId);
+            ViewData["RegionId"] = new SelectList(_context.Regions, "RegionId", "Name", model.RegionId);
             return View(model);
 
         }
@@ -125,7 +126,7 @@ namespace TravelAgencyBackend.Controllers
                 return NotFound();
             }
             ViewData["CreatedByEmployeeId"] = new SelectList(_context.Employees, "EmployeeId", "Name", officialTravel.CreatedByEmployeeId);
-            ViewData["RegionId"] = new SelectList(_context.Regions, "RegionId", "Country", officialTravel.RegionId);
+            ViewData["RegionId"] = new SelectList(_context.Regions, "RegionId", "Name", officialTravel.RegionId);
             //ViewData["TravelStatusList"] = GetTravelStatusSelectList();
 
             return View(officialTravel);
@@ -168,7 +169,7 @@ namespace TravelAgencyBackend.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["CreatedByEmployeeId"] = new SelectList(_context.Employees, "EmployeeId", "Name", officialTravel.CreatedByEmployeeId);
-            ViewData["RegionId"] = new SelectList(_context.Regions, "RegionId", "Country", officialTravel.RegionId);
+            ViewData["RegionId"] = new SelectList(_context.Regions, "RegionId", "Name", officialTravel.RegionId);
             //ViewData["TravelStatusList"] = GetTravelStatusSelectList();
 
             return View(officialTravel);

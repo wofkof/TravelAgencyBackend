@@ -10,7 +10,7 @@
     <a asp-action="Create">Create New</a> | 
     @Html.ActionLink("檢視行程細節", "Index", "OfficialTravelDetails")
 </p>
-<table class="table">
+<table id="myTable" class="display">
     <thead>
         <tr>
             <th>
@@ -100,3 +100,11 @@
 }
     </tbody>
 </table>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#myTable').DataTable();
+        });
+    </script>
+}
