@@ -409,6 +409,9 @@ namespace TravelAgencyBackend.Controllers
 
         public async Task<IActionResult> Delete(int? id)
         {
+            var check = CheckPermissionOrForbid("管理員工");
+            if (check != null) return check;
+
             if (id == null) return NotFound();
 
             var emp = await _context.Employees
@@ -436,6 +439,9 @@ namespace TravelAgencyBackend.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int EmployeeId)
         {
+            var check = CheckPermissionOrForbid("管理員工");
+            if (check != null) return check;
+
             var emp = await _context.Employees.FindAsync(EmployeeId);
             if (emp == null) return NotFound();
 
@@ -449,6 +455,9 @@ namespace TravelAgencyBackend.Controllers
 
         public IActionResult Details(int id)
         {
+            var check = CheckPermissionOrForbid("管理員工");
+            if (check != null) return check;
+
             var employee = _context.Employees.FirstOrDefault(e => e.EmployeeId == id);
 
             if (employee == null)

@@ -16,7 +16,12 @@
 <div class="app-header header-shadow">
     <!-- Logo + 關閉側邊欄按鈕（桌機用） -->
     <div class="app-header__logo">
-        <div class="logo-src">TravelAgency</div>
+        <div class="logo-src">
+            <a href="@Url.Action("Index", "Home")" class="logo-link">
+                 <img src="@Url.Content("~/logo/Logo.png")" alt="Logo"
+                 style="height: 50px; display: block; align-items: center; justify-content: flex-start; padding-left: 50px;  margin-top: -15px;" />
+            </a>
+        </div>
         <div class="header__pane ms-auto">
             <div>
                 <button type="button" class="hamburger close-sidebar-btn hamburger--elastic" data-class="closed-sidebar">
