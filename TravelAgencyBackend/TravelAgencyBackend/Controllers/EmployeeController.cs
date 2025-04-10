@@ -218,7 +218,7 @@ namespace TravelAgencyBackend.Controllers
             if (emp == null) return NotFound();
 
             var vm = new EmployeeEditViewModel
-            {
+            {   
                 EmployeeId = emp.EmployeeId,
                 Name = emp.Name,
                 Email = emp.Email,
@@ -265,6 +265,9 @@ namespace TravelAgencyBackend.Controllers
         public async Task<IActionResult> Edit(int id, EmployeeEditViewModel vm)
         {
             if (id != vm.EmployeeId) return NotFound();
+
+            if (_context.Employees.Any(m => m.Phone == vm.Phone && m.EmployeeId != vm.EmployeeId ))
+                ModelState.AddModelError("Phone", "此電話號碼已被使用。");
 
             if (!ModelState.IsValid)
             {

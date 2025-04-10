@@ -13,4 +13,5 @@ namespace TravelAgencyBackend.ViewModles
         public int TotalCount { get; set; }
         public IEnumerable<Member> Members { get; set; } = new List<Member>();
     }
+    //沒用到了 但先不刪除
 }
