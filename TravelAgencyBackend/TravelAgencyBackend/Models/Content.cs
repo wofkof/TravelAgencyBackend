@@ -19,7 +19,7 @@ namespace TravelAgencyBackend.Models
         public int ContentId { get; set; }
         [Display(Name = "客製化行程編號")]
         public int CustomTravelId { get; set; }
-        [Display(Name = "行程分類編號")]
+        [Display(Name = "行程")]
         public int ItemId { get; set; }
         [Display(Name = "行程分類名稱")]
         public Category Category { get; set; }
