@@ -4,10 +4,10 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>專案檢視</h1>
 
 <p>
-    <a asp-action="Create">Create New</a> | 
+    <a asp-action="Create">新增專案</a> | 
     @Html.ActionLink("檢視行程細節", "Index", "OfficialTravelDetails")
 </p>
 <table id="myTable" class="display">
@@ -25,18 +25,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.AvailableUntil)
             </th>
-            @* <th> *@
-            @*     @Html.DisplayNameFor(model => model.Description) *@
-            @* </th> *@
             <th>
                 @Html.DisplayNameFor(model => model.Days)
             </th>
-            @* <th> *@
-            @*     @Html.DisplayNameFor(model => model.CoverPath) *@
-            @* </th> *@
-            @* <th> *@
-            @*     @Html.DisplayNameFor(model => model.CreatedAt) *@
-            @* </th> *@
             <th>
                 @Html.DisplayNameFor(model => model.UpdatedAt)
             </th>
