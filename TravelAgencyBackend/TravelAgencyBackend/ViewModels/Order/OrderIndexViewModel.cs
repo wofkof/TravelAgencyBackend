@@ -1,29 +1,36 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using System;
+using System.Collections.Generic;
 using TravelAgencyBackend.Models;
+using TravelAgencyBackend.Helpers;
+using System.ComponentModel.DataAnnotations;
 
 namespace TravelAgencyBackend.ViewModels.Order
 {
     public class OrderIndexViewModel
     {
-        public int OrderId { get; set; }
-        public int MemberId { get; set; }
-        public int ItemId { get; set; }
-        public OrderCategory Category { get; set; }
-        public int ParticipantsCount { get; set; }
-        public decimal TotalAmount { get; set; }
-        public OrderStatus Status { get; set; }
-        public DateTime CreatedAt { get; set; }
+        // 改用 PaginatedList 來儲存當頁訂單
+        public PaginatedList<OrderSummaryViewModel>? Orders { get; set; } // 改為 PaginatedList
 
-        public Member Member { get; set; }
-        public OfficialTravel? OfficialTravel { get; set; }  // 加這個
-        public CustomTravel? CustomTravel { get; set; }      // 加這個
+        // --- 搜尋相關 ---
+        [Display(Name = "會員名稱")]
+        public string? SearchMemberName { get; set; }
 
-        public string? DisplayTitle => Category switch
-        {
-            OrderCategory.OfficialTravelDetail => OfficialTravel?.Title,
-            OrderCategory.CustomTravel => CustomTravel?.Note,
-            _ => null
-        };
+        // SearchCategory 仍然需要，用於 Controller 篩選
+        public OrderCategory? SearchCategory { get; set; }
+        public SelectList? Categories { get; set; } // 類別下拉選單 (用於搜尋)
+
+        // --- 排序相關 ---
+        public string? SortField { get; set; }
+        public string? SortDirection { get; set; }
+
+        // --- 分頁相關 ---
+        public int PageIndex { get; set; } = 1; // 當前頁碼
+        public int PageSize { get; set; } = 10; // 每頁顯示筆數 (預設值)
+        public int TotalCount { get; set; } // 總筆數
+        public int TotalPages { get; set; } // 總頁數
+        public SelectList? PageSizeOptions { get; set; } // 每頁筆數選項
+
+        public bool HasPreviousPage => PageIndex > 1;
+        public bool HasNextPage => PageIndex < TotalPages;
     }
 }
