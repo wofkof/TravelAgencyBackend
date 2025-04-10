@@ -10,11 +10,11 @@ namespace TravelAgencyBackend.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "ImagePath",
-                table: "T_Employee",
-                type: "nvarchar(max)",
-                nullable: true);
+            //migrationBuilder.AddColumn<string>(
+            //    name: "ImagePath",
+            //    table: "T_Employee",
+            //    type: "nvarchar(max)",
+            //    nullable: true);
         }
 
         /// <inheritdoc />
