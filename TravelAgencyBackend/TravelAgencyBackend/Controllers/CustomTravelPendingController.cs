@@ -87,15 +87,24 @@ namespace TravelAgencyBackend.Controllers
                 var customTravel = _context.CustomTravels
             .Where(d => d.CustomTravelId == id)
             .ToList();
-
                 var content = _context.Contents
                     .Where(c => c.CustomTravelId == id)
+                    .OrderBy(c => c.Day)
+                    .ThenBy(c => c.Time)
                     .ToList();
+                var attractions = _context.Attractions.ToList();
+                var restaurants = _context.Restaurants.ToList();
+                var hotels = _context.Hotels.ToList();
+                var transportations = _context.Transportations.ToList();
 
                 var ViewModel = new CustomTravelPendingViewModel
                 {
                     CustomTravel = customTravel,
-                    Content = content
+                    Content = content,
+                    Attraction = attractions,
+                    Restaurant = restaurants,
+                    Hotel = hotels,
+                    Transportation = transportations
                 };
 
                 return View(ViewModel);
