@@ -16,10 +16,10 @@ namespace TravelAgencyBackend.ViewModels.Employee
         [EmailAddress]
         public string Email { get; set; } = null!;
 
-        [Display(Name = "電話")]
-        [Required]
-        [RegularExpression(@"^09\d{8}$", ErrorMessage = "手機號碼格式不正確")]
+        [Required(ErrorMessage = "請輸入電話")]
+        [RegularExpression(@"^09\d{8}$", ErrorMessage = "手機號碼必須為 09 開頭的 10 碼數字")]
         [StringLength(10, MinimumLength = 10)]
+        [Display(Name = "帳號(電話)")]
         public string Phone { get; set; } = null!;
 
         [Display(Name = "生日")]
@@ -48,5 +48,10 @@ namespace TravelAgencyBackend.ViewModels.Employee
 
         // 🔐 密碼為 null 代表不修改
         public string? Password { get; set; }
+
+        [Display(Name = "大頭貼")]
+        public IFormFile? Photo { get; set; }  // 上傳圖檔
+
+        public string? ImagePath { get; set; }  // 用於顯示原始圖片
     }
 }

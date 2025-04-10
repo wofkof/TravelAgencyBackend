@@ -125,12 +125,12 @@ namespace TravelAgencyBackend.Controllers
             return RedirectToAction("Login");
         }
 
-        //[HttpPost]
-        //public IActionResult Logout()
-        //{
-        //    HttpContext.Session.Clear();
-        //    return RedirectToAction("Login");
-        //}
+        [HttpPost]
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("Login");
+        }
 
     }
 }

@@ -40,6 +40,8 @@ namespace TravelAgencyBackend.Models
         public DateTime BirthDate { get; set; }
         public DateTime HireDate { get; set; }
         public EmployeeStatus Status { get; set; } = EmployeeStatus.Active;
+        public string? ImagePath { get; set; }
+
         public string? Note { get; set; }
 
         // **新增的性別欄位**

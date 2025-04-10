@@ -7,6 +7,7 @@ using TravelAgencyBackend.ViewModles.Employee;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using TravelAgencyBackend.Helpers;
+using Microsoft.AspNetCore.Hosting;
 
 
 
@@ -14,16 +15,16 @@ namespace TravelAgencyBackend.Controllers
 {
     public class EmployeeController : Controller
     {
-        //public IActionResult Index()
-        //{
-        //    return View();
-        //}
-        private readonly AppDbContext _context;
 
-        public EmployeeController(AppDbContext context)
+        private readonly AppDbContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
+
+        public EmployeeController(AppDbContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
+
 
         //GET: Employees
         //public async Task<IActionResult> List(EmployeeKeyWordViewModel p)
@@ -161,34 +162,76 @@ namespace TravelAgencyBackend.Controllers
             return View(vm);
         }
 
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Create(EmployeeCreateViewModel vm)
+        //{
+        //    ViewBag.RoleList = new SelectList(_context.Roles, "RoleId", "RoleName", vm.RoleId);
+        //    ViewBag.GenderList = EnumHelper.GetSelectListWithDisplayName<GenderType>();
+        //    ViewBag.StatusList = EnumHelper.GetSelectListWithDisplayName<EmployeeStatus>(excludeDeleted: true);
+
+
+        //    if (_context.Employees.Any(e => e.Email == vm.Email && e.Status != EmployeeStatus.Deleted))
+        //    {
+        //        ModelState.AddModelError("Email", "此信箱已被使用，請改用其他信箱。");
+        //    }
+
+        //    // ✅ 驗證 Phone 是否重複
+        //    if (_context.Employees.Any(e => e.Phone == vm.Phone && e.Status != EmployeeStatus.Deleted))
+        //    {
+        //        ModelState.AddModelError("Phone", "此電話號碼已被使用，請再次確認輸入內容。");
+        //    }
+
+        //    // ❌ 有驗證錯誤就直接回原畫面
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return View(vm);
+        //    }
+
+        //    // ✅ 建立新員工實體
+        //    var emp = new Employee
+        //    {
+        //        Name = vm.Name,
+        //        Password = vm.Password,
+        //        Email = vm.Email,
+        //        Phone = vm.Phone,
+        //        BirthDate = vm.BirthDate,
+        //        HireDate = vm.HireDate,
+        //        Gender = vm.Gender!.Value,
+        //        Status = vm.Status!.Value,
+        //        Address = vm.Address,
+        //        Note = vm.Note,
+        //        RoleId = vm.RoleId!.Value,
+
+        //    };
+
+        //    _context.Add(emp);
+        //    await _context.SaveChangesAsync();
+        //    return RedirectToAction(nameof(List));
+        //}
+
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(EmployeeCreateViewModel vm)
         {
-            ViewBag.RoleList = new SelectList(_context.Roles, "RoleId", "RoleName", vm.RoleId);
-            ViewBag.GenderList = EnumHelper.GetSelectListWithDisplayName<GenderType>();
-            ViewBag.StatusList = EnumHelper.GetSelectListWithDisplayName<EmployeeStatus>(excludeDeleted: true);
+            string? fileName = null;
 
-
-            if (_context.Employees.Any(e => e.Email == vm.Email && e.Status != EmployeeStatus.Deleted))
+            if (vm.Photo != null && vm.Photo.Length > 0)
             {
-                ModelState.AddModelError("Email", "此信箱已被使用，請改用其他信箱。");
+                string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");
+                if (!Directory.Exists(uploadsFolder))
+                    Directory.CreateDirectory(uploadsFolder);
+                fileName = Guid.NewGuid().ToString() + Path.GetExtension(vm.Photo.FileName);
+                string filePath = Path.Combine(uploadsFolder, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await vm.Photo.CopyToAsync(stream);
+                }
             }
 
-            // ✅ 驗證 Phone 是否重複
-            if (_context.Employees.Any(e => e.Phone == vm.Phone && e.Status != EmployeeStatus.Deleted))
-            {
-                ModelState.AddModelError("Phone", "此電話號碼已被使用，請再次確認輸入內容。");
-            }
+            fileName ??= "default.png";
 
-            // ❌ 有驗證錯誤就直接回原畫面
-            if (!ModelState.IsValid)
-            {
-                return View(vm);
-            }
-
-            // ✅ 建立新員工實體
-            var emp = new Employee
+            var employee = new Employee
             {
                 Name = vm.Name,
                 Password = vm.Password,
@@ -201,12 +244,12 @@ namespace TravelAgencyBackend.Controllers
                 Address = vm.Address,
                 Note = vm.Note,
                 RoleId = vm.RoleId!.Value,
-
+                ImagePath = fileName
             };
 
-            _context.Add(emp);
+            _context.Employees.Add(employee);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(List));
+            return RedirectToAction("List");
         }
 
 
@@ -229,7 +272,8 @@ namespace TravelAgencyBackend.Controllers
                 Status = emp.Status,
                 Address = emp.Address,
                 Note = emp.Note,
-                RoleId = emp.RoleId
+                RoleId = emp.RoleId,
+                ImagePath = emp.ImagePath
 
             };
 
@@ -259,7 +303,8 @@ namespace TravelAgencyBackend.Controllers
             return View(vm);
         }
 
-        // POST: Employees/Edit
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, EmployeeEditViewModel vm)
@@ -271,21 +316,62 @@ namespace TravelAgencyBackend.Controllers
 
             if (!ModelState.IsValid)
             {
+                // ❗這段是你目前少的
                 ViewBag.RoleList = new SelectList(_context.Roles, "RoleId", "RoleName", vm.RoleId);
-                ViewBag.GenderList = new SelectList(Enum.GetValues(typeof(GenderType)).Cast<GenderType>());
-                ViewBag.StatusList = new SelectList(
-                Enum.GetValues(typeof(EmployeeStatus))
+                ViewBag.GenderList = Enum.GetValues(typeof(GenderType))
+                    .Cast<GenderType>()
+                    .Select(g => new SelectListItem
+                    {
+                        Text = g.GetType()
+                            .GetMember(g.ToString())
+                            .First()
+                            .GetCustomAttribute<DisplayAttribute>()?.Name ?? g.ToString(),
+                        Value = ((int)g).ToString()
+                    }).ToList();
+
+                ViewBag.StatusList = Enum.GetValues(typeof(EmployeeStatus))
                     .Cast<EmployeeStatus>()
-                    .Where(s => s != EmployeeStatus.Deleted) 
-);
+                    .Select(s => new SelectListItem
+                    {
+                        Text = s.GetType()
+                                .GetMember(s.ToString())
+                                .First()
+                                .GetCustomAttribute<DisplayAttribute>()?.Name ?? s.ToString(),
+                        Value = ((int)s).ToString()
+                    }).ToList();
 
                 return View(vm);
             }
 
-            var emp = await _context.Employees.FindAsync(id);
+            var emp = await _context.Employees.FindAsync(vm.EmployeeId);
             if (emp == null) return NotFound();
 
-            // 更新欄位
+            if (vm.Photo != null && vm.Photo.Length > 0)
+            {
+                string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");
+                if (!Directory.Exists(uploadsFolder))
+                    Directory.CreateDirectory(uploadsFolder);
+
+                if (!string.IsNullOrEmpty(emp.ImagePath) && emp.ImagePath != "default.png")
+                {
+                    string oldPath = Path.Combine(uploadsFolder, emp.ImagePath);
+                    if (System.IO.File.Exists(oldPath))
+                    {
+                        System.IO.File.Delete(oldPath);
+                    }
+                }
+
+                string fileName = Guid.NewGuid().ToString() + Path.GetExtension(vm.Photo.FileName);
+                string filePath = Path.Combine(uploadsFolder, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await vm.Photo.CopyToAsync(stream);
+                }
+
+                emp.ImagePath = fileName;
+            }
+
             emp.Name = vm.Name;
             emp.Email = vm.Email;
             emp.Phone = vm.Phone;
@@ -297,14 +383,11 @@ namespace TravelAgencyBackend.Controllers
             emp.Note = vm.Note;
             emp.RoleId = vm.RoleId;
 
-            if (!string.IsNullOrWhiteSpace(vm.Password))
-            {
-                emp.Password = vm.Password;
-            }
-
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(List));
+            return RedirectToAction("List");
         }
+
+
 
         public async Task<IActionResult> Delete(int? id)
         {
@@ -323,7 +406,9 @@ namespace TravelAgencyBackend.Controllers
                 RoleName = emp.Role.RoleName,
                 Phone = emp.Phone,
                 Email = emp.Email,
-                Note = emp.Note
+                Note = emp.Note,
+                ImagePath = emp.ImagePath
+
             };
 
             return View(vm);
@@ -364,7 +449,9 @@ namespace TravelAgencyBackend.Controllers
                 Address = employee.Address,
                 HireDate = employee.HireDate,
                 Status = employee.Status.GetDisplayName(),
-                Note = employee.Note
+                Note = employee.Note,
+                ImagePath = employee.ImagePath
+
             };
 
             return View(vm);

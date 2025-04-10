@@ -1,8 +1,17 @@
-﻿@inject TravelAgencyBackend.ViewComponent.DashboardService DashboardService
+﻿@* @inject TravelAgencyBackend.ViewComponent.DashboardService DashboardService
 @{
     int employeeId = 1; // ⚠️ 實際上應該是從登入的使用者抓
     int unreadCount = DashboardService.GetUnreadMessageCountForEmployee(employeeId);
+} *@
+@inject IHttpContextAccessor HttpContextAccessor
+@inject TravelAgencyBackend.ViewComponent.DashboardService DashboardService
+
+@{
+    var employeeName = HttpContextAccessor.HttpContext.Session.GetString("EmployeeName");
+    var employeeId = HttpContextAccessor.HttpContext.Session.GetInt32("EmployeeId") ?? 0;
+    int unreadCount = DashboardService.GetUnreadMessageCountForEmployee(employeeId);
 }
+
 
 <div class="app-header header-shadow">
     <!-- Logo + 關閉側邊欄按鈕（桌機用） -->
@@ -19,14 +28,33 @@
         </div>
     </div>
 
+    @* <div> *@
+    @*     <a asp-controller="Account" asp-action="Login"> *@
+    @*         <i class="metismenu-icon pe-7s-user"></i>登入 *@
+    @*     </a> *@
+    @*     <a asp-controller="Account" asp-action="Login"> *@
+    @*         登出 *@
+    @*     </a> *@
+    @* </div> *@
     <div>
-        <a asp-controller="Account" asp-action="Login">
-            <i class="metismenu-icon pe-7s-user"></i>登入
-        </a>
-        <a asp-controller="Account" asp-action="Login">
-            登出
-        </a>
+        @if (!string.IsNullOrEmpty(employeeName))
+        {
+            <span>
+                <i class="metismenu-icon pe-7s-user"></i> 歡迎 @employeeName
+            </span>
+            <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                <button type="submit" class="btn btn-link">登出</button>
+            </form>
+        }
+        else
+        {
+            <a asp-controller="Account" asp-action="Login">
+                <i class="metismenu-icon pe-7s-user"></i>登入
+            </a>
+        }
     </div>
+
+
 
         <a class="nav-link" asp-controller="ChatRoom" asp-action="Index">
             @if (unreadCount > 0)
