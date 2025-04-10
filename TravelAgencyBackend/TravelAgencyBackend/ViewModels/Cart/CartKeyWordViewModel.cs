@@ -1,10 +1,12 @@
-﻿namespace TravelAgencyBackend.ViewModels.Cart
+﻿using TravelAgencyBackend.Models;
+
+namespace TravelAgencyBackend.ViewModels
 {
     public class CartKeyWordViewModel
     {
         public string? txtKeyword { get; set; }
         public string? Category { get; set; }
         public string? Status { get; set; }
-        public List<Models.Cart> Carts { get; set; } = new List<Models.Cart>();
+        public List<Cart> Carts { get; set; } 
     }
 }

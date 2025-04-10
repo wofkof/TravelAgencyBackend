@@ -11,12 +11,12 @@ namespace TravelAgencyBackend.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "Caption",
-                table: "T_Permission",
-                type: "nvarchar(100)",
-                maxLength: 100,
-                nullable: true);
+            //migrationBuilder.AddColumn<string>(
+            //    name: "Caption",
+            //    table: "T_Permission",
+            //    type: "nvarchar(100)",
+            //    maxLength: 100,
+            //    nullable: true);
 
             migrationBuilder.AlterColumn<DateTime>(
                 name: "PassportIssueDate",
@@ -44,20 +44,20 @@ namespace TravelAgencyBackend.Migrations
                 oldClrType: typeof(DateTime),
                 oldType: "date");
 
-            migrationBuilder.AddColumn<string>(
-                name: "Address",
-                table: "T_Employee",
-                type: "nvarchar(255)",
-                maxLength: 255,
-                nullable: false,
-                defaultValue: "");
+            //migrationBuilder.AddColumn<string>(
+            //    name: "Address",
+            //    table: "T_Employee",
+            //    type: "nvarchar(255)",
+            //    maxLength: 255,
+            //    nullable: false,
+            //    defaultValue: "");
 
-            migrationBuilder.AddColumn<int>(
-                name: "Gender",
-                table: "T_Employee",
-                type: "int",
-                nullable: false,
-                defaultValue: 0);
+            //migrationBuilder.AddColumn<int>(
+            //    name: "Gender",
+            //    table: "T_Employee",
+            //    type: "int",
+            //    nullable: false,
+            //    defaultValue: 0);
         }
 
         /// <inheritdoc />
