@@ -23,12 +23,23 @@ namespace TravelAgencyBackend.Models
     public class Cart
     {
         public int CartId { get; set; }
+
+        [Display(Name = "會員編號")]
         public int MemberId { get; set; }
+
+        [Display(Name = "商品編號")]
         public int ItemId{ get; set; }
+
+        [Display(Name = "類別")]
         public CartCategory Category { get; set; }
+
+        [Display(Name = "建立時間")]
         public DateTime CreatedAt { get; set; }
+
+        [Display(Name = "狀態")]
         public CartStatus Status { get; set; } = CartStatus.Unchecked;
 
+        [Display(Name = "會員")]
         public Member Member { get; set; } = null!;
     }
 }
