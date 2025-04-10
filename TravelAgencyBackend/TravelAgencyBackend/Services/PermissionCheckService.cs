@@ -52,5 +52,14 @@ namespace TravelAgencyBackend.Services
         public bool CanViewAnnouncements => HasPermission("查看公告");
         public bool CanPushAnnouncements => HasPermission("發布公告");
         public bool CanManagePermissions => HasPermission("管理權限");
+        public bool CanViewCustomTravels => HasPermission("查看客製化行程");
+        public bool CanManageCustomTravels => HasPermission("管理客製化行程");
+        public bool CanViewOfficialTravels => HasPermission("查看官方行程");
+        public bool CanManageOfficialTravels => HasPermission("管理官方行程");
+        public bool CanViewOrders => HasPermission("查看訂單");
+        public bool CanManageOrders => HasPermission("管理訂單");
+        public bool CanViewHome => HasPermission("查看首頁");
+        
+
     }
 }

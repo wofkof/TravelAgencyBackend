@@ -1,20 +1,27 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using TravelAgencyBackend.Models;
+using TravelAgencyBackend.Services;
 
 namespace TravelAgencyBackend.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly PermissionCheckService _perm;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, PermissionCheckService perm)
+            :base(perm)
         {
             _logger = logger;
+            _perm = perm;
         }
 
         public IActionResult Index()
         {
+            var check = CheckPermissionOrForbid("¬d¬Ý­º­¶");
+            if (check != null) return check;
+
             ViewData["ActivePage"] = "Dashboard";
             return View();
         }

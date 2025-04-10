@@ -8,21 +8,24 @@ using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using TravelAgencyBackend.Helpers;
 using Microsoft.AspNetCore.Hosting;
+using TravelAgencyBackend.Services;
 
 
 
 namespace TravelAgencyBackend.Controllers
 {
-    public class EmployeeController : Controller
+    public class EmployeeController : BaseController
     {
 
         private readonly AppDbContext _context;
         private readonly IWebHostEnvironment _webHostEnvironment;
-
-        public EmployeeController(AppDbContext context, IWebHostEnvironment webHostEnvironment)
+        private readonly PermissionCheckService _perm;
+        public EmployeeController(AppDbContext context, IWebHostEnvironment webHostEnvironment, PermissionCheckService perm)
+            : base(perm)
         {
             _context = context;
             _webHostEnvironment = webHostEnvironment;
+            _perm = perm;
         }
 
 
@@ -82,6 +85,9 @@ namespace TravelAgencyBackend.Controllers
 
         public async Task<IActionResult> List(EmployeeKeyWordViewModel p, int page = 1)
         {
+            var check = CheckPermissionOrForbid("查看員工");
+            if (check != null) return check;
+
             int pageSize = 10;
 
             var query = _context.Employees
@@ -148,6 +154,9 @@ namespace TravelAgencyBackend.Controllers
 
         public IActionResult Create()
         {
+            var check = CheckPermissionOrForbid("管理員工");
+            if (check != null) return check;
+
             ViewBag.RoleList = new SelectList(_context.Roles, "RoleId", "RoleName");
             ViewBag.GenderList = EnumHelper.GetSelectListWithDisplayName<GenderType>();
             ViewBag.StatusList = EnumHelper.GetSelectListWithDisplayName<EmployeeStatus>(excludeDeleted: true);
@@ -213,6 +222,9 @@ namespace TravelAgencyBackend.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(EmployeeCreateViewModel vm)
         {
+            var check = CheckPermissionOrForbid("管理員工");
+            if (check != null) return check;
+
             string? fileName = null;
 
             if (vm.Photo != null && vm.Photo.Length > 0)
@@ -255,6 +267,9 @@ namespace TravelAgencyBackend.Controllers
 
         public async Task<IActionResult> Edit(int? id)
         {
+            var check = CheckPermissionOrForbid("管理員工");
+            if (check != null) return check;
+
             if (id == null) return NotFound();
 
             var emp = await _context.Employees.FindAsync(id);
@@ -309,6 +324,9 @@ namespace TravelAgencyBackend.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, EmployeeEditViewModel vm)
         {
+            var check = CheckPermissionOrForbid("管理員工");
+            if (check != null) return check;
+
             if (id != vm.EmployeeId) return NotFound();
 
             if (_context.Employees.Any(m => m.Phone == vm.Phone && m.EmployeeId != vm.EmployeeId ))
@@ -391,6 +409,9 @@ namespace TravelAgencyBackend.Controllers
 
         public async Task<IActionResult> Delete(int? id)
         {
+            var check = CheckPermissionOrForbid("管理員工");
+            if (check != null) return check;
+
             if (id == null) return NotFound();
 
             var emp = await _context.Employees
@@ -418,6 +439,9 @@ namespace TravelAgencyBackend.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int EmployeeId)
         {
+            var check = CheckPermissionOrForbid("管理員工");
+            if (check != null) return check;
+
             var emp = await _context.Employees.FindAsync(EmployeeId);
             if (emp == null) return NotFound();
 
@@ -431,6 +455,9 @@ namespace TravelAgencyBackend.Controllers
 
         public IActionResult Details(int id)
         {
+            var check = CheckPermissionOrForbid("管理員工");
+            if (check != null) return check;
+
             var employee = _context.Employees.FirstOrDefault(e => e.EmployeeId == id);
 
             if (employee == null)

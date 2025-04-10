@@ -1,4 +1,8 @@
-﻿
+﻿@{
+    var employeeId = Context.Session.GetInt32("EmployeeId") ?? 0;
+    var isLoggedIn = employeeId != 0;
+}
+
 <div class="app-sidebar sidebar-shadow">
     <div class="scrollbar-sidebar">
         <div class="app-sidebar__inner">
@@ -6,9 +10,21 @@
                 <li class="app-sidebar__heading">功能選單</li>
                 @* 首頁 *@
                 <li>
-                    <a asp-controller="Home" asp-action="Index">
-                        <i class="metismenu-icon pe-7s-home"></i>首頁
-                    </a>
+
+                    @* 需要登入 *@
+                    @if (isLoggedIn)
+                    {
+                        <a asp-controller="Home" asp-action="Index">
+                            <i class="metismenu-icon pe-7s-home"></i>首頁
+                        </a>
+                    }
+                    else
+                    {
+                        <a asp-controller="Home" asp-action="Index"
+                        class="bg-light disabled" tabindex="-1" aria-disabled="true" onclick="return false;">
+                            <i class="metismenu-icon pe-7s-home"></i>首頁
+                        </a>
+                    }
                 </li>
                 @* 員工 *@
                 <li>
@@ -18,24 +34,34 @@
                     </a>
                     <ul>
                         <li>
-                            <a asp-controller="Employee" asp-action="List">
-                                <i class="metismenu-icon"></i>員工列表
-                            </a>
+                            @if (PermissionChecker.CanViewEmployees)
+                            {
+                                <a asp-controller="Employee" asp-action="List">
+                                    <i class="metismenu-icon"></i>員工列表
+                                </a>
+                            }
+                            else
+                            {
+                                <a asp-controller="Employee" asp-action="List"
+                                class="bg-light disabled" tabindex="-1" aria-disabled="true" onclick="return false;">
+                                    <i class="metismenu-icon"></i>員工列表
+                                </a>
+                            }
                         </li>
                         <li>
-                            <a asp-controller="Role" asp-action="Index">
-                                <i class="metismenu-icon"></i>角色
-                            </a>
-                        </li>
-                        <li>
-                            <a asp-controller="Permission" asp-action="Index">
-                                <i class="metismenu-icon"></i>權限
-                            </a>
-                        </li>
-                        <li>
-                            <a asp-controller="Employee" asp-action="Create">
-                                <i class="metismenu-icon"></i>新增員工
-                            </a>
+                            @if (PermissionChecker.CanManageEmployees)
+                            {
+                                <a asp-controller="Employee" asp-action="Create">
+                                    <i class="metismenu-icon"></i>新增員工
+                                </a>
+                            }
+                            else
+                            {
+                                <a asp-controller="Employee" asp-action="Create"
+                                   class="bg-light disabled" tabindex="-1" aria-disabled="true" onclick="return false;">
+                                    <i class="metismenu-icon"></i>新增員工
+                                </a>
+                            }
                         </li>                      
                     </ul>
                 </li>
@@ -244,10 +270,29 @@
                         </li>
                     </ul>
                 </li>
+                @* 角色權限 *@
+                <li>
+                    <a href="#">
+                        <i class="metismenu-icon pe-7s-lock"></i>角色權限
+                        <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                    </a>
+                    <ul>
+                        <li>
+                            <a asp-controller="Role" asp-action="Index">
+                                <i class="metismenu-icon"></i>角色
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-controller="Permission" asp-action="Index">
+                                <i class="metismenu-icon"></i>權限
+                            </a>
+                        </li>
+                    </ul>
+                </li>
                 @* 前端功能 *@
                 <li>
                     <a href="#">
-                        <i class="metismenu-icon pe-7s-look"></i>前端功能
+                        <i class="metismenu-icon pe-7s-look"></i>前台功能
                         <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
                     </a>
                     <ul>
