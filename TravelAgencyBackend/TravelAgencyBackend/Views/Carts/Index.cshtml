@@ -1,59 +1,48 @@
-﻿@model IEnumerable<TravelAgencyBackend.Models.Cart>
+﻿@model TravelAgencyBackend.ViewModels.Cart.CartKeyWordViewModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "購物車列表";
 }
 
-<h1>Index</h1>
+<h1>購物車列表</h1>
+
+<form asp-action="Index" method="get" class="mb-3" style="width: 420px;">
+    <div class="input-group">
+        <input type="text" name="txtKeyword" class="form-control" placeholder="輸入類別或狀態" value="@Model.txtKeyword" autocomplete="off" />
+        <button type="submit" class="btn btn-outline-primary">搜尋</button>
+    </div>
+</form>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">新增</a>
 </p>
+
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.ItemId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Category)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedAt)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Member)
-            </th>
+            <th>@Html.DisplayNameFor(model => model.Carts[0].ItemId)</th>
+            <th>@Html.DisplayNameFor(model => model.Carts[0].Category)</th>
+            <th>@Html.DisplayNameFor(model => model.Carts[0].CreatedAt)</th>
+            <th>@Html.DisplayNameFor(model => model.Carts[0].Status)</th>
+            <th>@Html.DisplayNameFor(model => model.Carts[0].Member)</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ItemId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Category)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedAt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Member.Account)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.CartId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.CartId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.CartId">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model.Carts)
+        {
+            <tr>
+                <td>@Html.DisplayFor(m => item.ItemId)</td>
+                <td>@Html.DisplayFor(m => item.Category)</td>
+                <td>@Html.DisplayFor(m => item.CreatedAt)</td>
+                <td>@Html.DisplayFor(m => item.Status)</td>
+                <td>@Html.DisplayFor(m => item.Member.Account)</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.CartId">編輯</a> |
+                    <a asp-action="Details" asp-route-id="@item.CartId">詳細</a> |
+                    <a asp-action="Delete" asp-route-id="@item.CartId">刪除</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

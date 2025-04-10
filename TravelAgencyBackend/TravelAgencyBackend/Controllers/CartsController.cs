@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TravelAgencyBackend.Models;
+using TravelAgencyBackend.ViewModels.Cart;
 
 namespace TravelAgencyBackend.Controllers
 {
@@ -19,11 +20,38 @@ namespace TravelAgencyBackend.Controllers
         }
 
         // GET: Carts
-        public async Task<IActionResult> Index()
+        //public async Task<IActionResult> Index()
+        //{
+        //    var appDbContext = _context.Carts.Include(c => c.Member);
+        //    return View(await appDbContext.ToListAsync());
+        //}
+        // GET: 購物車
+        public async Task<IActionResult> Index(CartKeyWordViewModel p)
         {
-            var appDbContext = _context.Carts.Include(c => c.Member);
-            return View(await appDbContext.ToListAsync());
+            var 購物車 = _context.Carts.Include(c => c.Member).AsQueryable();
+
+            if (!string.IsNullOrEmpty(p.txtKeyword))
+            {
+                var keyword = $"%{p.txtKeyword}%"; // SQL LIKE 需要使用 % 作為萬用字元
+                購物車 = 購物車.Where(c =>
+                    EF.Functions.Like(c.Category.ToString(), keyword) ||
+                    EF.Functions.Like(c.Status.ToString(), keyword));
+            }
+            if (!string.IsNullOrEmpty(p.txtKeyword))
+            {
+                var keyword = $"%{p.txtKeyword}%"; // SQL Like 用的萬用字元
+                購物車 = 購物車.Where(c =>
+                    EF.Functions.Like(c.Category.ToString(), keyword) ||
+                    EF.Functions.Like(c.Member.Name, keyword) ||
+                    EF.Functions.Like(c.Status.ToString(), keyword) || // 檢查狀態
+                    EF.Functions.Like(c.Category.ToString(), keyword) // <--- 加入對 Category 的檢查
+                );
+            }
+
+            p.Carts = await 購物車.ToListAsync();
+            return View(p);
         }
+
 
         // GET: Carts/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -56,10 +84,12 @@ namespace TravelAgencyBackend.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CartId,MemberId,ItemId,Category,CreatedAt,Status")] Cart cart)
+        public async Task<IActionResult> Create([Bind("CartId,MemberId,ItemId,Category,Status")] Cart cart)
         {
+            ModelState.Remove("Member");
             if (ModelState.IsValid)
             {
+                cart.CreatedAt = DateTime.Now;
                 _context.Add(cart);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -90,17 +120,23 @@ namespace TravelAgencyBackend.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CartId,MemberId,ItemId,Category,CreatedAt,Status")] Cart cart)
+        public async Task<IActionResult> Edit(int id, [Bind("CartId,MemberId,ItemId,Category,Status")] Cart cart)
         {
+            ModelState.Remove("Member");
+
             if (id != cart.CartId)
             {
                 return NotFound();
             }
 
+            var time = await _context.Carts.AsNoTracking().FirstOrDefaultAsync(c => c.CartId == id);
+
+            cart.CreatedAt = time.CreatedAt;
             if (ModelState.IsValid)
             {
                 try
                 {
+                    
                     _context.Update(cart);
                     await _context.SaveChangesAsync();
                 }
