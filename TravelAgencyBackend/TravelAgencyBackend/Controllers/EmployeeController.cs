@@ -8,21 +8,24 @@ using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using TravelAgencyBackend.Helpers;
 using Microsoft.AspNetCore.Hosting;
+using TravelAgencyBackend.Services;
 
 
 
 namespace TravelAgencyBackend.Controllers
 {
-    public class EmployeeController : Controller
+    public class EmployeeController : BaseController
     {
 
         private readonly AppDbContext _context;
         private readonly IWebHostEnvironment _webHostEnvironment;
-
-        public EmployeeController(AppDbContext context, IWebHostEnvironment webHostEnvironment)
+        private readonly PermissionCheckService _perm;
+        public EmployeeController(AppDbContext context, IWebHostEnvironment webHostEnvironment, PermissionCheckService perm)
+            : base(perm)
         {
             _context = context;
             _webHostEnvironment = webHostEnvironment;
+            _perm = perm;
         }
 
 
@@ -82,6 +85,9 @@ namespace TravelAgencyBackend.Controllers
 
         public async Task<IActionResult> List(EmployeeKeyWordViewModel p, int page = 1)
         {
+            var check = CheckPermissionOrForbid("修改會員密碼");
+            if (check != null) return check;
+
             int pageSize = 10;
 
             var query = _context.Employees
