@@ -25,5 +25,6 @@ namespace TravelAgencyBackend.ViewModels.Employee
 
         [Display(Name = "備註")]
         public string? Note { get; set; }
+        public string? ImagePath { get; set; } 
     }
 }

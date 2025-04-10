@@ -13,7 +13,7 @@
         public string Status { get; set; }
         public string? Note { get; set; }
 
-        public string? ImagePath { get; set; }  // 替代原本的 PhotoUrl
+        public string? ImagePath { get; set; }
 
     }
 }

@@ -2,6 +2,11 @@
 
 @{
     ViewData["Title"] = "員工詳細資料";
+
+    // ✅ 檢查是否有有效的圖片路徑，否則顯示預設圖
+    var imagePath = !string.IsNullOrEmpty(Model.ImagePath)
+        ? Url.Content("~/uploads/" + Model.ImagePath)
+        : Url.Content("~/images/default.png");
 }
 
 <h1 class="mb-4 text-start">員工詳細資料</h1>
@@ -53,14 +58,15 @@
             <a asp-action="Edit" asp-route-id="@Model.EmployeeId" class="btn btn-outline-primary btn-lg px-4">編輯</a>
             <a asp-action="List" class="btn btn-outline-secondary btn-lg px-4">返回列表</a>
             <a asp-action="Delete" asp-route-id="@Model.EmployeeId" class="btn btn-outline-danger btn-lg px-4" onclick="return confirm('你確定要刪除這位員工嗎？')">刪除</a>
-
         </div>
     </div>
-    <div class="col-md-4">
-        <label class="form-label">照片</label>
-        <div class="border rounded p-2 bg-light text-center" style="min-height: 250px;">
-            <img src="~/uploads/@Model.ImagePath" class="img-fluid" />
 
+    <div class="col-md-4 text-center">
+        <label class="form-label d-block">員工照片</label>
+        <div>
+            <img id="previewImage"
+                 src="@(string.IsNullOrWhiteSpace(Model.ImagePath) ? Url.Content("~/images/default.png") : Url.Content("~/uploads/" + Model.ImagePath))"
+                 alt="預覽圖片" class="img-fluid rounded" style="max-height: 200px;" />
         </div>
     </div>
 </div>
