@@ -101,13 +101,35 @@
 					@Html.DisplayFor(modelItem => item.Note)
 				</td>
 				<td>
-					@Html.ActionLink("檢視", "ContentList", "CustomTravelPending", new { id = item.CustomTravelId }, new { @class = "btn btn-outline-success" })
+					@if (PermissionChecker.CanViewCustomTravels)
+					{
+						<a asp-controller="CustomTravelPending" asp-action="ContentList" asp-route-id="@item.CustomTravelId" class="btn btn-outline-success">檢視</a>
+					}
+					else
+					{
+						<a class="btn btn-outline-success disabled" tabindex="-1" aria-disabled="true" onclick="return false">檢視</a>
+					}
+
 				</td>
 				<td>
-					@Html.ActionLink("修改", "EditOrder", "CustomTravelPending", new { id = item.CustomTravelId }, new { @class = "btn btn-outline-warning" })
+					@if (PermissionChecker.CanManageCustomTravels)
+					{
+						<a asp-controller="CustomTravelPending" asp-action="EditOrder" asp-route-id="@item.CustomTravelId" class="btn btn-outline-warning">修改</a>
+					}
+					else
+					{
+						<a class="btn btn-outline-warning disabled" tabindex="-1" aria-disabled="true" onclick="return false">修改</a>
+					}
 				</td>
 				<td>
-					@Html.ActionLink("刪除", "DeleteOrder", "CustomTravelPending", new { id = item.CustomTravelId }, new { @class = "btn btn-outline-danger", onclick = "return confirm('確定要刪除嗎?')" })
+					@if (PermissionChecker.CanManageCustomTravels)
+					{
+						<a asp-controller="CustomTravelPending" asp-action="DeleteOrder" asp-route-id="@item.CustomTravelId" class="btn btn-outline-danger" onclick="return confirm('確定要刪除嗎?')">刪除</a>
+					}
+					else
+					{
+						<a class="btn btn-outline-danger disabled" tabindex="-1" aria-disabled="true" onclick="return false">刪除</a>
+					}
 				</td>
 			</tr>
 		}

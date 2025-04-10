@@ -23,10 +23,10 @@
                 <select asp-for="SelectedCityId" class="form-select">
                     <option selected disabled value="">請選擇縣市</option>
                     @foreach (var t in Model.City)
-                        {
-                            <option value="@t.CityId">@t.CityName</option>
-                        }  
-                    
+                    {
+                        <option value="@t.CityId">@t.CityName</option>
+                    }  
+
                 </select>
                 <label asp-for="SelectedDistrictId" class="control-label">區</label>
                 <select asp-for="SelectedDistrictId" class="form-select">
@@ -43,7 +43,7 @@
                 <label asp-for="NewContent.Category"  class="control-label"></label>
                 <select asp-for="NewContent.Category" 
                 asp-items="Html.GetEnumSelectList<Category>()"
-                        class="form-select d-inline w-auto mx-2" id="NewContent_Category">
+                class="form-select d-inline w-auto mx-2" id="NewContent_Category">
                     <option selected disabled value="">請選擇類別</option>
                 </select>
                 <span asp-validation-for="NewContent.Category" class="text-danger"></span>
@@ -57,7 +57,7 @@
                         {
                             <option data-category="3" data-district="@t.DistrictId" value="@t.AttractionId" hidden>@t.ScenicSpotName</option>
                         }
-                        
+
                         foreach (var t in Model.Restaurant)
                         {
                             <option data-category="2" data-district="@t.DistrictId" value="@t.RestaurantId" hidden>@t.RestaurantName</option>
@@ -93,8 +93,26 @@
                 <span asp-validation-for="NewContent.HotelName" class="text-danger"></span>
             </div>
             <div class="mt-4">
-                <input type="submit" value="新增" class="btn btn-primary" />
-                <a asp-action="ContentList" asp-route-id="@Model.NewContent.CustomTravelId" class="btn btn-secondary">返回</a>
+                @if (PermissionChecker.CanManageCustomTravels)
+                {
+                    <input type="submit" value="新增" class="btn btn-primary" />
+                }
+                else
+                {
+                    <input type="submit" value="新增" class="btn btn-primary disabled"
+                    tabindex="-1" aria-disabled="true" onclick="return false;" />
+                }
+                @if (PermissionChecker.CanViewCustomTravels)
+                {
+                    <a asp-action="ContentList" asp-route-id="@Model.NewContent.CustomTravelId" class="btn btn-secondary">返回</a>
+                }
+                else
+                {
+                    <a asp-action="ContentList" asp-route-id="@Model.NewContent.CustomTravelId" class="btn btn-secondary disabled"
+                       tabindex="-1" aria-disabled="true" onclick="return false;">
+                    返回
+                    </a>
+                }
             </div>
             
         </form>

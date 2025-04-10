@@ -1,20 +1,27 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using TravelAgencyBackend.Models;
+using TravelAgencyBackend.Services;
 using TravelAgencyBackend.ViewModels;
 
 namespace TravelAgencyBackend.Controllers
 {
-    public class CustomTravelPendingController : Controller
+    public class CustomTravelPendingController : BaseController
     {
         private readonly AppDbContext _context;
-        public CustomTravelPendingController(AppDbContext context)
+        private readonly PermissionCheckService _perm;
+        public CustomTravelPendingController(AppDbContext context, PermissionCheckService perm)
+            : base(perm)
         {
             _context = context;
+            _perm = perm;
         }
 
         public IActionResult List(KeywordViewModel p)
         {
+            var check = CheckPermissionOrForbid("查看客製化行程");
+            if (check != null) return check;
+
             IEnumerable<CustomTravel> CustomTravel = null;
             if (string.IsNullOrEmpty(p.txtKeyword))
             {
@@ -37,6 +44,9 @@ namespace TravelAgencyBackend.Controllers
 
         public IActionResult DeleteOrder(int? id)
         {
+            var check = CheckPermissionOrForbid("管理客製化行程");
+            if (check != null) return check;
+
             if (id != null)
             {
 
@@ -51,6 +61,9 @@ namespace TravelAgencyBackend.Controllers
         }
         public IActionResult EditOrder(int? id)
         {
+            var check = CheckPermissionOrForbid("管理客製化行程");
+            if (check != null) return check;
+
             if (id == null)
                 return RedirectToAction("List");
             CustomTravel d = _context.CustomTravels.FirstOrDefault(p => p.CustomTravelId == id);
@@ -63,6 +76,9 @@ namespace TravelAgencyBackend.Controllers
         [HttpPost]
         public IActionResult EditOrder(CustomTravel uiCustomTravel)
         {
+            var check = CheckPermissionOrForbid("管理客製化行程");
+            if (check != null) return check;
+
             CustomTravel dbCustomTravel = _context.CustomTravels.FirstOrDefault(p => p.CustomTravelId == uiCustomTravel.CustomTravelId);
             if (dbCustomTravel == null)
                 return RedirectToAction("List");
@@ -93,6 +109,9 @@ namespace TravelAgencyBackend.Controllers
 
         public IActionResult ContentList(int? id)
         {
+            var check = CheckPermissionOrForbid("查看客製化行程");
+            if (check != null) return check;
+
             IEnumerable<CustomTravel> CustomTravel = null;
             if (id != null)
             {
@@ -125,6 +144,9 @@ namespace TravelAgencyBackend.Controllers
         }
         public IActionResult CreateContent()
         {
+            var check = CheckPermissionOrForbid("管理客製化行程");
+            if (check != null) return check;
+
             var id = _context.Contents.FirstOrDefault()?.CustomTravelId;
             
             var datas = new CustomTravelPendingViewModel
@@ -143,13 +165,19 @@ namespace TravelAgencyBackend.Controllers
         }
         [HttpPost]
         public IActionResult CreateContent(CustomTravelPendingViewModel p)
-        {         
+        {
+            var check = CheckPermissionOrForbid("管理客製化行程");
+            if (check != null) return check;
+
             _context.Contents.Add(p.NewContent);
             _context.SaveChanges();
             return RedirectToAction("ContentList", new { id = p.NewContent.CustomTravelId });
         }
         public IActionResult DeleteContent(int? id)
         {
+            var check = CheckPermissionOrForbid("管理客製化行程");
+            if (check != null) return check;
+
             if (id != null)
             {
                 Content d = _context.Contents.FirstOrDefault(p => p.ContentId == id);
@@ -166,6 +194,9 @@ namespace TravelAgencyBackend.Controllers
         }
         public IActionResult EditContent(int? id)
         {
+            var check = CheckPermissionOrForbid("管理客製化行程");
+            if (check != null) return check;
+
             if (id == null)
                 return RedirectToAction("ContentList", new { id });
             Content d = _context.Contents.FirstOrDefault(p => p.ContentId == id);
@@ -187,6 +218,9 @@ namespace TravelAgencyBackend.Controllers
         [HttpPost]
         public IActionResult EditContent(CustomTravelPendingViewModel t)
         {
+            var check = CheckPermissionOrForbid("管理客製化行程");
+            if (check != null) return check;
+
             Content dbContent = _context.Contents.FirstOrDefault(p => p.ContentId == t.EditContent.ContentId);
             if (dbContent == null)
                 return RedirectToAction("ContentList", new { id = t.EditContent.CustomTravelId });

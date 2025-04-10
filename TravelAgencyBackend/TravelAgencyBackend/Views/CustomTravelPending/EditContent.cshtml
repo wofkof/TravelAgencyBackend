@@ -42,8 +42,8 @@
             <div class="form-group">
                 <label asp-for="EditContent.Category" class="control-label"></label>
                 <select asp-for="EditContent.Category"
-                        asp-items="Html.GetEnumSelectList<Category>()"
-                        class="form-select d-inline w-auto mx-2" id="EditContent_Category">
+                asp-items="Html.GetEnumSelectList<Category>()"
+                class="form-select d-inline w-auto mx-2" id="EditContent_Category">
                 </select>
                 <span asp-validation-for="EditContent.Category" class="text-danger"></span>
             </div>
@@ -95,7 +95,7 @@
                 </select>
                 <span asp-validation-for="EditContent.ItemId" class="text-danger"></span>                
             </div>
-            
+
             <div class="form-group">
                 <label asp-for="EditContent.Day" class="control-label"></label>
                 <input asp-for="EditContent.Day" class="form-control" />
@@ -112,8 +112,26 @@
                 <span asp-validation-for="EditContent.HotelName" class="text-danger"></span>
             </div>
             <div class="mt-4">
-                <input type="submit" value="修改" class="btn btn-primary" />
-                <a asp-action="ContentList" asp-route-id="@Model.EditContent.CustomTravelId" class="btn btn-secondary">返回</a>
+                @if (PermissionChecker.CanManageCustomTravels)
+                {
+                    <input type="submit" value="修改" class="btn btn-primary" />
+                }
+                else
+                {
+                    <input type="submit" value="修改" class="btn btn-primary disabled"
+                    tabindex="-1" aria-disabled="true" onclick="return false;" />
+                }
+                @if (PermissionChecker.CanViewEmployees)
+                {
+                    <a asp-action="ContentList" asp-route-id="@Model.EditContent.CustomTravelId" class="btn btn-secondary">返回</a>
+                }
+                else
+                {
+                    <a asp-action="ContentList" asp-route-id="@Model.EditContent.CustomTravelId" class="btn btn-secondary disabled"
+                       tabindex="-1" aria-disabled="true" onclick="return false;">
+                    返回
+                    </a>
+                }
             </div>
         </form>
     </div>
