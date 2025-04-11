@@ -63,10 +63,10 @@
                                 <td>
                                     @* 連結到訂單的詳細頁面 *@
                                     <a asp-controller="Order" asp-action="SimpleDetails"
-                                       asp-route-id="@order.OrderId"
-                                       asp-route-originItemId="@Model.ItemId" 
-                                       asp-route-originCategory="@Model.Category" 
-                                       class="btn btn-outline-secondary btn-sm">
+                                    asp-route-id="@order.OrderId"
+                                    asp-route-originItemId="@Model.ItemId" 
+                                    asp-route-originCategory="@Model.Category" 
+                                    class="btn btn-outline-secondary btn-sm">
                                         <i class="fas fa-search"></i> 查看訂單
                                     </a>
                                 </td>
@@ -84,5 +84,15 @@
 </div>
 
 <div class="mt-4">
-    <a asp-action="Index" class="btn btn-secondary">返回行程統計列表</a>
+    @if (PermissionChecker.CanViewOrders)
+    {
+        <a asp-action="Index" class="btn btn-secondary">返回行程統計列表</a>
+    }
+    else
+    {
+        <a asp-action="Index" class="btn btn-secondary disabled"
+           tabindex="-1" aria-disabled="true" onclick="return false;">
+        返回行程統計列表
+        </a>
+    }
 </div>

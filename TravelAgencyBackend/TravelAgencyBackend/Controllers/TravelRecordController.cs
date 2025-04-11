@@ -9,17 +9,21 @@ using TravelAgencyBackend.Helpers;
 using TravelAgencyBackend.Models;
 using TravelAgencyBackend.ViewModels.TravelRecord;
 using TravelAgencyBackend.ViewModels.Order;
+using TravelAgencyBackend.Services;
 
 namespace TravelAgencyBackend.Controllers
 {
     // Controller 用於顯示行程統計摘要與相關訂單
-    public class TravelRecordController : Controller
+    public class TravelRecordController : BaseController
     {
         private readonly AppDbContext _context;
+        private readonly PermissionCheckService _perm;
 
-        public TravelRecordController(AppDbContext context)
+        public TravelRecordController(AppDbContext context, PermissionCheckService perm)
+            : base(perm)
         {
             _context = context;
+            _perm = perm;
         }
 
         // GET: TravelRecord (顯示行程統計列表)
@@ -31,6 +35,9 @@ namespace TravelAgencyBackend.Controllers
             int? pageNumber,
             int? pageSize)
         {
+            var check = CheckPermissionOrForbid("查看訂單");
+            if (check != null) return check;
+
             sortField = string.IsNullOrEmpty(sortField) ? "ItemName" : sortField;
             sortDirection = string.IsNullOrEmpty(sortDirection) ? "asc" : sortDirection;
             int currentPageSize = pageSize ?? 10;
@@ -157,6 +164,9 @@ namespace TravelAgencyBackend.Controllers
         [HttpGet("TravelRecord/Details/{itemId}/{category}")]
         public async Task<IActionResult> Details(int itemId, OrderCategory category)
         {
+            var check = CheckPermissionOrForbid("查看訂單");
+            if (check != null) return check;
+
             // ... (同之前的 Details 邏輯) ...
 
             var ordersInGroup = await _context.Orders

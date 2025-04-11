@@ -48,18 +48,21 @@
     </div>
     <div class="card-footer bg-light">
         @* --- 修改返回按鈕邏輯 --- *@
-        @if (hasOriginInfo)
+        @if (PermissionChecker.CanViewOrders)
         {
-            // 如果有來源資訊，則返回行程統計詳細頁面
-            <a asp-controller="TravelRecord" asp-action="Details"
-               asp-route-itemId="@ViewBag.OriginItemId"
-               asp-route-category="@ViewBag.OriginCategory"
-               class="btn btn-secondary">返回行程訂單列表</a> @* 修改按鈕文字 *@
-        }
-        else
-        {
-            // 否則，提供返回一般訂單列表的連結
-            <a asp-controller="Order" asp-action="Index" class="btn btn-secondary">返回訂單列表</a>
+            @if (hasOriginInfo)
+            {
+                // 如果有來源資訊，則返回行程統計詳細頁面
+                <a asp-controller="TravelRecord" asp-action="Details"
+                   asp-route-itemId="@ViewBag.OriginItemId"
+                   asp-route-category="@ViewBag.OriginCategory"
+                   class="btn btn-secondary">返回行程訂單列表</a> @* 修改按鈕文字 *@
+            }
+            else
+            {
+                // 否則，提供返回一般訂單列表的連結
+                <a asp-controller="Order" asp-action="Index" class="btn btn-secondary">返回訂單列表</a>
+            }
         }
     </div>
 </div>

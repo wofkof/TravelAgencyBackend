@@ -89,8 +89,26 @@
     <div class="card-footer text-center">
         <form asp-action="Delete">
             <input type="hidden" asp-for="OrderId" />
-            <input type="submit" value="Delete" class="btn btn-danger" />
-            <a asp-action="Index" class="btn btn-secondary">返回列表</a>
+            @if (PermissionChecker.CanManageOrders)
+            {
+                <input type="submit" value="Delete" class="btn btn-danger" />
+            }
+            else
+            {
+                <input type="submit" value="Delete" class="btn btn-danger disabled"
+                tabindex="-1" aria-disabled="true" onclick="return false;" />
+            }
+            @if (PermissionChecker.CanViewOrders)
+            {
+                <a asp-action="Index" class="btn btn-secondary">返回列表</a>
+            }
+            else
+            {
+                <a asp-action="Index" class="btn btn-secondary disabled"
+                   tabindex="-1" aria-disabled="true" onclick="return false;">
+                返回列表
+                </a>
+            }
         </form>
     </div>
 </div>

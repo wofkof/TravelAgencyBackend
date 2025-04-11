@@ -7,10 +7,10 @@
 <h1 class="text-center mb-4">編輯訂單</h1> 
 
 <div class="card shadow-sm">
-    
+
     <div class="card-body">
         <form asp-action="Edit" class="needs-validation" novalidate>
-            
+
             <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
             <input type="hidden" asp-for="OrderId" /> 
@@ -116,8 +116,28 @@
 
             <div class="row">
                 <div class="col-sm-9 offset-sm-3 d-flex align-items-center">
-                    <button type="submit" class="btn btn-primary me-3">儲存</button> 
-                    <a asp-action="Index" class="btn btn-secondary">返回列表</a>
+                    @if (PermissionChecker.CanManageOrders)
+                    {
+                        <button type="submit" class="btn btn-primary me-3">儲存</button>
+                    }
+                    else
+                    {
+                        <button type="submit" class="btn btn-primary me-3 disabled"
+                        tabindex="-1" aria-disabled="true" onclick="return false;">
+                            儲存
+                        </button>
+                    }
+                    @if (PermissionChecker.CanViewOrders)
+                    {
+                        <a asp-action="Index" class="btn btn-secondary">返回列表</a>
+                    }
+                    else
+                    {
+                        <a asp-action="Index" class="btn btn-secondary disabled"
+                           tabindex="-1" aria-disabled="true" onclick="return false;">
+                        返回列表
+                        </a>
+                    }
                 </div>
             </div>
         </form>
