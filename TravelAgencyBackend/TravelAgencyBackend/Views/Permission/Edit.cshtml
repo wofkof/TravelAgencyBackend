@@ -21,8 +21,27 @@
         <span asp-validation-for="Caption" class="text-danger"></span>
     </div>
 
-    <button type="submit" class="btn btn-primary">儲存變更</button>
-    <a asp-action="Index" class="btn btn-secondary">返回</a>
+    @if (PermissionChecker.CanManagePermissions)
+    {
+        <button type="submit" class="btn btn-primary">儲存變更</button>
+    }
+    else
+    {
+        <button type="submit" class="btn btn-primary disabled">
+            tabindex="-1" aria-disabled="true" onclick="return false;"
+            儲存變更</button>
+    }
+    @if (PermissionChecker.CanManagePermissions)
+    {
+        <a asp-action="Index" class="btn btn-secondary">返回</a>
+    }
+    else
+    {
+        <a asp-action="Index" class="btn btn-secondary disabled"
+           tabindex="-1" aria-disabled="true" onclick="return false;">
+        返回
+        </a>
+    }
 </form>
 
 @section Scripts {

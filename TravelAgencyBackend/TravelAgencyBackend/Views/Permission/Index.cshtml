@@ -27,8 +27,27 @@
                 <td>@item.PermissionName</td>
                 <td>@item.Caption</td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.PermissionId" class="btn btn-sm btn-outline-secondary">編輯</a>
-                    <a asp-action="Delete" asp-route-id="@item.PermissionId" class="btn btn-sm btn-outline-danger" onclick="return confirm('確定要刪除嗎？')">刪除</a>
+                    @if (PermissionChecker.CanManagePermissions)
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.PermissionId" class="btn btn-sm btn-outline-secondary">編輯</a>
+                    }
+                    else
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.PermissionId" class="btn btn-sm btn-outline-secondary disabled"
+                        tabindex="-1" aria-disabled="true" onclick="return false;">
+                            編輯
+                        </a>
+                    }
+                    @if (PermissionChecker.CanManagePermissions)
+                    {
+                        <a asp-action="Delete" asp-route-id="@item.PermissionId" class="btn btn-sm btn-outline-danger" onclick="return confirm('確定要刪除嗎？')">刪除</a>
+                    }
+                    else
+                    {
+                        <a asp-action="Delete" asp-route-id="@item.PermissionId" class="btn btn-sm btn-outline-danger disabled"
+                           tabindex="-1" aria-disabled="true" onclick="return false;"
+                        onclick="return confirm('確定要刪除嗎？')">刪除</a>
+                    }
                 </td>
             </tr>
         }
