@@ -262,8 +262,8 @@ namespace TravelAgencyBackend.Controllers
                 }
             }
 
-            fileName ??= "default.png";
-
+            //fileName ??= "default.png";
+            fileName ??= "";
             var employee = new Employee
             {
                 Name = vm.Name,

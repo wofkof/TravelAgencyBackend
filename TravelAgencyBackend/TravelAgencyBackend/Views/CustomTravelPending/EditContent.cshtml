@@ -64,7 +64,7 @@
                             case Category.Hotel:
                                 itemName = Model.Hotel.FirstOrDefault(h => h.HotelId == Model.EditContent.ItemId)?.HotelName;
                                 break;
-                            case Category.Activity:
+                            case Category.Transport:
                                 itemName = Model.Transportation.FirstOrDefault(t => t.TransportId == Model.EditContent.ItemId)?.TransportMethod;
                                 break;
                         }

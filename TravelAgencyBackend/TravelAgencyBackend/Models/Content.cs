@@ -7,7 +7,7 @@ namespace TravelAgencyBackend.Models
         [Display(Name = "住宿")]
         Hotel,
         [Display(Name = "交通")]
-        Activity,
+        Transport,
         [Display(Name = "餐廳")]
         Restaurant,
         [Display(Name = "景點")]

@@ -269,23 +269,23 @@
                         {
                             <li>
                                 <a asp-controller="OfficialTravels" asp-action="Index"
-                                   class="bg-light disabled" tabindex="-1" aria-disabled="true" onclick="return false">
+                                class="bg-light disabled" tabindex="-1" aria-disabled="true" onclick="return false">
                                     <i class="metismenu-icon"></i>管理官方行程
                                 </a>
                             </li>
                             <li>
                                 <a asp-controller="TravelSuppliers" asp-action="Index"
-                                   class="bg-light disabled" tabindex="-1" aria-disabled="true" onclick="return false">
+                                class="bg-light disabled" tabindex="-1" aria-disabled="true" onclick="return false">
                                     <i class="metismenu-icon"></i>供應商業務管理
                                 </a>
                             </li>
                             <li>
                                 <a asp-controller="Regions" asp-action="Index" 
-                                   class="bg-light disabled" tabindex="-1" aria-disabled="true" onclick="return false">
+                                class="bg-light disabled" tabindex="-1" aria-disabled="true" onclick="return false">
                                     <i class="metismenu-icon"></i>地區管理(測試)
                                 </a>
                                 <a asp-controller="Flights" asp-action="Index"
-                                   class="bg-light disabled" tabindex="-1" aria-disabled="true" onclick="return false">
+                                class="bg-light disabled" tabindex="-1" aria-disabled="true" onclick="return false">
                                     <i class="metismenu-icon"></i>航班一覽表(測試)
                                 </a>
                             </li>
@@ -300,19 +300,19 @@
                     </a>
                     <ul>
                         <li>
-                            @if (PermissionChecker.CanViewCustomTravels)
-                            {
-                                <a asp-controller="CustomTravelPending" asp-action="List">
-                                    <i class="metismenu-icon"></i>查看自訂行程
-                                </a>
+                            @if (PermissionChecker.CanViewCustomTravels) 
+                            { 
+                            <a asp-controller="CustomTravelPending" asp-action="List">
+                                <i class="metismenu-icon"></i>查看自訂行程
+                            </a>
                             }
                             else
                             {
-                                <a asp-controller="CustomTravelPending" asp-action="List"
-                                class="bg-light disabled" tabindex="-1" aria-disabled="true" onclick="return false">
-                                    <i class="metismenu-icon"></i>查看自訂行程
-                                </a>
-                            }
+                               <a asp-controller="CustomTravelPending" asp-action="List" 
+                              class="bg-light disabled" tabindex="-1" aria-disabled="true" onclick="return false"> 
+                                  <i class="metismenu-icon"></i>查看自訂行程 
+                                </a> 
+                            } 
                         </li>
                         <li>
                             @if (PermissionChecker.CanManageCustomTravels)
@@ -324,7 +324,7 @@
                             else
                             {
                                 <a asp-controller="CustomTravelProducts" asp-action="List"
-                                   class="bg-light disabled" tabindex="-1" aria-disabled="true" onclick="return false">
+                                class="bg-light disabled" tabindex="-1" aria-disabled="true" onclick="return false">
                                     <i class="metismenu-icon"></i>新增自訂行程
                                 </a>
                             }
@@ -339,14 +339,35 @@
                     </a>
                     <ul>
                         <li>
-                            <a asp-controller="Order" asp-action="index">
-                                <i class="metismenu-icon"></i>查看訂單
-                            </a>
+                            @if (PermissionChecker.CanViewOrders)
+                            {
+                                <a asp-controller="Order" asp-action="index">
+                                    <i class="metismenu-icon"></i>查看訂單
+                                </a>
+                            }
+                            else
+                            {
+                                <a asp-controller="Order" asp-action="index"
+                                class="bg-light disabled" tabindex="-1" aria-disabled="true" onclick="return false">
+                                    <i class="metismenu-icon"></i>查看訂單
+                                </a>
+                            }
                         </li>
                         <li>
-                            <a asp-controller="TravelRecord" asp-action="index">
-                                <i class="metismenu-icon"></i>查看旅遊完成紀錄
-                            </a>
+                            @if (PermissionChecker.CanViewOrders)
+                            {
+                                <a asp-controller="TravelRecord" asp-action="index">
+                                    <i class="metismenu-icon"></i>查看旅遊完成紀錄
+                                </a>
+                            }
+                            else
+                            {
+                                <a asp-controller="TravelRecord" asp-action="index"
+                                class="bg-light disabled" tabindex="-1" aria-disabled="true" onclick="return false">
+                                    >
+                                    <i class="metismenu-icon"></i>查看旅遊完成紀錄
+                                </a>
+                            }
                         </li>
                     </ul>
                 </li>
@@ -358,14 +379,34 @@
                     </a>
                     <ul>
                         <li>
-                            <a asp-controller="Role" asp-action="Index">
-                                <i class="metismenu-icon"></i>角色
-                            </a>
+                            @if (PermissionChecker.CanManageRoles)
+                            {
+                                <a asp-controller="Role" asp-action="Index">
+                                    <i class="metismenu-icon"></i>角色
+                                </a>
+                            }
+                            else
+                            {
+                                <a asp-controller="Role" asp-action="Index"
+                                   class="bg-light disabled" tabindex="-1" aria-disabled="true" onclick="return false">
+                                    <i class="metismenu-icon"></i>角色
+                                </a>
+                            }
                         </li>
                         <li>
-                            <a asp-controller="Permission" asp-action="Index">
-                                <i class="metismenu-icon"></i>權限
-                            </a>
+                            @if (PermissionChecker.CanManagePermissions)
+                            {
+                                <a asp-controller="Permission" asp-action="Index">
+                                    <i class="metismenu-icon"></i>權限
+                                </a>
+                            }
+                            else
+                            {
+                                <a asp-controller="Permission" asp-action="Index"
+                                   class="bg-light disabled" tabindex="-1" aria-disabled="true" onclick="return false">
+                                    <i class="metismenu-icon"></i>權限
+                                </a>
+                            }
                         </li>
                     </ul>
                 </li>
