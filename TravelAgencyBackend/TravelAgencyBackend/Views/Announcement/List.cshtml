@@ -6,7 +6,19 @@
 
 <h2>@ViewData["Title"]</h2>
 
-<a asp-action="Create" class="btn btn-primary mb-3">新增公告</a>
+@if (PermissionChecker.CanPushAnnouncements)
+{
+    <a asp-action="Create" class="btn btn-primary mb-3">新增公告</a>
+}
+else
+{
+    <a asp-action="Create" 
+    class="btn btn-primary mb-3 disabled"
+       tabindex="-1" aria-disabled="true" onclick="return false;">
+       新增公告
+   </a>
+}
+
 
 <table class="table table-bordered table-hover">
     <thead>
@@ -29,9 +41,42 @@
                 <td>@item.SentAt.ToString("yyyy-MM-dd HH:mm")</td>
                 <td>@(item.Status == AnnouncementStatus.Announce ? "已公佈" : "未公佈")</td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.AnnouncementId" class="btn btn-sm btn-warning">編輯</a>
-                    <a asp-action="Details" asp-route-id="@item.AnnouncementId" class="btn btn-sm btn-info">查看</a>
-                    <a asp-action="Delete" asp-route-id="@item.AnnouncementId" class="btn btn-sm btn-danger">刪除</a>
+                    @if (PermissionChecker.CanPushAnnouncements)
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.AnnouncementId" class="btn btn-sm btn-warning">編輯</a>
+                    }
+                    else
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.AnnouncementId"
+                           class="btn btn-sm btn-warning disabled"
+                           tabindex="-1" aria-disabled="true" onclick="false">
+                            編輯
+                        </a>
+                    }
+                    @if (PermissionChecker.CanViewAnnouncements)
+                    {
+                        <a asp-action="Details" asp-route-id="@item.AnnouncementId" class="btn btn-sm btn-info">查看</a>
+                    }
+                    else
+                    {
+                        <a asp-action="Details" asp-route-id="@item.AnnouncementId"
+                           class="btn btn-sm btn-info disabled"
+                           tabindex="-1" aria-disabled="true" onclick="false">
+                        查看
+                        </a>
+                    }
+                    @if (PermissionChecker.CanPushAnnouncements)
+                    {
+                        <a asp-action="Delete" asp-route-id="@item.AnnouncementId" class="btn btn-sm btn-danger">刪除</a>
+                    }
+                    else
+                    {
+                        <a asp-action="Delete" asp-route-id="@item.AnnouncementId"
+                           class="btn btn-sm btn-danger disabled"
+                           tabindex="-1" aria-disabled="true" onclick="false">
+                        刪除
+                        </a>
+                    }
                 </td>
             </tr>
         }

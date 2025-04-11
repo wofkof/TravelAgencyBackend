@@ -83,10 +83,29 @@
             @Html.DisplayFor(model => model.Region.Country)
         </dd>
     </dl>
-    
+
     <form asp-action="Delete">
         <input type="hidden" asp-for="OfficialTravelId" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index" class="btn btn-outline-primary">取消</a>
+        @if (PermissionChecker.CanManageOfficialTravels)
+        {
+            <input type="submit" value="Delete" class="btn btn-danger" />
+        }
+        else
+        {
+            <input type="submit" value="Delete" class="btn btn-danger disabled"
+            tabindex="-1" aria-disabled="true" onclick="return false;" />
+        }
+        |
+        @if (PermissionChecker.CanViewOfficialTravels)
+        {
+            <a asp-action="Index" class="btn btn-outline-primary">取消</a>
+        }
+        else
+        {
+            <a asp-action="Index" class="btn btn-outline-primary disabled"
+               tabindex="-1" aria-disabled="true" onclick="return false;">
+            取消
+            </a>
+        }
     </form>
 </div>

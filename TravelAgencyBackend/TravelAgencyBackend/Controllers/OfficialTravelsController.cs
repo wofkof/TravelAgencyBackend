@@ -8,23 +8,30 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TravelAgencyBackend.Models;
+using TravelAgencyBackend.Services;
 using TravelAgencyBackend.ViewModels;
 
 
 namespace TravelAgencyBackend.Controllers
 {
-    public class OfficialTravelsController : Controller
+    public class OfficialTravelsController : BaseController
     {
         private readonly AppDbContext _context;
+        private readonly PermissionCheckService _perm;
 
-        public OfficialTravelsController(AppDbContext context)
+        public OfficialTravelsController(AppDbContext context, PermissionCheckService perm)
+            : base(perm)
         {
             _context = context;
+            _perm = perm;
         }
 
         // GET: OfficialTravels
         public async Task<IActionResult> Index()
         {
+            var check = CheckPermissionOrForbid("查看官方行程");
+            if (check != null) return check;
+
             var appDbContext = _context.OfficialTravels.Include(o => o.CreatedBy).Include(o => o.Region);
 
             return View(appDbContext);
@@ -33,6 +40,9 @@ namespace TravelAgencyBackend.Controllers
         // GET: OfficialTravels/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            var check = CheckPermissionOrForbid("查看官方行程");
+            if (check != null) return check;
+
             if (id == null)
             {
                 return NotFound();
@@ -53,6 +63,9 @@ namespace TravelAgencyBackend.Controllers
         // GET: OfficialTravels/Create
         public IActionResult Create()
         {
+            var check = CheckPermissionOrForbid("管理官方行程");
+            if (check != null) return check;
+
             ViewData["CreatedByEmployeeId"] = new SelectList(_context.Employees, "EmployeeId", "Name");
             ViewData["RegionId"] = new SelectList(_context.Regions, "RegionId", "Name");
             return View();
@@ -65,6 +78,9 @@ namespace TravelAgencyBackend.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ViewModels.OfficialTravelViewModel model)
         {
+            var check = CheckPermissionOrForbid("管理官方行程");
+            if (check != null) return check;
+
             if (ModelState.IsValid)
             {
                 string? coverPath = null;
@@ -115,6 +131,9 @@ namespace TravelAgencyBackend.Controllers
         
         public async Task<IActionResult> Edit(int? id)
         {
+            var check = CheckPermissionOrForbid("管理官方行程");
+            if (check != null) return check;
+
             if (id == null) return NotFound();
 
             var travel = await _context.OfficialTravels.FindAsync(id);
@@ -149,6 +168,9 @@ namespace TravelAgencyBackend.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, OfficialTravelEditViewModel vm)
         {
+            var check = CheckPermissionOrForbid("管理官方行程");
+            if (check != null) return check;
+
             if (id != vm.OfficialTravelId) return NotFound();
 
             if (ModelState.IsValid)
@@ -216,6 +238,9 @@ namespace TravelAgencyBackend.Controllers
         // GET: OfficialTravels/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            var check = CheckPermissionOrForbid("管理官方行程");
+            if (check != null) return check;
+
             if (id == null)
             {
                 return NotFound();

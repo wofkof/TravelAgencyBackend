@@ -18,20 +18,20 @@
                 <th>行程名稱</th>
                 <th>
                     <a href="#" data-sort-field="ParticipantsCount" data-sort-direction="@nextSortDirectionParticipants"
-                       class="sort-link @(currentSortField == "ParticipantsCount" ? "active" : "")">
+                    class="sort-link @(currentSortField == "ParticipantsCount" ? "active" : "")">
                         人數 <i class="fas @(currentSortField == "ParticipantsCount" ? (currentSortDirection == "asc" ? "fa-sort-up" : "fa-sort-down") : "fa-sort")"></i>
                     </a>
                 </th>
                 <th>
                     <a href="#" data-sort-field="TotalAmount" data-sort-direction="@nextSortDirectionAmount"
-                       class="sort-link @(currentSortField == "TotalAmount" ? "active" : "")">
+                    class="sort-link @(currentSortField == "TotalAmount" ? "active" : "")">
                         總金額 <i class="fas @(currentSortField == "TotalAmount" ? (currentSortDirection == "asc" ? "fa-sort-up" : "fa-sort-down") : "fa-sort")"></i>
                     </a>
                 </th>
                 <th>訂單狀態</th> @* 表頭文字已置中 (CSS) *@
                 <th>
                     <a href="#" data-sort-field="CreatedAt" data-sort-direction="@nextSortDirectionCreated"
-                       class="sort-link @(currentSortField == "CreatedAt" ? "active" : "")">
+                    class="sort-link @(currentSortField == "CreatedAt" ? "active" : "")">
                         建立日期 <i class="fas @(currentSortField == "CreatedAt" ? (currentSortDirection == "asc" ? "fa-sort-up" : "fa-sort-down") : "fa-sort")"></i>
                     </a>
                 </th>
@@ -91,9 +91,36 @@
                         <td>@Html.DisplayFor(modelItem => item.CreatedAt)</td>
                         <td>
                             <div class="btn-group btn-group-sm" role="group">
-                                <a asp-action="Edit" asp-route-id="@item.OrderId" class="btn btn-outline-primary"><i class="fas fa-edit"></i> 編輯</a>
-                                <a asp-action="Details" asp-route-id="@item.OrderId" class="btn btn-outline-info"><i class="fas fa-info-circle"></i> 詳細</a>
-                                <a asp-action="Delete" asp-route-id="@item.OrderId" class="btn btn-outline-danger"><i class="fas fa-trash"></i> 刪除</a>
+                                @if (PermissionChecker.CanManageOrders)
+                                {
+                                    <a asp-action="Edit" asp-route-id="@item.OrderId" class="btn btn-outline-primary"><i class="fas fa-edit"></i> 編輯</a>
+                                }
+                                else
+                                {
+                                    <a asp-action="Edit" asp-route-id="@item.OrderId" class="btn btn-outline-primary disabled"
+                                    tabindex="-1" aria-disabled="true" onclick="return false;">
+                                        <i class="fas fa-edit"></i> 編輯</a>
+                                }
+                                @if (PermissionChecker.CanViewOrders)
+                                {
+                                    <a asp-action="Details" asp-route-id="@item.OrderId" class="btn btn-outline-info"><i class="fas fa-info-circle"></i> 詳細</a>
+                                }
+                                else
+                                {
+                                    <a asp-action="Details" asp-route-id="@item.OrderId" class="btn btn-outline-info disabled"
+                                    tabindex="-1" aria-disabled="true" onclick="return false;">
+                                        <i class="fas fa-info-circle"></i> 詳細</a>
+                                }
+                                @if (PermissionChecker.CanManageOrders)
+                                {
+                                    <a asp-action="Delete" asp-route-id="@item.OrderId" class="btn btn-outline-danger"><i class="fas fa-trash"></i> 刪除</a>
+                                }
+                                else
+                                {
+                                    <a asp-action="Delete" asp-route-id="@item.OrderId" class="btn btn-outline-danger disabled"
+                                       tabindex="-1" aria-disabled="true" onclick="return false;">
+                                        <i class="fas fa-trash"></i> 刪除</a>
+                                }
                             </div>
                         </td>
                     </tr>

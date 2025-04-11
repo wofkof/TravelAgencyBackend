@@ -10,100 +10,100 @@
 <style>
     /* --- 樣式 (Layout & AJAX Loading & Pagination & Styling) --- */
     .sort-link i {
-        margin-left: 5px;
-        color: #6c757d;
+    margin-left: 5px;
+    color: #6c757d;
     }
 
     .sort-link.active i {
-        color: #0d6efd;
+    color: #0d6efd;
     }
 
     .search-form .form-control,
     .search-form .form-select {
-        margin-right: 0.5rem;
-        margin-bottom: 0.5rem;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
     }
 
     .search-form .btn {
-        margin-bottom: 0.5rem;
+    margin-bottom: 0.5rem;
     }
 
     .truncate-text {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        max-width: 180px;
-        display: inline-block;
-        vertical-align: middle;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 180px;
+    display: inline-block;
+    vertical-align: middle;
     }
     /* 欄寬建議 */
     .order-table th:nth-child(1), .order-table td:nth-child(1) {
-        width: 8%;
+    width: 8%;
     }
     /* ID */
     .order-table th:nth-child(3), .order-table td:nth-child(3) {
-        width: 18%;
+    width: 18%;
     }
     /* 行程名稱 */
     .order-table th:nth-child(4), .order-table td:nth-child(4) {
-        width: 8%;
-        text-align: center;
+    width: 8%;
+    text-align: center;
     }
     /* 人數 */
     .order-table th:nth-child(5), .order-table td:nth-child(5) {
-        width: 10%;
-        text-align: right;
+    width: 10%;
+    text-align: right;
     }
     /* 金額 */
     .order-table th:nth-child(7), .order-table td:nth-child(7) {
-        width: 12%;
+    width: 12%;
     }
     /* 建立日期 */
     .order-table th:last-child, .order-table td:last-child {
-        width: 18%;
+    width: 18%;
     }
     /* 操作 */
 
     /* AJAX Loading */
     .list-container {
-        position: relative;
-        min-height: 150px;
+    position: relative;
+    min-height: 150px;
     }
 
     .table-loading-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(255, 255, 255, 0.7);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 10;
-        visibility: hidden;
-        opacity: 0;
-        transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
     }
 
-        .table-loading-overlay.is-loading {
-            visibility: visible;
-            opacity: 1;
-        }
+    .table-loading-overlay.is-loading {
+    visibility: visible;
+    opacity: 1;
+    }
 
     /* 分頁樣式 */
     .pagination-info {
-        font-size: 0.9em;
-        color: #6c757d;
+    font-size: 0.9em;
+    color: #6c757d;
     }
 
     .page-size-select {
-        max-width: 150px;
+    max-width: 150px;
     }
 
     .order-table tfoot td {
-        border: none;
-        padding-top: 1rem;
+    border: none;
+    padding-top: 1rem;
     }
 
     /* --- 新增樣式 --- */
@@ -114,14 +114,14 @@
     /* } */
     /* 狀態文字置中 (可選) */
     .order-table td.status-cell {
-        text-align: center;
-        vertical-align: middle;
+    text-align: center;
+    vertical-align: middle;
     }
     /* 讓 Badge 稍微有點上下邊距，更好看 */
     .badge {
-        padding-top: 0.4em;
-        padding-bottom: 0.4em;
-        font-size: 0.85em;
+    padding-top: 0.4em;
+    padding-bottom: 0.4em;
+    font-size: 0.85em;
     }
 
 </style>
@@ -132,15 +132,24 @@
 @* 訊息顯示 *@
 @if (TempData["SuccessMessage"] != null)
 {
-     <div class="alert alert-success alert-dismissible fade show" role="alert">@TempData["SuccessMessage"]<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">@TempData["SuccessMessage"]<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>
 }
 @if (TempData["ErrorMessage"] != null)
 {
-     <div class="alert alert-danger alert-dismissible fade show" role="alert">@TempData["ErrorMessage"]<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">@TempData["ErrorMessage"]<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>
 }
 
 <p>
-    <a asp-action="Create" class="btn btn-success"><i class="fas fa-plus me-1"></i> 新增訂單</a>
+    @if (PermissionChecker.CanManageOrders)
+    {
+        <a asp-action="Create" class="btn btn-success"><i class="fas fa-plus me-1"></i> 新增訂單</a>
+    }
+    else
+    {
+        <a asp-action="Create" class="btn btn-success disabled"
+           tabindex="-1" aria-disabled="true" onclick="return false;">
+        <i class="fas fa-plus me-1"></i> 新增訂單</a>
+    }
 </p>
 
 @* 搜尋表單 *@

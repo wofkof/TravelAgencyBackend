@@ -7,18 +7,22 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TravelAgencyBackend.Helpers;
 using TravelAgencyBackend.Models;
+using TravelAgencyBackend.Services;
 using TravelAgencyBackend.ViewModels;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace TravelAgencyBackend.Controllers
 {
-    public class CartsController : Controller
+    public class CartsController : BaseController
     {
         private readonly AppDbContext _context;
+        private readonly PermissionCheckService _perm;
 
-        public CartsController(AppDbContext context)
+        public CartsController(AppDbContext context, PermissionCheckService perm)
+            : base(perm)
         {
             _context = context;
+            _perm = perm;
         }
 
         // GET: Carts
@@ -31,6 +35,9 @@ namespace TravelAgencyBackend.Controllers
 
         public async Task<IActionResult> Index(CartKeyWordViewModel p)
         {
+            var check = CheckPermissionOrForbid("查看購物車");
+            if (check != null) return check;
+            
             var 購物車 = _context.Carts
                                 .Include(c => c.Member)
                                 .AsQueryable();
@@ -64,6 +71,9 @@ namespace TravelAgencyBackend.Controllers
         // GET: Carts/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            var check = CheckPermissionOrForbid("查看購物車");
+            if (check != null) return check;
+
             if (id == null)
             {
                 return NotFound();
@@ -83,6 +93,9 @@ namespace TravelAgencyBackend.Controllers
         // GET: Carts/Create
         public IActionResult Create()
         {
+            var check = CheckPermissionOrForbid("管理購物車");
+            if ( check != null) return check;
+
             ViewData["MemberId"] = new SelectList(_context.Members, "MemberId", "Account");
             return View();
         }
@@ -94,6 +107,9 @@ namespace TravelAgencyBackend.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("CartId,MemberId,ItemId,Category,Status")] Cart cart)
         {
+            var check = CheckPermissionOrForbid("管理購物車");
+            if (check != null) return check;
+
             ModelState.Remove("Member");
             if (ModelState.IsValid)
             {
@@ -109,6 +125,9 @@ namespace TravelAgencyBackend.Controllers
         // GET: Carts/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            var check = CheckPermissionOrForbid("管理購物車");
+            if (check != null) return check;
+
             if (id == null)
             {
                 return NotFound();
@@ -130,6 +149,9 @@ namespace TravelAgencyBackend.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("CartId,MemberId,ItemId,Category,Status")] Cart cart)
         {
+            var check = CheckPermissionOrForbid("管理購物車");
+            if (check != null) return check;
+
             ModelState.Remove("Member");
 
             if (id != cart.CartId)
@@ -168,6 +190,9 @@ namespace TravelAgencyBackend.Controllers
         // GET: Carts/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            var check = CheckPermissionOrForbid("管理購物車");
+            if (check != null) return check;
+
             if (id == null)
             {
                 return NotFound();
@@ -189,6 +214,9 @@ namespace TravelAgencyBackend.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            var check = CheckPermissionOrForbid("管理購物車");
+            if (check != null) return check;
+
             var cart = await _context.Carts.FindAsync(id);
             if (cart != null)
             {

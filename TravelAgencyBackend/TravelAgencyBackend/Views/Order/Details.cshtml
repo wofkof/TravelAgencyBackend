@@ -27,14 +27,14 @@
                 @Html.DisplayFor(model => model.Member.Name) 
             </dd>
 
-            
+
             <dt class="col-sm-3">
                 @Html.DisplayNameFor(model => model.ItemName) 
             </dt>
             <dd class="col-sm-9">
                 @Html.DisplayFor(model => model.ItemName) 
             </dd>
-            
+
 
             <dt class="col-sm-3">
                 @Html.DisplayNameFor(model => model.Category)
@@ -101,7 +101,28 @@
         </dl>
     </div>
     <div class="card-footer text-center bg-light">
-        <a asp-action="Edit" asp-route-id="@Model?.OrderId" class="btn btn-primary">編輯</a> |
-        <a asp-action="Index" class="btn btn-secondary">返回列表</a>
+        @if (PermissionChecker.CanManageOrders)
+        {
+            <a asp-action="Edit" asp-route-id="@Model?.OrderId" class="btn btn-primary">編輯</a>
+        }
+        else
+        {
+            <a asp-action="Edit" asp-route-id="@Model?.OrderId" class="btn btn-primary disabled"
+            tabindex="-1" aria-disabled="true" onclick="return false;">
+                編輯
+            </a>
+        }
+        |
+        @if (PermissionChecker.CanViewOrders)
+        {
+            <a asp-action="Index" class="btn btn-secondary">返回列表</a>
+        }
+        else
+        {
+            <a asp-action="Index" class="btn btn-secondary disabled"
+               tabindex="-1" aria-disabled="true" onclick="return false;">
+            返回列表
+            </a>
+        }
     </div>
 </div>

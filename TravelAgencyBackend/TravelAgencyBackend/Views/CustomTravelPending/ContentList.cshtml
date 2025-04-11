@@ -84,10 +84,24 @@
 						@Html.DisplayFor(modelItem => item.HotelName)
 					</td>
 					<td>
-						@Html.ActionLink("修改", "EditContent", "CustomTravelPending", new { id = item.ContentId }, new { @class = "btn btn-outline-warning" })
+						@if (PermissionChecker.CanManageCustomTravels)
+						{
+							<a asp-controller="CustomTravelPending" asp-action="EditContent" asp-route-id="@item.ContentId" class="btn btn-outline-warning">修改</a>
+						}
+						else
+						{
+							<a class="btn btn-outline-warning disabled" tabindex="-1" aria-disabled="true" onclick="return false">修改</a>
+						}
 					</td>
 					<td>
-						@Html.ActionLink("刪除", "DeleteContent", "CustomTravelPending", new { id = item.ContentId }, new { @class = "btn btn-outline-danger", onclick = "return confirm('確定要刪除嗎?')" })
+						@if (PermissionChecker.CanManageCustomTravels)
+					{
+							<a asp-controller="CustomTravelPending" asp-action="DeleteContent" asp-route-id="@item.ContentId" class="btn btn-outline-danger" onclick="return confirm('確定要刪除嗎?')">刪除</a>
+					}
+					else
+					{
+						<a class="btn btn-outline-danger disabled" tabindex="-1" aria-disabled="true" onclick="return false">刪除</a>
+					}
 					</td>
 				</tr>
 			}
@@ -95,5 +109,4 @@
 	</tbody>
 </table>
 <div class="mt-4">
-	<a asp-action="List" class="btn btn-secondary">返回</a>
 </div>

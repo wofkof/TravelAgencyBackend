@@ -43,6 +43,27 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.CartId">編輯</a> |
-    <a asp-action="Index">返回列表</a>
+    @if (PermissionChecker.CanManageCarts)
+    {
+        <a asp-action="Edit" asp-route-id="@Model?.CartId">編輯</a>
+    }
+    else
+    {
+        <a asp-action="Edit" asp-route-id="@Model?.CartId" class="disabled"
+        tabindex="-1" aria-disabled="true" onclick="return false;">
+            編輯
+        </a>
+    }
+    |
+    @if (PermissionChecker.CanViewAnnouncements)
+    {
+        <a asp-action="Index">返回列表</a>
+    }
+    else
+    {
+        <a asp-action="Index" class="disabled"
+           tabindex="-1" aria-disabled="true" onclick="return false;">
+        返回列表
+        </a>
+    }
 </div>

@@ -85,5 +85,15 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Index">回到航班目錄</a>
+    @if (PermissionChecker.CanViewOfficialTravels)
+    {
+        <a asp-action="Index">回到航班目錄</a>
+    }
+    else
+    {
+        <a asp-action="Index" class="disabled"
+           tabindex="-1" aria-disabled="true" onclick="return false;">
+        回到航班目錄
+        </a>
+    }
 </div>

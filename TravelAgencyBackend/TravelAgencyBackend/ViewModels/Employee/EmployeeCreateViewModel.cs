@@ -44,6 +44,7 @@ namespace TravelAgencyBackend.ViewModels.Employee
         [Required(ErrorMessage = "請選擇員工狀態")]
         public EmployeeStatus? Status { get; set; }
 
+        [Required(ErrorMessage = "請輸入地址")]
         [Display(Name = "地址")]
         public string? Address { get; set; }
 

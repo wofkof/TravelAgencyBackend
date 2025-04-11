@@ -79,8 +79,29 @@
 </div>
 
 <div>
-    <a asp-action="Index">回到行程目錄</a> |
-    @Html.ActionLink("新增行程日程", "Create", "OfficialTravelSchedules")
+    @if (PermissionChecker.CanViewOfficialTravels)
+    {
+        <a asp-action="Index">回到行程目錄</a>
+    }
+    else
+    {
+        <a asp-action="Index" class="disabled"
+        tabindex="-1" aria-disabled="true" onclick="return false;">
+            回到行程目錄
+        </a>
+    }
+    |
+    @if (PermissionChecker.CanManageOfficialTravels)
+    {
+        <a asp-controller="OfficialTravelSchedules" asp-action="Create">新增行程日程</a>
+    }
+    else
+    {
+        <a asp-controller="OfficialTravelSchedules" asp-action="Create" class="disabled"
+           tabindex="-1" aria-disabled="true" onclick="return false;">
+        新增行程日程
+        </a>
+    }
 </div>
 
 @section Scripts {

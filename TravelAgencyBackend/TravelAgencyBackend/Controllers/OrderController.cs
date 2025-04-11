@@ -7,17 +7,21 @@ using System.Linq;
 using System.Threading.Tasks;
 using TravelAgencyBackend.Helpers;
 using TravelAgencyBackend.Models;
+using TravelAgencyBackend.Services;
 using TravelAgencyBackend.ViewModels.Order; 
 
 namespace TravelAgencyBackend.Controllers
 {
-    public class OrderController : Controller
+    public class OrderController : BaseController
     {
         private readonly AppDbContext _context;
+        private readonly PermissionCheckService _perm;
 
-        public OrderController(AppDbContext context)
+        public OrderController(AppDbContext context, PermissionCheckService perm)
+            : base(perm) 
         {
             _context = context;
+            _perm = perm;
         }
 
         // GET: Order
@@ -31,6 +35,9 @@ namespace TravelAgencyBackend.Controllers
             int? pageSize)   // 加入每頁筆數參數
         {
             // --- 設定預設值 ---
+            var check = CheckPermissionOrForbid("查看訂單");
+            if (check != null) return check;
+
             sortField = string.IsNullOrEmpty(sortField) ? "CreatedAt" : sortField;
             sortDirection = string.IsNullOrEmpty(sortDirection) ? "desc" : sortDirection;
             int currentPageSize = pageSize ?? 10; // 預設每頁 10 筆
@@ -174,6 +181,9 @@ namespace TravelAgencyBackend.Controllers
         [HttpGet("Order/SimpleDetails/{id}")]
         public async Task<IActionResult> SimpleDetails(int? id, int? originItemId, OrderCategory? originCategory)
         {
+            var check = CheckPermissionOrForbid("查看訂單");
+            if (check != null) return check;
+
             if (id == null)
             {
                 return NotFound();
@@ -221,6 +231,9 @@ namespace TravelAgencyBackend.Controllers
         // --- 保留原本的 Details Action ---
         public async Task<IActionResult> Details(int? id)
         {
+            var check = CheckPermissionOrForbid("查看訂單");
+            if (check != null) return check;
+
             if (id == null)
             {
                 return NotFound();
@@ -276,6 +289,9 @@ namespace TravelAgencyBackend.Controllers
         // GET: Order/Create
         public IActionResult Create()
         {
+            var check = CheckPermissionOrForbid("管理訂單");
+            if (check != null) return check;
+
             ViewData["MemberId"] = new SelectList(_context.Members, "MemberId", "Name");
             ViewData["ParticipantId"] = new SelectList(_context.Participants, "ParticipantId", "Name");
 
@@ -297,6 +313,9 @@ namespace TravelAgencyBackend.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(OrderCreateViewModel orderCreateViewModel)
         {
+            var check = CheckPermissionOrForbid("管理訂單");
+            if (check != null) return check;
+
             // 驗證 ItemId 是否根據 Category 被正確設定 (可以在前端 JS 做，後端也建議驗證)
             if (orderCreateViewModel.Category == OrderCategory.OfficialTravelDetail)
             {
@@ -355,6 +374,9 @@ namespace TravelAgencyBackend.Controllers
         // GET: Order/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            var check = CheckPermissionOrForbid("管理訂單");
+            if (check != null) return check;
+
             if (id == null)
             {
                 return NotFound();
@@ -399,6 +421,9 @@ namespace TravelAgencyBackend.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, OrderEditViewModel orderEditViewModel)
         {
+            var check = CheckPermissionOrForbid("管理訂單");
+            if (check != null) return check;
+
             if (id != orderEditViewModel.OrderId)
             {
                 return NotFound();
@@ -487,6 +512,9 @@ namespace TravelAgencyBackend.Controllers
         // GET: Order/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            var check = CheckPermissionOrForbid("管理訂單");
+            if (check != null) return check;
+
             if (id == null)
             {
                 return NotFound();
