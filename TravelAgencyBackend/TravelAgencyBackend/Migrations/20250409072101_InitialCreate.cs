@@ -18,31 +18,31 @@ namespace TravelAgencyBackend.Migrations
             //    maxLength: 100,
             //    nullable: true);
 
-            migrationBuilder.AlterColumn<DateTime>(
-                name: "PassportIssueDate",
-                table: "T_Participant",
-                type: "date",
-                nullable: true,
-                oldClrType: typeof(DateTime),
-                oldType: "date");
+            //migrationBuilder.AlterColumn<DateTime>(
+            //    name: "PassportIssueDate",
+            //    table: "T_Participant",
+            //    type: "date",
+            //    nullable: true,
+            //    oldClrType: typeof(DateTime),
+            //    oldType: "date");
 
-            migrationBuilder.AlterColumn<string>(
-                name: "Gender",
-                table: "T_Participant",
-                type: "nvarchar(20)",
-                maxLength: 20,
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(10)",
-                oldMaxLength: 10);
+            //migrationBuilder.AlterColumn<string>(
+            //    name: "Gender",
+            //    table: "T_Participant",
+            //    type: "nvarchar(20)",
+            //    maxLength: 20,
+            //    nullable: false,
+            //    oldClrType: typeof(string),
+            //    oldType: "nvarchar(10)",
+            //    oldMaxLength: 10);
 
-            migrationBuilder.AlterColumn<DateTime>(
-                name: "BirthDate",
-                table: "T_Participant",
-                type: "date",
-                nullable: true,
-                oldClrType: typeof(DateTime),
-                oldType: "date");
+            //migrationBuilder.AlterColumn<DateTime>(
+            //    name: "BirthDate",
+            //    table: "T_Participant",
+            //    type: "date",
+            //    nullable: true,
+            //    oldClrType: typeof(DateTime),
+            //    oldType: "date");
 
             //migrationBuilder.AddColumn<string>(
             //    name: "Address",

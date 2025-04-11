@@ -4,10 +4,10 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>日程目錄</h1>
 
 <p>
-    <a asp-action="Create">Create New</a> | 
+    <a asp-action="Create">新增</a> | 
     @Html.ActionLink("回到行程細節", "Index", "OfficialTravelDetails") | 
     @Html.ActionLink("回到專案管理", "Index", "OfficialTravels")
 </p>
@@ -69,9 +69,9 @@
                 @Html.DisplayFor(modelItem => item.OfficialTravelDetail.OfficialTravel.Title)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.OfficialTravelScheduleId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.OfficialTravelScheduleId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.OfficialTravelScheduleId">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.OfficialTravelScheduleId">編輯</a> |
+                <a asp-action="Details" asp-route-id="@item.OfficialTravelScheduleId">檢視</a> |
+                <a asp-action="Delete" asp-route-id="@item.OfficialTravelScheduleId">刪除</a>
             </td>
         </tr>
 }

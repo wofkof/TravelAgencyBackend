@@ -5,8 +5,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using TravelAgencyBackend.Helpers;
 using TravelAgencyBackend.Models;
-using TravelAgencyBackend.ViewModels.Cart;
+using TravelAgencyBackend.ViewModels;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace TravelAgencyBackend.Controllers
 {
@@ -26,31 +28,37 @@ namespace TravelAgencyBackend.Controllers
         //    return View(await appDbContext.ToListAsync());
         //}
         // GET: 購物車
+
         public async Task<IActionResult> Index(CartKeyWordViewModel p)
         {
-            var 購物車 = _context.Carts.Include(c => c.Member).AsQueryable();
+            var 購物車 = _context.Carts
+                                .Include(c => c.Member)
+                                .AsQueryable();
 
             if (!string.IsNullOrEmpty(p.txtKeyword))
             {
-                var keyword = $"%{p.txtKeyword}%"; // SQL LIKE 需要使用 % 作為萬用字元
-                購物車 = 購物車.Where(c =>
-                    EF.Functions.Like(c.Category.ToString(), keyword) ||
-                    EF.Functions.Like(c.Status.ToString(), keyword));
-            }
-            if (!string.IsNullOrEmpty(p.txtKeyword))
-            {
-                var keyword = $"%{p.txtKeyword}%"; // SQL Like 用的萬用字元
-                購物車 = 購物車.Where(c =>
-                    EF.Functions.Like(c.Category.ToString(), keyword) ||
-                    EF.Functions.Like(c.Member.Name, keyword) ||
-                    EF.Functions.Like(c.Status.ToString(), keyword) || // 檢查狀態
-                    EF.Functions.Like(c.Category.ToString(), keyword) // <--- 加入對 Category 的檢查
-                );
+                // 對 Category 做顯示名稱比對
+                var categoryMatches = Enum.GetValues(typeof(CartCategory))
+                    .Cast<CartCategory>()
+                    .Where(e => e.GetDisplayName().Contains(p.txtKeyword))
+                    .Select(e => e.ToString()).ToList();
+
+                // 對 Status 做顯示名稱比對
+                var statusMatches = Enum.GetValues(typeof(CartStatus))
+                    .Cast<CartStatus>()
+                    .Where(e => e.GetDisplayName().Contains(p.txtKeyword))
+                    .Select(e => e.ToString()).ToList();
+
+                // 資料庫比對的是 enum 原始名稱（不是中文）
+                購物車 = 購物車.Where(e =>
+                    categoryMatches.Contains(e.Category.ToString()) ||
+                    statusMatches.Contains(e.Status.ToString()));
             }
 
-            p.Carts = await 購物車.ToListAsync();
+             p.Carts = await 購物車.ToListAsync();
             return View(p);
         }
+
 
 
         // GET: Carts/Details/5
